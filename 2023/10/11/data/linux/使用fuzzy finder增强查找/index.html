@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="使用fuzzy finder增强查找">
+<meta property="og:url" content="http://example.com/2023/10/11/data/linux/%E4%BD%BF%E7%94%A8fuzzy%20finder%E5%A2%9E%E5%BC%BA%E6%9F%A5%E6%89%BE/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:36.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:36.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/linux/%E4%BD%BF%E7%94%A8fuzzy%20finder%E5%A2%9E%E5%BC%BA%E6%9F%A5%E6%89%BE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>使用fuzzy finder增强查找 | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/linux/%E4%BD%BF%E7%94%A8fuzzy%20finder%E5%A2%9E%E5%BC%BA%E6%9F%A5%E6%89%BE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用fuzzy finder增强查找
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:36" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:36+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><a
+href="%5BFuzzy%20finder(fzf+vim)%20使用全指南%20(keelii.com)%5D(https://keelii.com/2018/08/12/fuzzy-finder-full-guide)">文章来源</a></p>
+<h2 id="简介">简介</h2>
+<p><a target="_blank" rel="noopener" href="https://github.com/junegunn/fzf">Fuzzy finder</a> 是一款使用
+GO 语言编写的交互式的 Unix
+命令行工具。可以用来查找任何 <strong>列表</strong> 内容，文件、Git
+分支、进程等。所有的命令行工具可以生成列表输出的都可以再通过管道 pipe 到
+fzf 上进行搜索和查找</p>
+<h2 id="优点">优点</h2>
+<ul>
+<li>GO 语言编写，编译完生成可执行文件没有任何依赖<br />
+</li>
+<li>搜索/查找速度飞快<br />
+</li>
+<li>功能全面/可视化界面体验很棒<br />
+</li>
+<li>周边插件丰富 (vim, tmux, fuzzy auto-completion)</li>
+</ul>
+<h2 id="安装">安装</h2>
+<p>参考<strong>FZF</strong>的<a
+href="%5Bjunegunn/fzf:%20:cherry_blossom:%20A%20command-line%20fuzzy%20finder%20(github.com)%5D(https://github.com/junegunn/fzf/tree/master)">github仓库地址</a>中，给出的安装指示</p>
+<h2 id="使用">使用</h2>
+<p>命令行下执行 <code>fzf</code> 即可展示当前目录下所有文件列表，可以用键盘上下键或者鼠标点出来选择 <img
+src="https://img10.360buyimg.com/devfe/jfs/t26002/277/432949068/59208/9725245b/5b6fc71fN03036763.png"
+alt="fzf-normal" /><br />
+或许你会觉得这个查找提示看起来挺漂亮的，但是并没有什么卵用，因为查找出来就没有然后了。其实这也是
+Fuzzy finder
+最核心的地方，他只是一个通用的下拉查找功能，自己本身并不关心你用它来做什么，通常我们需要组合使用才会有很好的效果</p>
+<p>或许你会觉得这个查找提示看起来挺漂亮的，但是并没有什么卵用，因为查找出来就没有然后了。其实这也是
+Fuzzy finder
+最核心的地方，他只是一个通用的下拉查找功能，自己本身并不关心你用它来做什么，通常我们需要组合使用才会有很好的效果</p>
+<h3 id="用-vim-打开文件">用 vim 打开文件</h3>
+<p>比如我们用 vim 组合 fzf 来查找并打开目录下的文件：<br />
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim $(fzf)</span><br></pre></td></tr></table></figure></p>
+<figure>
+<img
+src="https://img30.360buyimg.com/devfe/jfs/t25372/5/461999989/83158/3ce44a5/5b6fc7f2Nd6432499.gif"
+alt="fzf-vim" />
+<figcaption aria-hidden="true">fzf-vim</figcaption>
+</figure>
+<h3 id="切换当前工作目录">切换当前工作目录</h3>
+<p>再比如进入到某个文件夹下面，使用 fzf 的过滤选择真是太方便了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> $(find * -<span class="built_in">type</span> d | fzf)</span><br></pre></td></tr></table></figure>
+<p>这是个组合 (cd+find+fzf)
+命令，完成切换到任意子目录的功能。可以看出来当 fzf
+和其它命令组合使用时就能使得一些操作更方便：</p>
+<ol type="1">
+<li>使用 find 命令找出所有的子目录<br />
+</li>
+<li>把子目录列表 pipe 到 fzf 上进行选择<br />
+</li>
+<li>再把结果以子命令的形式传给 cd<br />
+<img
+src="https://img13.360buyimg.com/devfe/jfs/t23848/96/1951894215/50884/20a513d7/5b6fcabbNb77c46d5.gif"
+alt="fzf-find-cd" /></li>
+</ol>
+<h3 id="切换-git-分支">切换 git 分支</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout $(git branch -r | fzf)</span><br></pre></td></tr></table></figure>
+<figure>
+<img
+src="https://img10.360buyimg.com/devfe/jfs/t23242/262/2000817850/127859/c0955478/5b6fce70N3c3573ae.gif"
+alt="fzf-git-branch" />
+<figcaption aria-hidden="true">fzf-git-branch</figcaption>
+</figure>
+<p>不过这样组合使用命令的实在太长了，如果你不使用自动补全的话巧起来很累的。建议把常用的
+alias 放在 .zshrc 中管理嘛</p>
+<h3 id="shell-命令行补全">shell 命令行补全</h3>
+<p>fzf 默认使用 <code>**</code> 来补全 shell 命令，比起默认的 tab
+补全，fzf 补全不知道高到哪里去了。cd, vim, kill, ssh, export...
+统统都能补全，好用哭了 🤣</p>
+<figure>
+<img
+src="https://img10.360buyimg.com/devfe/jfs/t24820/280/435378103/490486/3777afba/5b6fedc6N59529380.gif"
+alt="fzf-completion" />
+<figcaption aria-hidden="true">fzf-completion</figcaption>
+</figure>
+<h2 id="配置">配置</h2>
+<p>fzf 提供了两个 <em>环境变量</em> 配置参数，来分别设置默认的调用命令和
+fzf 默认配置参数</p>
+<h3 id="核心命令-fzf_default_command">核心命令 FZF_DEFAULT_COMMAND</h3>
+<p>对于使用 fzf 来查找文件的情况，fzf 其实底层是调用的 Unix
+系统 <code>find</code> 命令，如果你觉得 find
+不好用也可以使用其它查找文件的命令行工具「我使用 <a
+target="_blank" rel="noopener" href="https://github.com/sharkdp/fd">fd</a>」。注意：对原始命令添加一些参数应该在这个环境变量里面添加</p>
+<p>比如说我们一般都会查找文件 <code>-type f</code>，通常会忽略一些文件夹/目录 <code>--exclude=...</code>，下面是我的变量值：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> FZF_DEFAULT_COMMAND=<span class="string">&quot;fd --exclude=&#123;.git,.idea,.vscode,.sass-cache,node_modules,build&#125; --type f&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="界面展示-fzf_default_opts">界面展示 FZF_DEFAULT_OPTS</h3>
+<p>界面展示这些参数在 <code>fzf --help</code> 中都有，按需配置即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> FZF_DEFAULT_OPTS=<span class="string">&quot;--height 40% --layout=reverse --preview &#x27;(highlight -O ansi &#123;&#125; || cat &#123;&#125;) 2&gt; /dev/null | head -500&#x27;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>界面配置参数加上后就漂亮多了 <a
+target="_blank" rel="noopener" href="https://img11.360buyimg.com/devfe/jfs/t24178/228/1983729650/93496/412c5c52/5b6fd697N0d686b66.png"><img
+src="https://img11.360buyimg.com/devfe/jfs/t24178/228/1983729650/93496/412c5c52/5b6fd697N0d686b66.png"
+alt="fzf-with-preview" /></a></p>
+<p><code>--preview</code> 表示在右侧显示文件的预览界面，语法高亮的设置使用了 <a
+target="_blank" rel="noopener" href="http://www.andre-simon.de/doku/highlight/en/highlight.php">highlight</a> 如果
+highlight 失败则使用最常见的 <code>cat</code> 命令来查看文件内容</p>
+<p>highlight 安装可能会有个小插曲。highlight
+需要手动编译安装，默认安装目录在 <code>/usr/bin</code>, <code>/usr/share</code> 下面。然而在
+macOS 中由于 SIP 保护，用户安装的程序不能在这几个目录下面「即使有 sudo
+权限也不行」。我们可以手动更改下 highlight 源代码中 makefile
+中的参数即可</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># PREFIX = /usr</span></span><br><span class="line">PREFIX = /usr/local</span><br></pre></td></tr></table></figure>
+<p>将 <code>PREFIX = /usr</code> 改成 <code>PREFIX = /usr/local</code>，然后 <code>make</code>，<code>sudo make install</code> 就可以了</p>
+<h3 id="触发命令行补全-fzf_completion_trigger">触发命令行补全
+FZF_COMPLETION_TRIGGER</h3>
+<p>默认是 <code>**</code>，一般不用修改</p>
+<h2 id="vim-fzf-插件">VIM fzf 插件</h2>
+<p>如果你使用 vim，那么官方提供的插件会让你的 vim 使用更加流畅</p>
+<h3 id="安装插件">安装插件</h3>
+<p>如果你本地安装过 fzf 命令行工具了，只需要在 .vimrc
+里面添加下面两个插件配置即可</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Plug <span class="string">&#x27;/usr/local/opt/fzf&#x27;</span></span><br><span class="line">Plug <span class="string">&#x27;junegunn/fzf.vim&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>注意：使用了 <a
+target="_blank" rel="noopener" href="https://github.com/junegunn/vim-plug">vim-plug</a> 插件管理</p>
+<p>插件主要对 fzf 集成绑定了一些和 vim 相关的功能，比如：查找当前
+Buffer、Tag、Marks。甚至切换 window 更换 vim 主题配色等</p>
+<p>命令模式下敲 <code>Files</code> 即可选择当前目录下所有文件，<code>Buffers</code> 可以过滤当前所有
+vim buffer 内容</p>
+<figure>
+<img
+src="https://img10.360buyimg.com/devfe/jfs/t25240/349/434572567/558564/433c151a/5b6fdfadNfd6ea407.gif"
+alt="fzf-vim-plugin" />
+<figcaption aria-hidden="true">fzf-vim-plugin</figcaption>
+</figure>
+<p>再配置几个常用快捷键就可以直接取代 CtrlP 插件了 🤔</p>
+<ul>
+<li>Ctrl + p 查看文件列表<br />
+</li>
+<li>Ctrl + e 查看当前 Buffer，两次 Ctrl + e 快速切换上次打开的
+Buffer</li>
+</ul>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">nmap</span> <span class="symbol">&lt;C-p&gt;</span> :Files<span class="symbol">&lt;CR&gt;</span></span><br><span class="line"><span class="keyword">nmap</span> <span class="symbol">&lt;C-e&gt;</span> :Buffers<span class="symbol">&lt;CR&gt;</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">g:fzf_action</span> = &#123; <span class="string">&#x27;ctrl-e&#x27;</span>: <span class="string">&#x27;edit&#x27;</span> &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="结语">结语</h3>
+<p>当然 fzf
+还可以在很多其它场景下用来。如果你想使用可视化的列表选择而不是咣咣敲命令，那就自己搭配一些组合来使用吧</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/linux/" rel="tag"># linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/linux/vim/vim7%E5%8D%87%E7%BA%A7vim8/" rel="prev" title="vim7升级vim8">
+      <i class="fa fa-chevron-left"></i> vim7升级vim8
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/linux/%E4%BD%BF%E7%94%A8XRDP%E6%9C%8D%E5%8A%A1%E5%9C%A8%E5%B1%80%E5%9F%9F%E7%BD%91%E5%AE%8C%E6%88%90%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/" rel="next" title="使用XRDP服务在局域网完成远程桌面连接">
+      使用XRDP服务在局域网完成远程桌面连接 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8-vim-%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6"><span class="nav-number">4.1.</span> <span class="nav-text">用 vim 打开文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%87%E6%8D%A2%E5%BD%93%E5%89%8D%E5%B7%A5%E4%BD%9C%E7%9B%AE%E5%BD%95"><span class="nav-number">4.2.</span> <span class="nav-text">切换当前工作目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%87%E6%8D%A2-git-%E5%88%86%E6%94%AF"><span class="nav-number">4.3.</span> <span class="nav-text">切换 git 分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shell-%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%A1%A5%E5%85%A8"><span class="nav-number">4.4.</span> <span class="nav-text">shell 命令行补全</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">5.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%91%BD%E4%BB%A4-fzf_default_command"><span class="nav-number">5.1.</span> <span class="nav-text">核心命令 FZF_DEFAULT_COMMAND</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%95%8C%E9%9D%A2%E5%B1%95%E7%A4%BA-fzf_default_opts"><span class="nav-number">5.2.</span> <span class="nav-text">界面展示 FZF_DEFAULT_OPTS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A6%E5%8F%91%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%A1%A5%E5%85%A8-fzf_completion_trigger"><span class="nav-number">5.3.</span> <span class="nav-text">触发命令行补全
+FZF_COMPLETION_TRIGGER</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vim-fzf-%E6%8F%92%E4%BB%B6"><span class="nav-number">6.</span> <span class="nav-text">VIM fzf 插件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%8F%92%E4%BB%B6"><span class="nav-number">6.1.</span> <span class="nav-text">安装插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">6.2.</span> <span class="nav-text">结语</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>

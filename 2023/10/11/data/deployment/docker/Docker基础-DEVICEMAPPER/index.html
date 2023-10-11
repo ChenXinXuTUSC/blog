@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="Docker基础-DEVICEMAPPER">
+<meta property="og:url" content="http://example.com/2023/10/11/data/deployment/docker/Docker%E5%9F%BA%E7%A1%80-DEVICEMAPPER/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:22.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:22.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="deployment">
+<meta property="article:tag" content="docker">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/deployment/docker/Docker%E5%9F%BA%E7%A1%80-DEVICEMAPPER/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>Docker基础-DEVICEMAPPER | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/deployment/docker/Docker%E5%9F%BA%E7%A1%80-DEVICEMAPPER/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Docker基础-DEVICEMAPPER
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:22" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:22+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/deployment/" itemprop="url" rel="index"><span itemprop="name">deployment</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在上一篇<a
+target="_blank" rel="noopener" href="https://coolshell.cn/articles/17061.html">介绍AUFS的文章</a>中，大家可以看到，Docker的分层镜像是怎么通过UnionFS这种文件系统做到的，但是，因为Docker首选的AUFS并不在Linux的内核主干里，所以，对于非Ubuntu的Linux分发包，比如CentOS，就无法使用AUFS作为Docker的文件系统了。于是作为第二优先级的DeviceMapper就被拿出来做分层镜像的一个实现。</p>
+<p>目录</p>
+<ul>
+<li><a
+target="_blank" rel="noopener" href="https://coolshell.cn/articles/17200.html#Device_Mapper_%E7%AE%80%E4%BB%8B"
+title="Device Mapper 简介">Device Mapper 简介</a><br />
+</li>
+<li><a
+target="_blank" rel="noopener" href="https://coolshell.cn/articles/17200.html#Thin_Provisioning_%E7%AE%80%E4%BB%8B"
+title="Thin Provisioning 简介">Thin Provisioning 简介</a><br />
+</li>
+<li><a
+target="_blank" rel="noopener" href="https://coolshell.cn/articles/17200.html#Thin_Provisioning_Snapshot_%E6%BC%94%E7%A4%BA"
+title="Thin Provisioning Snapshot 演示">Thin Provisioning Snapshot
+演示</a><br />
+</li>
+<li><a
+target="_blank" rel="noopener" href="https://coolshell.cn/articles/17200.html#Docker%E7%9A%84DeviceMapper"
+title="Docker的DeviceMapper">Docker的DeviceMapper</a><br />
+</li>
+<li><a
+target="_blank" rel="noopener" href="https://coolshell.cn/articles/17200.html#Device_Mapper_%E8%A1%8C%E4%B8%8D%E8%A1%8C%EF%BC%9F"
+title="Device Mapper 行不行？">Device Mapper 行不行？</a></li>
+</ul>
+<h4 id="device-mapper-简介">Device Mapper 简介</h4>
+<p>DeviceMapper自Linux
+2.6被引入成为了Linux最重要的一个技术。它在内核中支持逻辑卷管理的通用设备映射机制，它为实现用于存储资源管理的块设备驱动提供了一个高度模块化的内核架构，它包含三个重要的对象概念，Mapped
+Device、Mapping Table、Target device。</p>
+<p>Mapped Device
+是一个逻辑抽象，可以理解成为内核向外提供的逻辑设备，它通过Mapping
+Table描述的映射关系和 Target Device 建立映射。Target device 表示的是
+Mapped Device 所映射的物理空间段，对 Mapped Device
+所表示的逻辑设备来说，就是该逻辑设备映射到的一个物理设备。</p>
+<p>Mapping Table里有 Mapped Device 逻辑的起始地址、范围、和表示在 Target
+Device 所在物理设备的地址偏移量以及Target
+类型等信息（注：这些地址和偏移量都是以磁盘的扇区为单位的，即 512
+个字节大小，所以，当你看到128的时候，其实表示的是128*512=64K）。</p>
+<p>DeviceMapper 中的逻辑设备Mapped
+Device不但可以映射一个或多个物理设备Target
+Device，还可以映射另一个Mapped
+Device，于是，就是构成了一个迭代或递归的情况，就像文件系统中的目录里除了文件还可以有目录，理论上可以无限嵌套下去。</p>
+<p>DeviceMapper在内核中通过一个一个模块化的 Target Driver 插件实现对 IO
+请求的过滤或者重新定向等工作，当前已经实现的插件包括软
+Raid、加密、多路径、镜像、快照等，这体现了在 Linux
+内核设计中策略和机制分离的原则。如下图所示。从图中，我们可以<strong>看到DeviceMapper只是一个框架，在这个框架上，我们可以插入各种各样的策略</strong>（让我不自然地想到了面向对象中的策略模式），在这诸多“插件”中，<strong>有一个东西叫Thin
+Provisioning
+Snapshot，这是Docker使用DeviceMapper中最重要的模块</strong>。</p>
+<figure>
+<img
+src="https://coolshell.cn/wp-content/uploads/2015/08/device.mapper.2.gif"
+alt="图片来源：http://people.redhat.com/agk/talks/FOSDEM_2005/" />
+<figcaption
+aria-hidden="true">图片来源：http://people.redhat.com/agk/talks/FOSDEM_2005/</figcaption>
+</figure>
+<p>图片来源：<a
+target="_blank" rel="noopener" href="http://people.redhat.com/agk/talks/FOSDEM_2005/">http://people.redhat.com/agk/talks/FOSDEM_2005/</a></p>
+<h4 id="thin-provisioning-简介"><strong>Thin Provisioning
+简介</strong></h4>
+<p>Thin
+Provisioning要怎么翻译成中文，真是一件令人头痛的事，我就不翻译了。这个技术是虚拟化技术中的一种。它是什么意思呢？<strong>你可以联想一下我们计算机中的内存管理中用到的——“虚拟内存技术”</strong>——操作系统给每个进程N多N多用不完的内址地址（32位下，每个进程可以有最多2GB的内存空间），但是呢，我们知道，物理内存是没有那么多的，如果按照进程内存和物理内存一一映射来玩的话，那么，我们得要多少的物理内存啊。所以，操作系统引入了虚拟内存的设计，<strong>意思是，我逻辑上给你无限多的内存，但是实际上是实报实销</strong>，因为我知道你一定用不了那么多，于是，达到了内存使用率提高的效果。（今天云计算中很多所谓的虚拟化其实完全都是在用和“虚拟内存”相似的Thin
+Provisioning的技术，所谓的超配，或是超卖）</p>
+<p>好了，话题拉回来，我们这里说的是存储。看下面两个图（<a
+target="_blank" rel="noopener" href="http://www.architecting.it/2009/06/04/enterprise-computing-why-thin-provisioning-is-not-the-holy-grail-for-utilisation/">图片来源</a>），第一个是Fat
+Provisioning，第二个是Thin
+Provisioning，其很好的说明了是个怎么一回事（和虚拟内存是一个概念）</p>
+<p><img
+src="https://coolshell.cn/wp-content/uploads/2015/08/thin-provisioning-1.jpg"
+alt="thin-provisioning-1" /><img
+src="https://coolshell.cn/wp-content/uploads/2015/08/thin-provisioning-2.jpg"
+alt="thin-provisioning-2" /></p>
+<p>那么，Docker是怎么使用Thin
+Provisioning这个技术做到像UnionFS那样的分层镜像的呢？答案是，Docker使用了Thin
+Provisioning的Snapshot的技术。下面我们来介绍一下Thin
+Provisioning的Snapshot。</p>
+<h4 id="thin-provisioning-snapshot-演示">Thin Provisioning Snapshot
+演示</h4>
+<p>下面，我们用一系列的命令来演示一下Device Mapper的Thin Provisioning
+Snapshot是怎么玩的。</p>
+<p>首先，我们需要先建两个文件，一个是data.img，一个是meta.data.img：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">~hchen$ sudo dd if=/dev/zero of=/tmp/data.img bs=1K count=1 seek=10M</span><br><span class="line">1+0 records in</span><br><span class="line">1+0 records out</span><br><span class="line">1024 bytes (1.0 kB) copied, 0.000621428 s, 1.6 MB/s</span><br><span class="line"></span><br><span class="line">~hchen$ sudo dd if=/dev/zero of=/tmp/meta.data.img bs=1K count=1 seek=1G</span><br><span class="line">1+0 records in</span><br><span class="line">1+0 records out</span><br><span class="line">1024 bytes (1.0 kB) copied, 0.000140858 s, 7.3 MB/s</span><br></pre></td></tr></table></figure>
+注意命令中<code>seek</code>选项，其表示为略过<code>of</code>选项指定的输出文件的前10G个output的bloksize的空间后再写入内容。因为bs是1个字节，所以也就是10G的尺寸，但其实在硬盘上是没有占有空间的，占有空间只有1k的内容。当向其写入内容时，才会在硬盘上为其分配空间。我们可以用ls命令看一下，实际分配了12K和4K。<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">~hchen$ sudo ls -lsh /tmp/data.img</span><br><span class="line">12K -rw-r--r--. 1 root root 11G Aug 25 23:01 /tmp/data.img</span><br><span class="line"></span><br><span class="line">~hchen$ sudo ls -slh /tmp/meta.data.img</span><br><span class="line">4.0K -rw-r--r--. 1 root root 101M Aug 25 23:17 /tmp/meta.data.img</span><br></pre></td></tr></table></figure>
+然后，我们为这个文件创建一个loopback设备。（loop2015和loop2016是我乱取的两个名字）<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">~hchen$ sudo losetup /dev/loop2015 /tmp/data.img</span><br><span class="line">~hchen$ sudo losetup /dev/loop2016 /tmp/meta.data.img</span><br><span class="line"></span><br><span class="line">~hchen$ sudo losetup -a</span><br><span class="line">/dev/loop2015: [64768]:103991768 (/tmp/data.img)</span><br><span class="line">/dev/loop2016: [64768]:103991765 (/tmp/meta.data.img)</span><br></pre></td></tr></table></figure> 现在，我们为这个设备建一个Thin
+Provisioning的Pool，用dmsetup命令：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~hchen$ sudo dmsetup create hchen-thin-pool \</span><br><span class="line">                  --table &quot;0 20971522 thin-pool /dev/loop2016 /dev/loop2015 \</span><br><span class="line">                           128 65536 1 skip_block_zeroing&quot;</span><br></pre></td></tr></table></figure> 其中的参数解释如下（更多信息可参看<a
+target="_blank" rel="noopener" href="https://github.com/torvalds/linux/blob/master/Documentation/device-mapper/thin-provisioning.txt">Thin
+Provisioning的man page</a>）：</p>
+<ul>
+<li>dmsetup create是用来创建thin pool的命令<br />
+</li>
+<li>hchen-thin-pool 是自定义的一个pool名，不冲突就好。<br />
+</li>
+<li>–table是这个pool的参数设置
+<ul>
+<li>0代表起的sector位置<br />
+</li>
+<li>20971522代码结句的sector号，前面说过，一个sector是512字节，所以，20971522个正好是10GB<br />
+</li>
+<li>/dev/loop2016是meta文件的设备（前面我们建好了）<br />
+</li>
+<li>/dev/loop2015是data文件的设备（前面我们建好了）<br />
+</li>
+<li>128是最小的可分配的sector数<br />
+</li>
+<li>65536是最少可用sector的water mark，也就是一个threshold<br />
+</li>
+<li>1 代表有一个附加参数<br />
+</li>
+<li>skip_block_zeroing是个附加参数，表示略过用0填充的块</li>
+</ul></li>
+</ul>
+<p>然后，我们就可以看到一个Device Mapper的设备了：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~hchen$ sudo ll /dev/mapper/hchen-thin-pool</span><br><span class="line">lrwxrwxrwx. 1 root root 7 Aug 25 23:24 /dev/mapper/hchen-thin-pool -&gt; ../dm-4</span><br></pre></td></tr></table></figure> 接下来，我们的初始还没有完成，还要创建一个Thin
+Provisioning 的 Volume：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~hchen$ sudo dmsetup message /dev/mapper/hchen-thin-pool 0 &quot;create_thin 0&quot;</span><br><span class="line">~hchen$ sudo dmsetup create hchen-thin-volumn-001 \</span><br><span class="line">            --table &quot;0 2097152 thin /dev/mapper/hchen-thin-pool 0&quot;</span><br></pre></td></tr></table></figure> 其中：</p>
+<ul>
+<li>第一个命令中的create_thin是关键字，后面的0表示这个Volume的device 的
+id<br />
+</li>
+<li>第二个命令，是真正的为这个Volumn创建一个可以mount的设备，名字叫hchen-thin-volumn-001。2097152只有1GB</li>
+</ul>
+<p>好了，在mount前，我们还要格式化一下：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">~hchen$ sudo mkfs.ext4 /dev/mapper/hchen-thin-volumn-001</span><br><span class="line">mke2fs 1.42.9 (28-Dec-2013)</span><br><span class="line">Discarding device blocks: done</span><br><span class="line">Filesystem label=</span><br><span class="line">OS type: Linux</span><br><span class="line">Block size=4096 (log=2)</span><br><span class="line">Fragment size=4096 (log=2)</span><br><span class="line">Stride=16 blocks, Stripe width=16 blocks</span><br><span class="line">65536 inodes, 262144 blocks</span><br><span class="line">13107 blocks (5.00%) reserved for the super user</span><br><span class="line">First data block=0</span><br><span class="line">Maximum filesystem blocks=268435456</span><br><span class="line">8 block groups</span><br><span class="line">32768 blocks per group, 32768 fragments per group</span><br><span class="line">8192 inodes per group</span><br><span class="line">Superblock backups stored on blocks:</span><br><span class="line">32768, 98304, 163840, 229376</span><br><span class="line"></span><br><span class="line">Allocating group tables: done</span><br><span class="line">Writing inode tables: done</span><br><span class="line">Creating journal (8192 blocks): done</span><br><span class="line">Writing superblocks and filesystem accounting information: done</span><br></pre></td></tr></table></figure>
+好了，我们可以mount了（下面的命令中，我还创建了一个文件）<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">~hchen$ sudo mkdir -p /mnt/base</span><br><span class="line">~hchen$ sudo mount /dev/mapper/hchen-thin-volumn-001 /mnt/base</span><br><span class="line">~hchen$ sudo echo &quot;hello world, I am a base&quot; &gt; /mnt/base/id.txt</span><br><span class="line">~hchen$ sudo cat /mnt/base/id.txt</span><br><span class="line">hello world, I am a base</span><br></pre></td></tr></table></figure> 好了，接下来，我们来看看snapshot怎么搞：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">~hchen$ sudo dmsetup message /dev/mapper/hchen-thin-pool 0 &quot;create_snap 1 0&quot;</span><br><span class="line">~hchen$ sudo dmsetup create mysnap1 \</span><br><span class="line">                   --table &quot;0 2097152 thin /dev/mapper/hchen-thin-pool 1&quot;</span><br><span class="line"></span><br><span class="line">~hchen$ sudo ll /dev/mapper/mysnap1</span><br><span class="line">lrwxrwxrwx. 1 root root 7 Aug 25 23:49 /dev/mapper/mysnap1 -&gt; ../dm-5</span><br></pre></td></tr></table></figure> 上面的命令中：</p>
+<ul>
+<li><p>第一条命令是向hchen-thin-pool发一个create_snap的消息，后面跟两个id，第一个是新的dev
+id，第二个是要从哪个已有的dev id上做snapshot（0这个dev
+id是我们前面就创建了了）</p></li>
+<li><p>第二条命令是创建一个mysnap1的device，并可以被mount。<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">~hchen$ sudo mkdir -p /mnt/mysnap1</span><br><span class="line">~hchen$ sudo mount /dev/mapper/mysnap1 /mnt/mysnap1</span><br><span class="line"></span><br><span class="line">~hchen$ sudo ll /mnt/mysnap1/</span><br><span class="line">total 20</span><br><span class="line">-rw-r--r--. 1 root root 25 Aug 25 23:46 id.txt</span><br><span class="line">drwx------. 2 root root 16384 Aug 25 23:43 lost+found</span><br><span class="line"></span><br><span class="line">~hchen$ sudo cat /mnt/mysnap1/id.txt</span><br><span class="line">hello world, I am a base</span><br></pre></td></tr></table></figure>
+我们来修改一下/mnt/mysnap1/id.txt，并加上一个snap1.txt的文件：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">~hchen$ sudo echo &quot;I am snap1&quot; &gt;&gt; /mnt/mysnap1/id.txt</span><br><span class="line">~hchen$ sudo echo &quot;I am snap1&quot; &gt; /mnt/mysnap1/snap1.txt</span><br><span class="line"></span><br><span class="line">~hchen$ sudo cat /mnt/mysnap1/id.txt</span><br><span class="line">hello world, I am a base</span><br><span class="line">I am snap1</span><br><span class="line"></span><br><span class="line">~hchen$ sudo cat /mnt/mysnap1/snap1.txt</span><br><span class="line">I am snap1</span><br></pre></td></tr></table></figure> 我们再看一下/mnt/base，你会发现没有什么变化：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">~hchen$ sudo ls /mnt/base</span><br><span class="line">id.txt      lost+found</span><br><span class="line">~hchen$ sudo cat /mnt/base/id.txt</span><br><span class="line">hello world, I am a base</span><br></pre></td></tr></table></figure> 你是不是已经看到了分层镜像的样子了？</p></li>
+</ul>
+<p>你还要吧继续在刚才的snapshot上再建一个snapshot<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">~hchen$ sudo dmsetup message /dev/mapper/hchen-thin-pool 0 &quot;create_snap 2 1&quot;</span><br><span class="line">~hchen$ sudo dmsetup create mysnap2 \</span><br><span class="line">                   --table &quot;0 2097152 thin /dev/mapper/hchen-thin-pool 2&quot;</span><br><span class="line"></span><br><span class="line">~hchen$ sudo ll /dev/mapper/mysnap2</span><br><span class="line">lrwxrwxrwx. 1 root root 7 Aug 25 23:52 /dev/mapper/mysnap1 -&gt; ../dm-7</span><br><span class="line"></span><br><span class="line">~hchen$ sudo mkdir -p /mnt/mysnap2</span><br><span class="line">~hchen$ sudo mount /dev/mapper/mysnap2 /mnt/mysnap2</span><br><span class="line">~hchen$ sudo  ls /mnt/mysnap2</span><br><span class="line">id.txt  lost+found  snap1.txt</span><br></pre></td></tr></table></figure> 好了，我相信你看到了分层镜像的样子了。</p>
+<p>看完演示，我们再来补点理论知识吧：</p>
+<ul>
+<li>Snapshot来自LVM（Logic Volumn
+Manager），它可以在不中断服务的情况下为某个device打一个快照。<br />
+</li>
+<li>Snapshot是Copy-On-Write的，也就是说，只有发生了修改，才会对对应的内存进行拷贝。</li>
+</ul>
+<p>另外，这里有篇文章<a
+target="_blank" rel="noopener" href="http://searchstorage.techtarget.com/tip/Storage-thin-provisioning-benefits-and-challenges">Storage
+thin provisioning benefits and challenges</a>可以前往一读。</p>
+<h4 id="docker的devicemapper">Docker的DeviceMapper</h4>
+<p>上面基本上就是Docker的玩法了，我们可以看一下docker的loopback设备：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~hchen $ sudo losetup -a</span><br><span class="line">/dev/loop0: [64768]:38050288 (/var/lib/docker/devicemapper/devicemapper/data)</span><br><span class="line">/dev/loop1: [64768]:38050289 (/var/lib/docker/devicemapper/devicemapper/metadata)</span><br></pre></td></tr></table></figure> 其中data 100GB，metadata 2.0GB<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~hchen $ sudo ls -alhs /var/lib/docker/devicemapper/devicemapper</span><br><span class="line">506M -rw-------. 1 root root 100G Sep 10 20:15 data</span><br><span class="line">1.1M -rw-------. 1 root root 2.0G Sep 10 20:15 metadata</span><br></pre></td></tr></table></figure>
+下面是相关的thin-pool。其中，有个当一大串hash串的device是正在启动的容器：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~hchen $ sudo ll /dev/mapper/dock*</span><br><span class="line">lrwxrwxrwx. 1 root root 7 Aug 25 07:57 /dev/mapper/docker-253:0-104108535-pool -&gt; ../dm-2</span><br><span class="line">lrwxrwxrwx. 1 root root 7 Aug 25 11:13 /dev/mapper/docker-253:0-104108535-deefcd630a60aa5ad3e69249f58a68e717324be4258296653406ff062f605edf -&gt; ../dm-3</span><br></pre></td></tr></table></figure> 我们可以看一下它的device
+id（Docker都把它们记下来了）：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~hchen $ sudo cat /var/lib/docker/devicemapper/metadata/deefcd630a60aa5ad3e69249f58a68e717324be4258296653406ff062f605edf</span><br><span class="line">&#123;&quot;device_id&quot;:24,&quot;size&quot;:10737418240,&quot;transaction_id&quot;:26,&quot;initialized&quot;:false&#125;</span><br></pre></td></tr></table></figure> device_id是24，size是10737418240，除以512，就是20971520
+个 sector，我们用这些信息来做个snapshot看看（注：我用了一个比较大的dev
+id – 1024）：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">~hchen$ sudo dmsetup message &quot;/dev/mapper/docker-253:0-104108535-pool&quot; 0 \</span><br><span class="line">                                    &quot;create_snap 1024 24&quot;</span><br><span class="line">~hchen$ sudo dmsetup create dockersnap --table \</span><br><span class="line">                    &quot;0 20971520 thin /dev/mapper/docker-253:0-104108535-pool 1024&quot;</span><br><span class="line">~hchen$ sudo mkdir /mnt/docker</span><br><span class="line">~hchen$ sudo mount /dev/mapper/dockersnap /mnt/docker/</span><br><span class="line">~hchen$ sudo ls /mnt/docker/</span><br><span class="line">id lost+found rootfs</span><br><span class="line">~hchen$ sudo ls /mnt/docker/rootfs/</span><br><span class="line">bin dev etc home lib lib64 lost+found media mnt opt proc root run sbin srv sys tmp usr var</span><br></pre></td></tr></table></figure>
+我们在docker的容器里用findmnt命令也可以看到相关的mount的情况（因为太长，下面只是摘要）：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># findmnt</span><br><span class="line">TARGET                SOURCE               </span><br><span class="line">/                 /dev/mapper/docker-253:0-104108535-deefcd630a60[/rootfs]</span><br><span class="line">/etc/resolv.conf  /dev/mapper/centos-root[/var/lib/docker/containers/deefcd630a60/resolv.conf]</span><br><span class="line">/etc/hostname     /dev/mapper/centos-root[/var/lib/docker/containers/deefcd630a60/hostname]</span><br><span class="line">/etc/hosts        /dev/mapper/centos-root[/var/lib/docker/containers/deefcd630a60/hosts]</span><br></pre></td></tr></table></figure></p>
+<h4 id="device-mapper-行不行">Device Mapper 行不行？</h4>
+<p>Thin Provisioning的文档中说，这还处理实验阶段，不要上Production.</p>
+<blockquote>
+<p>These targets are very much still in the EXPERIMENTAL state. Please
+do not yet rely on them in production.</p>
+</blockquote>
+<p>另外，Jeff Atwood在Twitter上发过这样的一推</p>
+<p><a
+target="_blank" rel="noopener" href="https://twitter.com/codinghorror/status/604096348682485760"><img
+src="https://coolshell.cn/wp-content/uploads/2015/08/Jeff.Atwood.DeviceMapper.png"
+alt="Jeff.Atwood.DeviceMapper" /></a></p>
+<p>这个推指向的<a
+target="_blank" rel="noopener" href="https://forums.docker.com/t/rmi-not-freeing-disk-space-in-devicemapper-sparse-file-centos-6-6/1640/3">这个讨论</a>中，其中指向了这个<a
+target="_blank" rel="noopener" href="https://github.com/discourse/discourse_docker/commit/48f22d14f39496c8df446cbc65ee04b258c5a1a0">code
+diff</a>，基本上就是说，DeviceMapper这种东西问题太多了，我们应该把其加入黑名单。Doker的Founder也这样回复到：</p>
+<p><a
+target="_blank" rel="noopener" href="https://twitter.com/solomonstre/status/604055267303636992"><img
+src="https://coolshell.cn/wp-content/uploads/2015/08/Solomon.Hykeys.DeviceMapper.png" /></a></p>
+<p>所以，如果你在使用loopback的devicemapper的话，当你的存储出现了问题后，正确的解决方案是：</p>
+<p>rm -rf /var/lib/docker</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/deployment/" rel="tag"># deployment</a>
+              <a href="/blog/tags/docker/" rel="tag"># docker</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/deployment/docker/Docker%E5%9F%BA%E7%A1%80%E4%B8%8A/" rel="prev" title="Docker基础上">
+      <i class="fa fa-chevron-left"></i> Docker基础上
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/deployment/%E9%83%A8%E7%BD%B2%E5%8F%82%E8%80%83/" rel="next" title="部署参考">
+      部署参考 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#device-mapper-%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">Device Mapper 简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#thin-provisioning-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">Thin Provisioning
+简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#thin-provisioning-snapshot-%E6%BC%94%E7%A4%BA"><span class="nav-number">3.</span> <span class="nav-text">Thin Provisioning Snapshot
+演示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#docker%E7%9A%84devicemapper"><span class="nav-number">4.</span> <span class="nav-text">Docker的DeviceMapper</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#device-mapper-%E8%A1%8C%E4%B8%8D%E8%A1%8C"><span class="nav-number">5.</span> <span class="nav-text">Device Mapper 行不行？</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>

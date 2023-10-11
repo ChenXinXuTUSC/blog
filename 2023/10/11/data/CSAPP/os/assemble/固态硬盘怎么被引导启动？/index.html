@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="固态硬盘怎么被引导启动？">
+<meta property="og:url" content="http://example.com/2023/10/11/data/CSAPP/os/assemble/%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98%E6%80%8E%E4%B9%88%E8%A2%AB%E5%BC%95%E5%AF%BC%E5%90%AF%E5%8A%A8%EF%BC%9F/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:15.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:15.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="CSAPP">
+<meta property="article:tag" content="os">
+<meta property="article:tag" content="assemble">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/CSAPP/os/assemble/%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98%E6%80%8E%E4%B9%88%E8%A2%AB%E5%BC%95%E5%AF%BC%E5%90%AF%E5%8A%A8%EF%BC%9F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>固态硬盘怎么被引导启动？ | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/CSAPP/os/assemble/%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98%E6%80%8E%E4%B9%88%E8%A2%AB%E5%BC%95%E5%AF%BC%E5%90%AF%E5%8A%A8%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          固态硬盘怎么被引导启动？
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:15" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:15+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/CSAPP/" itemprop="url" rel="index"><span itemprop="name">CSAPP</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>固态硬盘没有磁头磁盘，那BIOS怎么启动引导程序？</p>
+<p>2023/8/16 22:29:30</p>
+<p>你提到的是一个很好的问题。固态硬盘（SSD）和传统的机械硬盘（HDD）相比，确实没有物理磁头。然而，BIOS并不依赖于磁头来引导启动程序。</p>
+<p>在 BIOS 引导过程中，它的主要任务是查找可引导设备上的引导记录（boot
+record），这是一个特殊的扇区，包含了引导加载器（boot
+loader）的代码。对于固态硬盘，BIOS会按照预先设定的启动顺序检查每个可引导设备，例如硬盘、光驱或USB设备。</p>
+<p>当BIOS发现一个可引导设备时，它会读取设备的引导记录并将控制权交给引导加载器。引导加载器进而负责加载操作系统并启动计算机。</p>
+<p>对于固态硬盘，BIOS和引导加载器的工作方式与传统硬盘是相同的，只是存储介质的物理结构不同。固态硬盘使用闪存芯片进行数据存储，而不是用磁道和磁头来读取数据。</p>
+<p>因此，尽管固态硬盘没有磁头，但BIOS仍然可以通过读取固态硬盘上的引导记录来启动引导程序，从而启动操作系统。</p>
+<p>2023/8/16 22:32:09</p>
+<p>怎么样才算是一个可引导设备？它的定义是什么？</p>
+<p>2023/8/16 22:32:44</p>
+<p>一个可引导设备是满足以下条件的设备：</p>
+<ol type="1">
+<li><p>设备包含引导记录（boot
+record）：可引导设备上的第一个扇区需要包含引导记录，它是引导加载器（boot
+loader）的入口点。引导记录通常由引导加载器的代码和相关的引导参数组成。</p></li>
+<li><p>引导记录的合法性：引导记录需要符合特定的格式和标准，以便被BIOS或UEFI识别。这些标准可能因不同的操作系统和引导加载器而异，例如MBR（Master
+Boot Record）或GPT（GUID Partition Table）等。</p></li>
+<li><p>设备在BIOS或UEFI的引导顺序中：可引导设备应该在计算机的BIOS或UEFI的引导设备列表中，并且设置为优先级高于其他设备，如硬盘、光驱或USB设备。</p></li>
+<li><p>操作系统的安装：可引导设备必须安装了支持启动的操作系统。引导加载器负责加载操作系统的内核并启动系统。</p></li>
+</ol>
+<p>当满足以上条件时，设备被认为是一个可引导设备，可以由BIOS或UEFI通过读取引导记录来启动引导加载器。引导加载器进而加载操作系统并引导计算机启动。</p>
+<p>需要注意的是，在传统的BIOS环境下，引导设备通常是指硬盘、光驱或USB设备等物理设备。而在新的UEFI环境下，UEFI固件更加灵活，可以直接从文件系统中的EFI启动程序（如EFI文件）引导操作系统，因此可引导设备的概念也略有不同。</p>
+<p>2023/8/16 22:32:56</p>
+<p>UEFI是新一代BIOS的替代吗？</p>
+<p>2023/8/16 22:33:31</p>
+<p>是的，UEFI（统一的扩展固件接口）被视为传统BIOS的替代技术，它是新一代的固件标准。UEFI的设计目标是取代传统BIOS，并提供更高级、更现代化的功能和特性。</p>
+<p>与传统BIOS相比，UEFI具有以下几个主要优势：</p>
+<ol type="1">
+<li><p>引导方式：UEFI支持从文件系统直接引导操作系统，而不需要依赖于引导记录和分区表，这使得引导过程更加灵活和可靠。</p></li>
+<li><p>容量限制：传统BIOS通常面临着引导磁盘容量的限制，例如2TB。而UEFI可以克服这些限制，支持更大容量的硬盘。</p></li>
+<li><p>界面和图形能力：UEFI提供了更先进、更友好的图形界面，使用户能够轻松地进行配置和设置。</p></li>
+<li><p>安全性：UEFI引入了安全启动（Secure
+Boot）机制，通过验证引导加载器和操作系统的签名，防止恶意软件的植入和启动。</p></li>
+<li><p>扩展性：UEFI提供了更强大的扩展性，允许厂商为其添加更多的功能和驱动程序。</p></li>
+</ol>
+<p>尽管UEFI已经成为较新计算机中的标准，但仍然存在一些老旧的计算机和设备仍在使用传统BIOS。然而，UEFI相较于传统BIOS具有更多的优势，被视为更先进的固件接口技术，并逐渐在计算机行业中得到广泛采用。</p>
+<p>固态硬盘也有扇区的概念吗？</p>
+<p>2023/8/16 22:39:46</p>
+<p>是的，固态硬盘（SSD）在逻辑层面上仍然使用扇区的概念。扇区是存储数据的最小单位，也是文件系统和操作系统进行数据读写的基本单元。</p>
+<p>然而，与传统机械硬盘（HDD）不同，固态硬盘在物理层面上并不是由旋转的可读写磁盘组成的。固态硬盘使用了非易失性闪存存储器作为存储介质，其中的数据是以电子状态的方式进行存储和访问的。</p>
+<p>在固态硬盘中，扇区的概念被称为“逻辑块”（Logical
+Block），每个逻辑块通常具有相同的大小，通常为512字节或4KB。逻辑块是固态硬盘进行数据读写操作的最小单位。</p>
+<p>虽然固态硬盘没有磁盘旋转和寻道的概念，但为了与传统的存储系统和操作系统兼容，固态硬盘在逻辑层面上仍然将数据划分为逻辑块（扇区）。这样可以更好地实现数据的管理、读写和兼容性。</p>
+<p>2023/8/16 22:43:44</p>
+<p>如果一块硬盘上有多个系统，那引导记录都在第一个扇区吗？</p>
+<p>2023/8/16 22:44:09</p>
+<p>多个系统共存的情况下，每个系统的引导记录通常会单独存放在各自分区的引导扇区中，而不是全部都集中在硬盘的第一个扇区。</p>
+<p>通常情况下，在分区表（如MBR或GPT）中会记录每个分区的起始位置和大小信息，并指定每个分区的文件系统类型。每个分区都有自己的引导扇区，其中包含了该分区的引导记录和相关的引导加载器。</p>
+<p>当计算机启动时，BIOS或UEFI会读取分区表，并根据设定的引导顺序选择相应的分区进行引导。然后，引导加载器从所选分区的引导扇区中加载操作系统的内核并启动系统。</p>
+<p>因此，每个系统的引导记录通常是分散存放在各自分区的引导扇区中，以便实现对多个系统的独立引导和管理。</p>
+<p>2023/8/16 22:44:16</p>
+<p>那么分区表在第一个扇区吗？</p>
+<p>2023/8/16 22:44:46</p>
+<p>是的，在传统的主引导记录（MBR）方案中，分区表位于硬盘的第一个扇区（扇区编号为0），也被称为MBR扇区或主引导扇区。这个扇区的大小通常为512字节。</p>
+<p>MBR记录了硬盘的分区信息，包括分区的起始位置、大小、文件系统类型等。同时，MBR扇区还包含了引导代码（bootloader），这段代码负责加载操作系统的引导加载器（例如GRUB或NTLDR）。</p>
+<p>在引导过程中，计算机的BIOS或UEFI会读取MBR扇区中的分区表，并根据分区表中设置的引导标志来确定要引导的分区。然后，引导加载器会从相应的分区的引导扇区中加载操作系统内核并启动系统。</p>
+<p>需要注意的是，随着UEFI替代传统BIOS，新的分区方案GPT（GUID分区表）也逐渐取代了MBR。在GPT方案中，分区表存储在硬盘的较早扇区，通常是1号扇区（LBA
+1），而不是硬盘的第一个扇区。这种变化是为了避免与保护MBR和分区表的主引导记录（MBR扇区）冲突。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/CSAPP/" rel="tag"># CSAPP</a>
+              <a href="/blog/tags/os/" rel="tag"># os</a>
+              <a href="/blog/tags/assemble/" rel="tag"># assemble</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/CSAPP/os/assemble/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F%E7%94%A8%E5%8D%95%E5%BC%95%E5%8F%B7%E8%BF%98%E6%98%AF%E5%8F%8C%E5%BC%95%E5%8F%B7%EF%BC%9F/" rel="prev" title="字符串常量用单引号还是双引号？">
+      <i class="fa fa-chevron-left"></i> 字符串常量用单引号还是双引号？
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/CSAPP/os/assemble/%E5%86%99%E6%B1%87%E7%BC%96%E4%BB%A3%E7%A0%81%E6%97%B6%E6%B3%A8%E6%84%8F%E7%AB%8B%E5%8D%B3%E6%95%B0%E5%90%8E%E7%BC%80/" rel="next" title="写汇编代码时注意立即数后缀">
+      写汇编代码时注意立即数后缀 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>

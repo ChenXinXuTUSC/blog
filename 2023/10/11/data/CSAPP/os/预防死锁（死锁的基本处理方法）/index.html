@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="预防死锁（死锁的基本处理方法）">
+<meta property="og:url" content="http://example.com/2023/10/11/data/CSAPP/os/%E9%A2%84%E9%98%B2%E6%AD%BB%E9%94%81%EF%BC%88%E6%AD%BB%E9%94%81%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95%EF%BC%89/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:16.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:16.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="CSAPP">
+<meta property="article:tag" content="os">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/CSAPP/os/%E9%A2%84%E9%98%B2%E6%AD%BB%E9%94%81%EF%BC%88%E6%AD%BB%E9%94%81%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>预防死锁（死锁的基本处理方法） | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/CSAPP/os/%E9%A2%84%E9%98%B2%E6%AD%BB%E9%94%81%EF%BC%88%E6%AD%BB%E9%94%81%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          预防死锁（死锁的基本处理方法）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:16" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:16+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/CSAPP/" itemprop="url" rel="index"><span itemprop="name">CSAPP</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="处理死锁的基本方法">处理死锁的基本方法</h2>
+<p>目前，处理死锁的方法可归结为以下四种：</p>
+<h3 id="预防死锁">1 预防死锁</h3>
+<p>这是一种较为简单和直观的事先预防的方法。该方法是通过设置某些限制条件，去破坏产生死锁的四个必要条件中的一个或几个条件，来预防发生死锁。预防死锁是一种较易实现的方法，已被广泛使用。但由于所施加的限制条件往往太严格，因而可能导致系统资源利用率和系统吞吐量降低。</p>
+<h3 id="避免死锁">2 避免死锁</h3>
+<p>该方法同样是属于事先预防策略，但它并不需要事先采取各种限制措施去破坏产生死锁的四个必要条件，而是在资源的动态分配过程中，用某种方法去防止系统进入不安全状态，从而避免发生死锁。这种方法只需事先施加较弱的限制条件，便可获得较高的资源利用率及系统吞吐量，但在实现上有一定的难度。目前在较完善的系统中常用此方法来避免发生死锁。</p>
+<h3 id="检测死锁">3 检测死锁</h3>
+<p>这种方法并不需要事先采取任何限制性措施，也不必检查系统是否已经进入不安全区，而是允许系统在运行过程中发生死锁。但可通过系统所设置的检测机构，及时的检测出死锁的发生，并精确的确定与死锁有关的进程和资源；然后采取适当措施从系统中将已发生的死锁清除掉。</p>
+<h3 id="解除死锁">4  解除死锁</h3>
+<p>这是与检测死锁相配套的一种措施。当检测到系统中已经发生死锁时，将进程从死锁状态中解脱出来。常用的方法是撤销或挂起一些进程，以便回收一些资源，再将这些资源分配给已经处于阻塞状态的进程，使之转为就绪态，以继续运行。死锁的检测和解除措施有可能使系统获得较好的资源利用率和吞吐量，但是实现上难度也最大。</p>
+<p>预防死锁的基本方法</p>
+<p>预防死锁和避免死锁这两种方法实质上都是通过施加某些限制条件，来预防发生死锁。两者的主要差别在于：为预防死锁所施加的限制条件比较严格，这往往会影响进程的并发执行；而为避免死锁所加的限</p>
+<p>制条件则比较宽松，这给进程的运行提供了较宽松的环境，有利于进程的并发。</p>
+<h2 id="一预防死锁">一、预防死锁</h2>
+<p>预防死锁的方法是使四个必要条件中的第2、3、4个条件之一不能成立，来避免发生死锁。至于必要条</p>
+<p>件1，因为它是由设备的固有特性所决定的，不仅不能改变，还应加以保证。</p>
+<h3 id="摒弃请求和保持条件">1）摒弃“请求和保持”条件</h3>
+<p>在采用这种方法时，系统规定所有进程在开始运行之前，都必须一次性的申请其在整个运行过程所需的全部资源。此时，若系统有足够的资源分配给某进程，便可把其需要的所有资源分配给进程，这样，该进程在整个运行期间便不会再提出资源要求，从而摒弃了请求条件。但在分配资源时，只要有一种资源不能满足某进程的要求，即使其它所需各资源都空闲，也不分配给该进程，而让该进程等待。由于在该进程的等待期间，它并未占用任何资源，因而也摒弃了保持条件，从而避免发生死锁。</p>
+<p>这种方法的缺点是：首先表现为资源被严重浪费，因为一个进程是一次性地获得其整个运行过程中所需的全部资源的，且独占资源，其中可能有些资源很少用，甚至在整个运行期间都未使用，这就严重的恶化了系统资源的利用率；其次是使进程延迟运行，仅当进程在获得了其所需的全部资源后，才能开始运行，但可能因有些资源已长期被其它进程占用而使等待该资源的进程迟迟不能运行。</p>
+<h3 id="摒弃不可剥夺条件">2）摒弃“不可剥夺”条件</h3>
+<p>在采用这种方法时系统规定，进程是逐个地提出对资源的要求的。当一个已经保持了某些资源的进程，再提出新的资源请求而不能立即满足时，必须释放它已经保持了的所有资源，待以后需要时再重新申请。这意味着某一进程已经占有的资源，在运行过程中会被占时释放掉，也可认为是被剥夺了，从而摒弃了“不可剥夺”条件。</p>
+<h3 id="摒弃环路等待条件">3）摒弃“环路等待”条件</h3>
+<p>这种方法中规定，系统将所有资源按类型进行线性排队，并赋予不同的序号。例如，令输入机的序号为1，打印机的序号为2，磁带机为3，磁盘为4.所有进程对资源的请求必须严格按照资源序号递增的次序</p>
+<p>提出，这样，在所形成的资源分配图中，不可能再出现环路，因而摒弃了“环路等待”条件。</p>
+<h2 id="二系统安全状态">二、系统安全状态</h2>
+<p>在该方法中把系统的状态分为安全状态和不安全状态，只要能使系统始终处于安全状态，便可避免发生</p>
+<p>死锁。</p>
+<h3 id="安全状态">1.安全状态</h3>
+<p>在避免死锁的方法中，允许进程动态的申请资源，但系统在进行资源分配之前，应先计算此次资源分配</p>
+<p>的安全性。若此次分配不会导致系统进入不安全状态，则将资源分配给进程，否则，令进程等待。</p>
+<p>所谓安全状态，是指系统能按某种进程顺序（P1,P2,……,Pn）（称&lt;“P1,P2,…,Pn&gt;序列为安全序列），来为每个进程Pi分配其所需资源，直至满足每个进程对资源的最大需求，使每个进程都可以顺</p>
+<p>利完成。如果系统无法找到这样一个安全序列，则称系统处于不安全状态。</p>
+<p>虽然并非所有的不安全状态都必然会转为死锁状态，但当系统进入不安全状态后，便有可能进而进入死锁状态；反之，只要系统处于安全状态，系统便可避免进入死锁状态。因此，避免死锁的实质在于：系</p>
+<p>统在进行资源分配时，如何使系统不进入不安全状态。</p>
+<p>2.安全状态之例</p>
+<p>假定系统中有三个进程P1、P2和P3，共有12台磁带机。进程P1总共要求10台磁带机，P2和P3分别要求4台和9台。假设在T0时刻，进程P1、P2和P3已分别获得5台、2台和2台磁带机，尚有3台空闲未分配，</p>
+<p>如下表所示：</p>
+<figure>
+<img
+src="data:image/png;base64,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"
+alt="这里写图片描述" />
+<figcaption aria-hidden="true">这里写图片描述</figcaption>
+</figure>
+<p>经分析发现，在T0时刻系统是安全的，因为这时存在一个安全序列《P2,P1,P3》，即只要系统按此进程序列分配资源，就能使每个进程都顺利完成。例如，将剩余的磁带机取2台分配给P2，使之继续运行，待P2完成，便可释放出4台磁带机，于是可用资源增至5台；以后再将这些全部分配给进程P1，使之运行，待P1完成后，将释放出10台磁带机，P3便能获得足够的资源，从而使P1、P2、P3每个进程都能顺利完成。</p>
+<p>3.由安全状态向不安全状态的转换。</p>
+<p>如果不按照安全序列分配资源，则系统可能会由安全状态进入不安全状态。例如在T0时刻以后，P3又请求1台磁带机，若此时系统把剩余3台中的1台分配给P3，则系统便进入不安全状态。因为此时无法再找到一个安全序列，例如，把剩余的2台分配给P2，这样，在P2完成后只能释放出4台，既不能满足P1尚需5台的要求，也不能满足P3尚需6台的需求，致使它们都无法推进前行，彼此都在等待对方释放资源，即陷入僵局，结果导致死锁。类似地，如果我们将剩余的两台磁带机先分配给P1或P3，也同样都无法使它们推进完成，因此，从给P3分配了第三台磁带机开始，系统便又进入了不安全状态。由此可见，在P3请求资源时，尽管系统中尚有可用的磁带机，但却不能分配给它，必须让P3一直等待到P1和P2完成，释放出资源后再将足够的资源分配给P3，它才能顺利完成。</p>
+<p>三、利用银行家算法避免死锁</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/CSAPP/" rel="tag"># CSAPP</a>
+              <a href="/blog/tags/os/" rel="tag"># os</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/CSAPP/os/assemble/%E6%96%B9%E6%8B%AC%E5%8F%B7%E8%A7%A3%E5%BC%95%E7%94%A8%E7%9A%84%E6%97%B6%E5%80%99%E4%BC%9A%E8%A7%A3%E9%87%8A%E5%A4%9A%E5%B0%91%E5%AD%97%E8%8A%82%E4%BD%9C%E4%B8%BA%E6%95%B0%E5%80%BC%EF%BC%9F/" rel="prev" title="方括号解引用的时候会解释多少字节作为数值？">
+      <i class="fa fa-chevron-left"></i> 方括号解引用的时候会解释多少字节作为数值？
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/CSAPP/os/%E8%BF%9B%E7%A8%8B%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4/" rel="next" title="进程地址空间">
+      进程地址空间 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E6%AD%BB%E9%94%81%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%96%B9%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">处理死锁的基本方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%84%E9%98%B2%E6%AD%BB%E9%94%81"><span class="nav-number">1.1.</span> <span class="nav-text">1 预防死锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%BF%E5%85%8D%E6%AD%BB%E9%94%81"><span class="nav-number">1.2.</span> <span class="nav-text">2 避免死锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%B5%8B%E6%AD%BB%E9%94%81"><span class="nav-number">1.3.</span> <span class="nav-text">3 检测死锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%99%A4%E6%AD%BB%E9%94%81"><span class="nav-number">1.4.</span> <span class="nav-text">4  解除死锁</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E9%A2%84%E9%98%B2%E6%AD%BB%E9%94%81"><span class="nav-number">2.</span> <span class="nav-text">一、预防死锁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%92%E5%BC%83%E8%AF%B7%E6%B1%82%E5%92%8C%E4%BF%9D%E6%8C%81%E6%9D%A1%E4%BB%B6"><span class="nav-number">2.1.</span> <span class="nav-text">1）摒弃“请求和保持”条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%92%E5%BC%83%E4%B8%8D%E5%8F%AF%E5%89%A5%E5%A4%BA%E6%9D%A1%E4%BB%B6"><span class="nav-number">2.2.</span> <span class="nav-text">2）摒弃“不可剥夺”条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%92%E5%BC%83%E7%8E%AF%E8%B7%AF%E7%AD%89%E5%BE%85%E6%9D%A1%E4%BB%B6"><span class="nav-number">2.3.</span> <span class="nav-text">3）摒弃“环路等待”条件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8%E7%8A%B6%E6%80%81"><span class="nav-number">3.</span> <span class="nav-text">二、系统安全状态</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E7%8A%B6%E6%80%81"><span class="nav-number">3.1.</span> <span class="nav-text">1.安全状态</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="字节面试体验很棒！">
+<meta property="og:url" content="http://example.com/2023/10/11/data/interview/%E5%B0%8F%E6%9E%97coding/%E5%AD%97%E8%8A%82%E9%9D%A2%E8%AF%95%E4%BD%93%E9%AA%8C%E5%BE%88%E6%A3%92%EF%BC%81/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:28.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:28.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="interview">
+<meta property="article:tag" content="小林coding">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/interview/%E5%B0%8F%E6%9E%97coding/%E5%AD%97%E8%8A%82%E9%9D%A2%E8%AF%95%E4%BD%93%E9%AA%8C%E5%BE%88%E6%A3%92%EF%BC%81/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>字节面试体验很棒！ | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/interview/%E5%B0%8F%E6%9E%97coding/%E5%AD%97%E8%8A%82%E9%9D%A2%E8%AF%95%E4%BD%93%E9%AA%8C%E5%BE%88%E6%A3%92%EF%BC%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          字节面试体验很棒！
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:28" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:28+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/interview/" itemprop="url" rel="index"><span itemprop="name">interview</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>今天分享秋招的字节、快手 Java
+后端面经，我筛选了Java+MySQL+Redis+MQ+网络+操作系统共性的面试题，排除了项目和实习经历的问题，同学反馈字节面试体验很好，遇到不会的，面试官会一步一步引导，还会详细解释下，返回环节还介绍了部门情况。</p>
+<p>整体难度不算太难，还算比较基础，很多都是高频面试题，可以收藏起来，反复复习。</p>
+<h2 id="网络">网络</h2>
+<h3
+id="从输入域名到浏览器看见页面经历了什么过程">从输入域名到浏览器看见页面经历了什么过程？</h3>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZfW5jtMU7dzOUhL6avJSwsulOMWcGG9YfxxiaT1IOzxLsn4p006zswayeApBCb8TRANCQ3qAvmYMvA/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<p>简单的网络模型</p>
+<ul>
+<li><p>解析URL：分析 URL
+所需要使用的传输协议和请求的资源路径。如果输入的 URL
+中的协议或者主机名不合法，将会把地址栏中输入的内容传递给搜索引擎。如果没有问题，浏览器会检查
+URL
+中是否出现了非法字符，则对非法字符进行转义后在进行下一过程。</p></li>
+<li><p>缓存判断：浏览器会判断所请求的资源是否在缓存里，如果请求的资源在缓存里且没有失效，那么就直接使用，否则向服务器发起新的请求。</p></li>
+<li><p>DNS解析：如果资源不在本地缓存，首先需要进行DNS解析。浏览器会向本地DNS服务器发送域名解析请求，本地DNS服务器会逐级查询，最终找到对应的IP地址。</p></li>
+<li><p>获取MAC地址：当浏览器得到 IP 地址后，数据传输还需要知道目的主机
+MAC 地址，因为应用层下发数据给传输层，TCP
+协议会指定源端口号和目的端口号，然后下发给网络层。网络层会将本机地址作为源地址，获取的
+IP
+地址作为目的地址。然后将下发给数据链路层，数据链路层的发送需要加入通信双方的
+MAC 地址，本机的 MAC 地址作为源 MAC 地址，目的 MAC
+地址需要分情况处理。通过将 IP
+地址与本机的子网掩码相结合，可以判断是否与请求主机在同一个子网里，如果在同一个子网里，可以使用
+APR 协议获取到目的主机的 MAC
+地址，如果不在一个子网里，那么请求应该转发给网关，由它代为转发，此时同样可以通过
+ARP 协议来获取网关的 MAC 地址，此时目的主机的 MAC
+地址应该为网关的地址。</p></li>
+<li><p>建立TCP连接：主机将使用目标 IP地址和目标MAC地址发送一个TCP
+SYN包，请求建立一个TCP连接，然后交给路由器转发，等路由器转到目标服务器后，服务器回复一个SYN-ACK包，确认连接请求。然后，主机发送一个ACK包，确认已收到服务器的确认，然后
+TCP 连接建立完成。</p></li>
+<li><p>HTTPS 的 TLS 四次握手：如果使用的是 HTTPS 协议，在通信前还存在
+TLS 的四次握手。</p></li>
+<li><p>发送HTTP请求：连接建立后，浏览器会向服务器发送HTTP请求。请求中包含了用户需要获取的资源的信息，例如网页的URL、请求方法（GET、POST等）等。</p></li>
+<li><p>服务器处理请求并返回响应：服务器收到请求后，会根据请求的内容进行相应的处理。例如，如果是请求网页，服务器会读取相应的网页文件，并生成HTTP响应。</p></li>
+</ul>
+<h3
+id="tcp的三次握手过程三次握手的原因是什么">TCP的三次握手过程？三次握手的原因是什么？</h3>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZfW5jtMU7dzOUhL6avJSwsuORlbSH2ktOhYeUicGObyt1TJ2V1RoibSybI3xBjeoqOjmaNRHpNbiaDJw/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<p>在这里插入图片描述</p>
+<ul>
+<li><p>第一次握手（SYN）：客户端向服务器发送一个带有SYN标志的数据包，请求建立连接。客户端会选择一个随机的初始序列号（ISN）作为起始序号。</p></li>
+<li><p>第二次握手（SYN+ACK）：服务器收到客户端的请求后，会发送一个带有SYN和ACK（确认）标志的数据包作为响应。服务器也会选择一个随机的初始序列号，并将客户端的初始序列号加1作为确认号。同时，服务器也表示自己已经收到了客户端的请求。</p></li>
+<li><p>第三次握手（ACK）：客户端收到服务器的响应后，会发送一个带有ACK标志的数据包作为确认。客户端会将服务器的初始序列号加1作为确认号，并向服务器表示自己已经收到了服务器的响应。</p></li>
+</ul>
+<p>完成了这三次握手后，TCP连接就建立起来了，双方可以开始进行数据的传输。</p>
+<p>三次握手的目的是确保双方都能够收到对方的请求和确认，并且双方都同意建立连接。这样可以防止因为网络延迟或丢包等问题导致连接建立失败或不稳定。同时，三次握手也能够防止已经失效的连接请求报文段在网络中重新出现，避免了资源的浪费。</p>
+<h3 id="tcp为什么可靠">TCP为什么可靠?</h3>
+<ul>
+<li><p>序列号与确认机制：TCP将每个数据包分配一个唯一的序列号，并且接收方会发送确认消息来确认已经接收到的数据。发送方会根据接收到的确认消息判断是否需要重新发送丢失的数据包。</p></li>
+<li><p>数据校验和：TCP使用校验和来验证数据在传输过程中是否发生了损坏。接收方会计算校验和并与发送方发送的校验和进行比较，如果不一致，则说明数据包发生了损坏，需要重新发送。</p></li>
+<li><p>滑动窗口机制：TCP使用滑动窗口来控制发送方发送数据的速度和接收方接收数据的速度，以避免因发送速度过快或接收速度过慢而导致的数据丢失或堵塞。</p></li>
+<li><p>重传机制：如果发送方没有收到接收方的确认消息，或者接收方收到的数据包校验和不一致，发送方会重新发送数据包，确保数据的可靠传输。</p></li>
+<li><p>拥塞控制：TCP具有拥塞控制机制，可以根据网络的拥塞情况来调整发送数据的速率，避免网络拥塞导致的数据丢失和延迟。</p></li>
+</ul>
+<h3 id="http状态码有哪些">HTTP状态码有哪些？</h3>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZfW5jtMU7dzOUhL6avJSwsuqCQCA3iayya7LwUubvNKePCkVWI3Xpg6FwwnZDicustXrrA9pcYv6ia4Q/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<p>五大类 HTTP 状态码</p>
+<p>1xx：信息性状态码，表示服务器已接收了客户端请求，客户端可继续发送请求。</p>
+<ul>
+<li><p>100 Continue</p></li>
+<li><p>101 Switching Protocols</p></li>
+<li><p>2xx：成功状态码，表示服务器已成功接收到请求并进行处理。</p></li>
+</ul>
+<p>200 OK 表示客户端请求成功</p>
+<ul>
+<li><p>204 No Content 成功，但不返回任何实体的主体部分</p></li>
+<li><p>206 Partial Content 成功执行了一个范围（Range）请求</p></li>
+</ul>
+<p>3xx：重定向状态码，表示服务器要求客户端重定向。</p>
+<ul>
+<li><p>301 Moved Permanently
+永久性重定向，响应报文的Location首部应该有该资源的新URL</p></li>
+<li><p>302 Found
+临时性重定向，响应报文的Location首部给出的URL用来临时定位资源</p></li>
+<li><p>303 See Other
+请求的资源存在着另一个URI，客户端应使用GET方法定向获取请求的资源</p></li>
+<li><p>304 Not Modified
+服务器内容没有更新，可以直接读取浏览器缓存</p></li>
+<li><p>307 Temporary Redirect 临时重定向。与302
+Found含义一样。302禁止POST变换为GET，但实际使用时并不一定，307则更多浏览器可能会遵循这一标准，但也依赖于浏览器具体实现</p></li>
+</ul>
+<p>4xx：客户端错误状态码，表示客户端的请求有非法内容。</p>
+<ul>
+<li><p>400 Bad Request
+表示客户端请求有语法错误，不能被服务器所理解</p></li>
+<li><p>401 Unauthonzed 表示请求未经授权，该状态代码必须与
+WWW-Authenticate 报头域一起使用</p></li>
+<li><p>403 Forbidden
+表示服务器收到请求，但是拒绝提供服务，通常会在响应正文中给出不提供服务的原因</p></li>
+<li><p>404 Not Found 请求的资源不存在，例如，输入了错误的URL</p></li>
+</ul>
+<p>5xx：服务器错误状态码，表示服务器未能正常处理客户端的请求而出现意外错误。</p>
+<ul>
+<li><p>500 Internel Server Error
+表示服务器发生不可预期的错误，导致无法完成客户端的请求</p></li>
+<li><p>503 Service Unavailable
+表示服务器当前不能够处理客户端的请求，在一段时间之后，服务器可能会恢复正常</p></li>
+</ul>
+<h2 id="操作系统">操作系统</h2>
+<h3 id="进程间通信有哪些">进程间通信有哪些？</h3>
+<ul>
+<li><p>管道（Pipe）：管道是一种半双工的通信方式，可以在具有亲缘关系的进程之间进行通信。它可以分为匿名管道和命名管道。匿名管道只能在具有共同祖先的进程之间使用，而命名管道可以在不具有亲缘关系的进程之间使用。</p></li>
+<li><p>优点：简单易用，无需额外的系统调用和复杂的设置。</p></li>
+<li><p>缺点：只能在具有亲缘关系的进程之间进行通信，且只能实现单向通信。</p></li>
+<li><p>信号（Signal）：信号是一种异步的通信方式，用于通知进程发生了某种事件。一个进程可以向另一个进程发送信号，接收信号的进程可以选择采取相应的行动。</p></li>
+<li><p>优点：简单、快速，适用于简单的通信需求。</p></li>
+<li><p>缺点：信号的发送和接收是异步的，无法传递大量数据，且不支持双向通信。</p></li>
+<li><p>共享内存（Shared
+Memory）：共享内存是一种高效的通信方式，多个进程可以将同一块内存空间映射到各自的地址空间中，从而实现共享数据。</p></li>
+<li><p>优点：传输效率高，适用于大量数据的共享。</p></li>
+<li><p>缺点：需要额外的同步机制来保证数据的一致性和互斥访问，容易造成数据竞争和死锁。</p></li>
+<li><p>信号量（Semaphore）：信号量是一种用于进程间同步的机制，可以用来保护共享资源的互斥访问。</p></li>
+<li><p>优点：可以用于进程间的同步和互斥。</p></li>
+<li><p>缺点：只提供了同步和互斥的功能，无法传递大量数据。</p></li>
+<li><p>消息队列：消息队列是一种消息传递的机制，可以在不同进程之间传递特定格式的消息。</p></li>
+<li><p>优点：支持多对多的进程通信，每个消息都有特定的格式。</p></li>
+<li><p>缺点：消息的发送和接收是同步的，且不支持实时性要求较高的通信。</p></li>
+<li><p>套接字（Socket）：套接字是一种通用的进程间通信机制，可以在不同主机上的进程之间进行通信。</p></li>
+<li><p>优点：支持网络通信，可以在不同主机上的进程之间进行通信。</p></li>
+<li><p>缺点：相对于其他IPC方式，套接字的使用和编程复杂度较高。</p></li>
+</ul>
+<h3 id="电脑-4gb内存我申请-5gb内存可以吗">电脑 4GB内存，我申请
+5GB内存可以吗？</h3>
+<p>应用程序通过 malloc
+函数申请内存的时候，实际上申请的是虚拟内存，此时并不会分配物理内存。</p>
+<p>虚拟内存的最大值首先操作系统的位数，32 位操作系统和 64
+位操作系统的虚拟地址空间大小是不同的，在 Linux
+操作系统中，虚拟地址空间的内部又被分为<strong>内核空间和用户空间</strong>两部分，如下所示：</p>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZfW5jtMU7dzOUhL6avJSwsunpM5Uhl2SD3BOyiaGALicxJ7EbTNxzvf4t2DHWiaibnS67IicVPhbTyx5icQ/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<ul>
+<li><p><code>32</code> 位系统的内核空间占用 <code>1G</code>，位于最高处，剩下的 <code>3G</code> 是用户空间，所以<strong>在
+32 位操作系统场景下，执行malloc申请5G内存，会失败。</strong></p></li>
+<li><p><code>64</code> 位系统的内核空间和用户空间都是 <code>128T</code>，所以<strong>在
+64 位操作系统场景下，即使物理内存只有
+4G，但是还是可以申请5G虚拟内存，能申请成功。</strong></p></li>
+</ul>
+<h3
+id="申请成功之后在使用这5g内存时候会有问题吗">申请成功之后，在使用这5G内存时候会有问题吗？</h3>
+<p>会有问题，会发生 OOM 的错误，内存溢出。</p>
+<p>当应用程序读写了这块虚拟内存，CPU 就会去访问这个虚拟内存，
+这时会发现这个虚拟内存没有映射到物理内存， CPU
+就会产生<strong>缺页中断</strong>，进程会从用户态切换到内核态，并将缺页中断交给内核的
+Page Fault Handler （缺页中断函数）处理。</p>
+<p>缺页中断处理函数会看是否有空闲的物理内存：</p>
+<ul>
+<li><p>如果有，就直接分配物理内存，并建立虚拟内存与物理内存之间的映射关系。</p></li>
+<li><p>如果没有空闲的物理内存，那么内核就会开始进行的工作，如果回收内存工作结束后，空闲的物理内存仍然无法满足此次物理内存的申请，那么内核就会放最后的大招了触发
+OOM （Out of Memory）机制。</p></li>
+</ul>
+<h2 id="mysql">MySQL</h2>
+<h3 id="索引的底层是怎么实现的">索引的底层是怎么实现的？</h3>
+<p>MySQL 默认存储引擎是 InnoDB，InnoDB 默认是使用 B+树
+作为索引的数据结构。</p>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZfW5jtMU7dzOUhL6avJSwsuSePCPa98D1wzIMlus4zOD77jKuiaHNS5elp21Jktxxsapwcjqm81Uvw/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<p>主键索引 B+Tree</p>
+<h3 id="为什么用b树呢">为什么用B+树呢？</h3>
+<ul>
+<li><p>B+Tree vs 二叉树：对于有 N 个叶子节点的
+B+Tree，其搜索复杂度为<code>O(logdN)</code>，其中 d
+表示节点允许的最大子节点个数为 d 个。在实际的应用当中， d
+值是大于100的，这样就保证了，即使数据达到千万级别时，B+Tree
+的高度依然维持在 3~4 层左右，也就是说一次数据查询操作只需要做 3~4
+次的磁盘 I/O
+操作就能查询到目标数据。而二叉树的每个父节点的儿子节点个数只能是 2
+个，意味着其搜索复杂度为 <code>O(logN)</code>，这已经比 B+Tree
+高出不少，因此二叉树检索到目标数据所经历的磁盘 I/O 次数要更多。</p></li>
+<li><p>B+Tree vs Hash：Hash 在做等值查询的时候效率贼快，搜索复杂度为
+O(1)。但是 Hash 表不适合做范围查询，它更适合做等值的查询，这也是 B+Tree
+索引要比 Hash 表索引有着更广泛的适用场景的原因。</p></li>
+<li><p>B+Tree vs B Tree：B+Tree 只在叶子节点存储数据，而 B 树
+的非叶子节点也要存储数据，所以 B+Tree
+的单个节点的数据量更小，在相同的磁盘 I/O
+次数下，就能查询更多的节点。另外，B+Tree
+叶子节点采用的是双链表连接，适合 MySQL 中常见的基于范围的顺序查找，而 B
+树无法做到这一点。</p></li>
+</ul>
+<h3
+id="你是如何选择什么字段来做索引的">你是如何选择什么字段来做索引的？</h3>
+<ul>
+<li><p>字段有唯一性限制的，比如商品编码；</p></li>
+<li><p>经常用于 <code>WHERE</code> 查询条件的字段，这样能够提高整个表的查询速度，如果查询条件不是一个字段，可以建立联合索引。</p></li>
+<li><p>经常用于 <code>GROUP BY</code> 和 <code>ORDER BY</code> 的字段，这样在查询的时候就不需要再去做一次排序了，因为我们都已经知道了建立索引之后在
+B+Tree 中的记录都是排序好的。</p></li>
+</ul>
+<h3
+id="假如现在有三个普通索引abcsql查询where-a-xx-and-b-xx-and-c-xx会怎么样">假如现在有三个普通索引a，b，c，sql查询where
+a = xx and b = xx and c == xx会怎么样？</h3>
+<p>会进行索引合并，对多个索引分别进行条件扫描，然后将它们各自的结果进行合并。</p>
+<p>MySQL5.0之前，一个表一次只能使用一个索引，无法同时使用多个索引分别进行条件扫描。但是从5.1开始，引入了索引合并优化技术，对同一个表可以使用多个索引分别进行条件扫描。</p>
+<h3
+id="那如果不想索引合并呢怎么解决">那如果不想索引合并呢？怎么解决？</h3>
+<p>如果出现了索引合并，那么一般同时也意味着我们的索引建立得不太合理，因为索引合并
+是可以通过建立联合索引进行更一步优化的，减少索引扫描的次数。</p>
+<p>比如，建立联合索引（a, b,
+c），这条查询语句遵循最左匹配原则，所以三个字段都可以利用联合索引。</p>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZfW5jtMU7dzOUhL6avJSwsuwxc3G8lcNK1XDdIaJf1DF70V4W5tRgxLynUMyUXV6ibiafMQfYvFW8hg/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<h2 id="redis">Redis</h2>
+<h3 id="redis在项目中的应用">Redis在项目中的应用？</h3>
+<p>主要用做缓存，提升查询的性能，避免请求查询mysql。</p>
+<h3 id="redis过期淘汰策略有哪些">Redis过期淘汰策略有哪些？</h3>
+<p>Redis
+内存淘汰策略共有八种，这八种策略大体分为「不进行数据淘汰」和「进行数据淘汰」两类策略。</p>
+<p><em>1、不进行数据淘汰的策略</em></p>
+<p><strong>noeviction</strong>（Redis3.0之后，默认的内存淘汰策略）
+：它表示当运行内存超过最大设置内存时，不淘汰任何数据，这时如果有新的数据写入，会报错通知禁止写入，不淘汰任何数据，但是如果没用数据写入的话，只是单纯的查询或者删除操作的话，还是可以正常工作。</p>
+<p><em>2、进行数据淘汰的策略</em></p>
+<p>针对「进行数据淘汰」这一类策略，又可以细分为「在设置了过期时间的数据中进行淘汰」和「在所有数据范围内进行淘汰」这两类策略。</p>
+<p>在设置了过期时间的数据中进行淘汰：</p>
+<ul>
+<li><p><strong>volatile-random</strong>：随机淘汰设置了过期时间的任意键值；</p></li>
+<li><p><strong>volatile-ttl</strong>：优先淘汰更早过期的键值。</p></li>
+<li><p><strong>volatile-lru</strong>（Redis3.0
+之前，默认的内存淘汰策略）：淘汰所有设置了过期时间的键值中，最久未使用的键值；</p></li>
+<li><p><strong>volatile-lfu</strong>（Redis 4.0
+后新增的内存淘汰策略）：淘汰所有设置了过期时间的键值中，最少使用的键值；</p></li>
+</ul>
+<p>在所有数据范围内进行淘汰：</p>
+<ul>
+<li><p><strong>allkeys-random</strong>：随机淘汰任意键值;</p></li>
+<li><p><strong>allkeys-lru</strong>：淘汰整个键值中最久未使用的键值；</p></li>
+<li><p><strong>allkeys-lfu</strong>（Redis 4.0
+后新增的内存淘汰策略）：淘汰整个键值中最少使用的键值。</p></li>
+</ul>
+<h2 id="java">Java</h2>
+<h3 id="hashmap底层原理">HashMap底层原理</h3>
+<ul>
+<li><strong>数据结构</strong>：在 JDK 1.7 版本之前， HashMap
+数据结构是数组和链表，HashMap通过哈希算法将元素的键（Key）映射到数组中的槽位（Bucket）。如果多个键映射到同一个槽位，它们会以链表的形式存储在同一个槽位上，因为链表的查询时间是O(n)，所以冲突很严重，一个索引上的链表非常长，效率就很低了，所以在
+JDK
+1.8版本的时候做了优化，当一个链表的长度超过8的时候就转换数据结构，不再使用链表存储，而是使用红黑树，查找时使用红黑树，时间复杂度O（log
+n），可以提高查询性能，但是在数量较少时，即数量小于6时，会将红黑树转换回链表。</li>
+</ul>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZfW5jtMU7dzOUhL6avJSwsuZDX6iah5PhSzAx8UlmJNCQVdpnNnRqiauOojpKxcv8DATdmWJAq1NAXw/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<p>image-20200905223727298</p>
+<ul>
+<li><p><strong>插入键值对的put方法的区别</strong>：JDK
+1.8中会将节点插入到链表尾部，而1.7中是采用头插；</p></li>
+<li><p><strong>哈希算法</strong>：JDK
+1.7中的 <code>hash()</code> 扰动函数需要进行4次异或运算；而 JDK
+1.8中则是将 (<code>h = key.hashCode()) ^ (h &gt;&gt;&gt; 16</code>)
+的结果作为计算下标的hash值，只需要一次异或运算就可以让hashCode的高位和低位同时参与下标值的计算，更具有随机性，可以使元素分布更均匀；</p></li>
+</ul>
+<p><code>// JDK 1.7 hash 方法源码.   final int hash(Object k) &#123;       int h = hashSeed;       if (0 != h &amp;&amp; k instanceof String) &#123;           return sun.misc.Hashing.stringHash32((String) k);       &#125;          h ^= k.hashCode();          // This function ensures that hashCodes that differ only by       // constant multiples at each bit position have a bounded       // number of collisions (approximately 8 at default load factor).       h ^= (h &gt;&gt;&gt; 20) ^ (h &gt;&gt;&gt; 12);       return h ^ (h &gt;&gt;&gt; 7) ^ (h &gt;&gt;&gt; 4);   &#125;         // JDK 1.8 hash 方法源码.   static final int hash(Object key) &#123;         int h;         // key.hashCode()：返回散列值也就是hashcode         // ^：按位异或         // &gt;&gt;&gt;:无符号右移，忽略符号位，空位都以0补齐         return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);     &#125;</code></p>
+<h3 id="hashmap的扩容过程说一下">HashMap的扩容过程，说一下</h3>
+<p>hashMap默认的负载因子是0.75，即如果hashmap中的元素个数超过了总容量75%，则会触发扩容，扩容分为两个步骤：</p>
+<ul>
+<li><p>新的数组扩容 2 倍大小</p></li>
+<li><p>计算每个元素新的位置，然后迁移元素</p></li>
+</ul>
+<p>JDK 1.8 在扩容 2
+倍容量后，在迁移数据时，不需要重新计算元素的hash进行元素迁移，而是用原先位置key的hash值与旧数组的长度（oldCap）进行"与"操作。</p>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZfW5jtMU7dzOUhL6avJSwsuN8LeI7eY78KpmPwl83bpHa8KiaHhSjHvRxXLteiafdaliaFKJ9bTgmVzw/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<p>image-20231010173913953</p>
+<p>举一个例子，假设元素 e 存储在旧数据的桶位 i 中：</p>
+<ul>
+<li><p>如果(e.hash &amp; oldCap) == 0
+，那么当前元素的桶位置不变。</p></li>
+<li><p>如果(e.hash &amp; oldCap) ==
+1，那么桶的位置就是原位置+原数组长度（oldCap）</p></li>
+</ul>
+<blockquote>
+<p>为什么用 e.hash &amp; oldCap 计算新位置？</p>
+</blockquote>
+<p>首先我们要明确三点:</p>
+<ol type="1">
+<li><p>HashMap的数组大小一定是2的N次幂</p></li>
+<li><p>HashMap扩容时一般为增大一倍，即size = size * 2</p></li>
+<li><p>HashMap的索引计算方式为 hash(key) &amp; (size -
+1)，由1可知，size-1的二进制「低位都为1」</p></li>
+</ol>
+<p>我们假设 oldCap = 16, 即 2^4，16 - 1 = 15,
+二进制表示为 <code>0000 0000 0000 0000 0000 0000 0000 1111</code>，可见除了低4位,
+其他位置都是0，则 <code>(16-1) &amp; hash</code> 自然就是取hash值的低4位，我们假设它为 <code>abcd</code>（abcd
+各自的值可能是 0 或者 1）。</p>
+<p>当我们将oldCap扩大两倍后，
+新的index的位置就变成了 <code>(32-1) &amp; hash</code>, 其实就是取
+hash值的低5位.。那么对于同一个Node, 低5位的值无外乎下面两种情况:</p>
+<p><code>0abcd   1abcd</code></p>
+<p>其中, <code>0abcd</code>与原来的index值一致,
+而<code>1abcd</code> = <code>0abcd + 10000</code> = <code>0abcd + oldCap</code>（这里的oldCap是
+16，二进制数：10000 ）</p>
+<p>故虽然数组大小扩大了一倍，但是同一个<code>key</code>在新旧table中对应的index却存在一定联系：要么一致，要么相差一个 <code>oldCap</code>。</p>
+<p>而新旧index是否一致就体现在hash值的第4位(我们把最低为称作第0位),
+怎么拿到这一位的值呢, 只要:</p>
+<p><code>hash &amp; 0000 0000 0000 0000 0000 0000 0001 0000</code></p>
+<p>上式就等效于</p>
+<p><code>hash &amp; oldCap</code></p>
+<p>故得出结论:</p>
+<ul>
+<li><p>如果(e.hash &amp; oldCap) == 0
+，那么当前元素的桶位置不变。</p></li>
+<li><p>如果(e.hash &amp; oldCap) ==
+1，那么桶的位置就是原位置+原数组长度（oldCap）</p></li>
+</ul>
+<h3
+id="arraylist底层是怎么实现扩容的">ArrayList底层是怎么实现扩容的？</h3>
+<ul>
+<li><p>当创建ArrayList对象时，如果使用的是<strong>无参构造器</strong>，则初始elementData容量为0，第1次添加，则扩容elementData为10，如需要再次扩容，则扩容elementData:为1.5倍</p></li>
+<li><p>如果使用的是指定大小的构造器，则初始elementData容量为指定大小，如果需要扩容，则直接扩容elementData为1.5倍。</p></li>
+</ul>
+<h3 id="arraylist和linkedlist的区别">ArrayList和LinkedList的区别</h3>
+<ul>
+<li><p><strong>是否保证线程安全：</strong> <code>ArrayList</code> 和 <code>LinkedList</code> 都是不同步的，也就是不保证线程安全；</p></li>
+<li><p><strong>底层数据结构：</strong> <code>Arraylist</code> 底层使用的是 <strong><code>Object</code> 数组</strong>；<code>LinkedList</code> 底层使用的是 <strong>双向链表</strong> 数据结构（JDK1.6
+之前为循环链表，JDK1.7
+取消了循环。注意双向链表和双向循环链表的区别，下面有介绍到！）</p></li>
+<li><p><strong>插入和删除是否受元素位置的影响：</strong> ① <strong><code>ArrayList</code> 采用数组存储，所以插入和删除元素的时间复杂度受元素位置的影响。</strong> 比如：执行<code>add(E e)</code>方法的时候， <code>ArrayList</code> 会默认在将指定的元素追加到此列表的末尾，这种情况时间复杂度就是
+O(1)。但是如果要在指定位置 i
+插入和删除元素的话（<code>add(int index, E element)</code>）时间复杂度就为
+O(n-i)。因为在进行上述操作的时候集合中第 i 和第 i
+个元素之后的(n-i)个元素都要执行向后位/向前移一位的操作。② <strong><code>LinkedList</code> 采用链表存储，所以对于<code>add(E e)</code>方法的插入，删除元素时间复杂度不受元素位置的影响，近似
+O(1)，如果是要在指定位置<code>i</code>插入和删除元素的话（<code>(add(int index, E element)</code>）
+时间复杂度近似为<code>o(n))</code>因为需要先移动到指定位置再插入。</strong></p></li>
+<li><p><strong>是否支持快速随机访问：</strong> <code>LinkedList</code> 不支持高效的随机元素访问，而 <code>ArrayList</code> 支持。快速随机访问就是通过元素的序号快速获取元素对象(对应于<code>get(int index)</code>方法)。</p></li>
+<li><p><strong>内存空间占用：</strong> <code>ArrayList</code> 的空
+间浪费主要体现在在 list
+列表的结尾会预留一定的容量空间，而 <code>LinkedList</code> 的空间花费则体现在它的每一个元素都需要消耗比 <code>ArrayList</code> 更多的空间（因为要存放直接后继和直接前驱以及数据）。</p></li>
+</ul>
+<h2 id="消息队列">消息队列</h2>
+<h3 id="mq如何防止消息不丢失">MQ如何防止消息不丢失？</h3>
+<p>使用一个消息队列，其实就分为三大块：<strong>生产者、中间件、消费者</strong>，所以要保证消息就是保证三个环节都不能丢失数据。</p>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZfW5jtMU7dzOUhL6avJSwsu2mjicVf2ZjCmpS93xWFUBk07GK7hqvIdMawwKV5YjXF69jnAPyuceKQ/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<p>img</p>
+<ul>
+<li><p>消息生产阶段：生产者会不会丢消息，取决于生产者对于异常情况的处理是否合理。从消息被生产出来，然后提交给
+MQ 的过程中，只要能正常收到 （ MQ 中间件） 的 ack
+确认响应，就表示发送成功，所以只要处理好返回值和异常，如果返回异常则进行消息重发，那么这个阶段是不会出现消息丢失的。</p></li>
+<li><p>消息存储阶段：RabbitMQ 或 Kafka
+这类专业的队列中间件，在使用时是部署一个集群，生产者在发布消息时，队列中间件通常会写「多个节点」，也就是有多个副本，这样一来，即便其中一个节点挂了，也能保证集群的数据不丢失。</p></li>
+<li><p>消息消费阶段：消费者接收消息+消息处理之后，才回复 ack
+的话，那么消息阶段的消息不会丢失。不能收到消息就回
+ack，否则可能消息处理中途挂掉了，消息就丢失了。</p></li>
+</ul>
+<h3 id="mq消息大量堆积怎么办">MQ消息大量堆积怎么办？</h3>
+<ul>
+<li><p>从生产者端解决：一般我们的系统容量或者处理能力都是规划好的，出现消息堆积的情况，大部分是由于流量暴增引起，这个时候可以考虑控制生产者的速率，对前端机器流量进行限速限流。</p></li>
+<li><p>从消费者端解决。消费者端解决的思路有两种：</p></li>
+<li><p>假如消费者数还有增加的空间，那么我们加消费者解决。</p></li>
+<li><p>假如没有拓展的可能，但吞吐量还没达到MQ的上限，只是消费者消费能力不足，比如消费者总体消费能力已经到达上线（数据库写入能力等），或者类似Kafka的消费者数量与partition数有关，如果前期设计没有做好水平拓展的设计，这个时候多少个partition就只能对应多少个消费者。这个时候我们可以先把一部分消息先打到另外一个MQ中或者先落到日志文件中，再拓展消费者进行消费，优先恢复上游业。</p></li>
+<li><p>从整体系统上进行解决：第2点有提到就是有些MQ的设计限制，导致的消费者数是没法动态拓展的，这个时候可以考虑将原先队列进行拆分，比如新建一个topic
+分担一部分消息，这个方式需要对系统的上下游都要进行调整，在实际操作难度可能比较高，处理起来可能也比较耗时，如果在事前有做好这个设计那事发后就能很好进行调整。</p></li>
+</ul>
+<p>转载：<a
+target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/e2waj6bmgfkgJzNBbE7i7g">字节面试体验很棒！</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/interview/" rel="tag"># interview</a>
+              <a href="/blog/tags/%E5%B0%8F%E6%9E%97coding/" rel="tag"># 小林coding</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/interview/%E5%B0%8F%E6%9E%97coding/%E5%B0%8F%E6%9E%97coding%20-%20%E5%AD%97%E8%8A%82230829/" rel="prev" title="小林coding - 字节230829">
+      <i class="fa fa-chevron-left"></i> 小林coding - 字节230829
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/interview/%E5%B0%8F%E6%9E%97coding/%E4%B8%8D%E6%84%A7%E6%98%AF%E8%85%BE%E8%AE%AF%E5%A4%A9%E7%BE%8E%EF%BC%8C%E9%9D%A2%E7%9A%84%E8%B4%BC%E7%BB%86%EF%BC%81/" rel="next" title="不愧是腾讯天美，面的贼细！">
+      不愧是腾讯天美，面的贼细！ <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C"><span class="nav-number">1.</span> <span class="nav-text">网络</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E8%BE%93%E5%85%A5%E5%9F%9F%E5%90%8D%E5%88%B0%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9C%8B%E8%A7%81%E9%A1%B5%E9%9D%A2%E7%BB%8F%E5%8E%86%E4%BA%86%E4%BB%80%E4%B9%88%E8%BF%87%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">从输入域名到浏览器看见页面经历了什么过程？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tcp%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E7%9A%84%E5%8E%9F%E5%9B%A0%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.2.</span> <span class="nav-text">TCP的三次握手过程？三次握手的原因是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tcp%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E9%9D%A0"><span class="nav-number">1.3.</span> <span class="nav-text">TCP为什么可靠?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http%E7%8A%B6%E6%80%81%E7%A0%81%E6%9C%89%E5%93%AA%E4%BA%9B"><span class="nav-number">1.4.</span> <span class="nav-text">HTTP状态码有哪些？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="nav-number">2.</span> <span class="nav-text">操作系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%9C%89%E5%93%AA%E4%BA%9B"><span class="nav-number">2.1.</span> <span class="nav-text">进程间通信有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E8%84%91-4gb%E5%86%85%E5%AD%98%E6%88%91%E7%94%B3%E8%AF%B7-5gb%E5%86%85%E5%AD%98%E5%8F%AF%E4%BB%A5%E5%90%97"><span class="nav-number">2.2.</span> <span class="nav-text">电脑 4GB内存，我申请
+5GB内存可以吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B3%E8%AF%B7%E6%88%90%E5%8A%9F%E4%B9%8B%E5%90%8E%E5%9C%A8%E4%BD%BF%E7%94%A8%E8%BF%995g%E5%86%85%E5%AD%98%E6%97%B6%E5%80%99%E4%BC%9A%E6%9C%89%E9%97%AE%E9%A2%98%E5%90%97"><span class="nav-number">2.3.</span> <span class="nav-text">申请成功之后，在使用这5G内存时候会有问题吗？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql"><span class="nav-number">3.</span> <span class="nav-text">MySQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E5%BA%95%E5%B1%82%E6%98%AF%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%9A%84"><span class="nav-number">3.1.</span> <span class="nav-text">索引的底层是怎么实现的？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8b%E6%A0%91%E5%91%A2"><span class="nav-number">3.2.</span> <span class="nav-text">为什么用B+树呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%A0%E6%98%AF%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E4%BB%80%E4%B9%88%E5%AD%97%E6%AE%B5%E6%9D%A5%E5%81%9A%E7%B4%A2%E5%BC%95%E7%9A%84"><span class="nav-number">3.3.</span> <span class="nav-text">你是如何选择什么字段来做索引的？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%87%E5%A6%82%E7%8E%B0%E5%9C%A8%E6%9C%89%E4%B8%89%E4%B8%AA%E6%99%AE%E9%80%9A%E7%B4%A2%E5%BC%95abcsql%E6%9F%A5%E8%AF%A2where-a-xx-and-b-xx-and-c-xx%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7"><span class="nav-number">3.4.</span> <span class="nav-text">假如现在有三个普通索引a，b，c，sql查询where
+a &#x3D; xx and b &#x3D; xx and c &#x3D;&#x3D; xx会怎么样？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%82%A3%E5%A6%82%E6%9E%9C%E4%B8%8D%E6%83%B3%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6%E5%91%A2%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3"><span class="nav-number">3.5.</span> <span class="nav-text">那如果不想索引合并呢？怎么解决？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis"><span class="nav-number">4.</span> <span class="nav-text">Redis</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#redis%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">4.1.</span> <span class="nav-text">Redis在项目中的应用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis%E8%BF%87%E6%9C%9F%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5%E6%9C%89%E5%93%AA%E4%BA%9B"><span class="nav-number">4.2.</span> <span class="nav-text">Redis过期淘汰策略有哪些？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#java"><span class="nav-number">5.</span> <span class="nav-text">Java</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hashmap%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86"><span class="nav-number">5.1.</span> <span class="nav-text">HashMap底层原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hashmap%E7%9A%84%E6%89%A9%E5%AE%B9%E8%BF%87%E7%A8%8B%E8%AF%B4%E4%B8%80%E4%B8%8B"><span class="nav-number">5.2.</span> <span class="nav-text">HashMap的扩容过程，说一下</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#arraylist%E5%BA%95%E5%B1%82%E6%98%AF%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E6%89%A9%E5%AE%B9%E7%9A%84"><span class="nav-number">5.3.</span> <span class="nav-text">ArrayList底层是怎么实现扩容的？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#arraylist%E5%92%8Clinkedlist%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">5.4.</span> <span class="nav-text">ArrayList和LinkedList的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97"><span class="nav-number">6.</span> <span class="nav-text">消息队列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mq%E5%A6%82%E4%BD%95%E9%98%B2%E6%AD%A2%E6%B6%88%E6%81%AF%E4%B8%8D%E4%B8%A2%E5%A4%B1"><span class="nav-number">6.1.</span> <span class="nav-text">MQ如何防止消息不丢失？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mq%E6%B6%88%E6%81%AF%E5%A4%A7%E9%87%8F%E5%A0%86%E7%A7%AF%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="nav-number">6.2.</span> <span class="nav-text">MQ消息大量堆积怎么办？</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>

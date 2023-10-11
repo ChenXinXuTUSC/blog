@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="部署InfluxDB，docker容器运行">
+<meta property="og:url" content="http://example.com/2023/10/11/data/deployment/%E9%83%A8%E7%BD%B2InfluxDB%EF%BC%8Cdocker%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:22.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:22.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="deployment">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/deployment/%E9%83%A8%E7%BD%B2InfluxDB%EF%BC%8Cdocker%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>部署InfluxDB，docker容器运行 | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/deployment/%E9%83%A8%E7%BD%B2InfluxDB%EF%BC%8Cdocker%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          部署InfluxDB，docker容器运行
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:22" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:22+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/deployment/" itemprop="url" rel="index"><span itemprop="name">deployment</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img
+src="https://miro.medium.com/v2/resize:fit:875/0*L4rlJyor6EKcqgcX.png" /></p>
+<p>InfluxDB 2.0, the image belongs to InfluxData.</p>
+<p>InfluxDB 2.0 is generally available. This version of InfluxDB
+provides the time-series database and a set of tools to create beautiful
+dashboards using either the query builder or writing the Flux query
+manually. You can also schedule tasks and configure alerts when a
+measurement exceeds a certain threshold.</p>
+<p>Months ago, I always deploy InfluxDB along with Grafana or Chronograf
+for visualization. Now I only need to deploy InfluxDB 2.0 image
+alongside the applications that I developed.</p>
+<p>Let’s get started!</p>
+<p>First of all, InfluxData provides a comprehensive guide for deploying
+InfluxDB 2.0 using docker. So, I’m not going to describe everything in
+detail. Instead, I’m going to describe how the configuration or setup
+process can be automated using a bash script.</p>
+<p>You will need to pull the image from the docker hub using the
+following command:</p>
+<p>docker pull influxdb:2.0.7</p>
+<p>If you want to customize the configuration, you will need to create
+the config.yml file and mount it as a volume to the docker container</p>
+<p>docker run --rm influxdb:2.0.7 influxd print-config &gt;
+config.yml</p>
+<p>A config.yml file will be created inside your working directory.</p>
+<p>Now, if you want to persist the database on your host machine, you
+can create a directory and mount it to /var/lib/influxdb2 on the
+container.</p>
+<p>So, let’s create the container</p>
+<p>docker run --name influxdb -d   -p 8086:8086   --volume
+<code>pwd</code>/influxdb2:/var/lib/influxdb2   --volume
+<code>pwd</code>/config.yml:/etc/influxdb2/config.yml  
+influxdb:2.0.7</p>
+<p>The command above will create a container
+named <code>influxdb</code> and mount the config.yml file and influxdb2
+directory inside your working directory. It also binds the 8086 port of
+your host machine to the port 8086 of the container, assuming that you
+don’t have any software running and using that port on your host
+machine.</p>
+<p>Remember that our goal is to create a bash script that can automate
+the configuration process. But we’ll walk through every process
+manually.</p>
+<p>Next, we’re going to set up an account that we can use to access the
+dashboard, writing, and querying data from the database. To do this, we
+need to use the <code>setup</code> command
+of <code>influx</code> command-line interface tool.</p>
+<p>You can see the complete flags for that command <a
+target="_blank" rel="noopener" href="https://docs.influxdata.com/influxdb/v2.0/reference/cli/influx/setup/#flags">here</a>.
+But we’re going to use some of the flags as shown in the following
+command:</p>
+<p>docker exec influxdb influx setup   --bucket BUCKET_NAME   --org
+ORG_NAME   --password PASSWORD   --username USERNAME   --force</p>
+<p>A bucket is a group of measurements. You can think of a bucket as a
+database in a relational database and measurements as the tables. You
+need to provide the name of the bucket and replace
+the <code>BUCKET_NAME</code>.</p>
+<p>Next, you have to input the name of your organization and replace
+the <code>ORG_NAME</code>.</p>
+<p>Then, you need to provide the username and password of the owner of
+the organization. This username and password will be used as your log-in
+to the dashboard.</p>
+<p>If you are going to explore the features of InfluxDB 2.0 without
+coding any software to write or query the data from the database, then
+you are done. You can visit http://localhost:8086, log in, and then
+explore the features.</p>
+<p>But, if you already have an application that can write and/or query
+data, and you need to get the access token programmatically then you can
+continue reading.</p>
+<p>The token that I mentioned is used to authenticate and authorize a
+client that is going to write and/or query data. It is available on the
+dashboard, but we’re not gonna open the dashboard just for that
+purpose.</p>
+<p>You can use the <code>influx</code> CLI to retrieve the token using
+the following command:<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec influxdb influx auth list</span><br></pre></td></tr></table></figure></p>
+<p>The command will produce the following output:<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ID   Description Token            User Name User ID   Permissions07ec335d5c118000 admin&#x27;s Token TOKEN_REDACTED admin  07ec335d32118000 [read:authorizations write:authorizations read:buckets write:buckets read:dashboards write:dashboards read:orgs write:orgs read:sources write:sources read:tasks write:tasks read:telegrafs write:telegrafs read:users write:users read:variables write:variables read:scrapers write:scrapers read:secrets write:secrets read:labels write:labels read:views write:views read:documents write:documents read:notificationRules write:notificationRules read:notificationEndpoints write:notificationEndpoints read:checks write:checks read:dbrp write:dbrp]</span><br></pre></td></tr></table></figure></p>
+<p>As you can see, there’s a lot of information from the output. For
+example, we have an account with <code>admin</code> as the username.
+This account is assigned as the owner of an organization, that’s why
+there’s a lot of permissions assigned to that account.</p>
+<p>But, we’re here for the token, right? Yes, you can see the token from
+that output. But you might need to narrow your vision to look for the
+token.</p>
+<p>You may have already noticed that the output is formatted like a
+table. If we split each line of the output by using space into an
+array-like type by using <code>awk</code>, then the token is stored as
+the 4th entry. But this isn’t always true.</p>
+<p>The index of the token depends on the content of the description. By
+default, the description of the token follows the following format:</p>
+<p>USERNAME's Token</p>
+<p>In this case, it’s <code>admin’s Token</code>. If we try visualizing
+the array, here how it will look like:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&quot;07ec335d5c118000&quot;, &quot;admin&#x27;s&quot;, &quot;Token&quot;, &quot;REDACTED_TOKEN&quot;, &quot;admin&quot;, ...]</span><br></pre></td></tr></table></figure>
+<p>You can confirm this by using <code>awk</code></p>
+<p>docker exec influxdb influx auth list | awk '/admin/ {print $4 "
+"}'</p>
+<p>The command above will print the token in a line of text that
+has <code>admin</code> in it. We have the token now.</p>
+<p>Are we done? No, not yet.</p>
+<p>At this point, we’ve done everything we need to do (excluding putting
+all of the commands into a single bash script file), though. But there’s
+one last thing that I want to highlight by asking this question: What if
+the username is not <code>admin</code> ?</p>
+<p>Of course, you can change the <code>admin</code> in the command line
+with something else. But once everything is in a bash script file, you
+will need to change the file for different users. You don’t want to do
+this, trust me.</p>
+<p>No need to panic, there’s an easy way for this.</p>
+<p>You can use an environment variable to provide the username and
+assign it to <code>awk</code> variable and use it as a pattern to match
+the lines in the output of<code>influx auth list</code>.</p>
+<p>For example, we’re going to
+use <code>INFLUXDB_USERNAME</code> environment variable to store the
+username, and pass the value to <code>username</code> variable
+in <code>awk</code>.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export INFLUXDB_USERNAME=otheruser  </span><br><span class="line">docker exec influxdb influx auth list | awk -v username=$INFLUXDB_USERNAME &#x27;$5 ~ username &#123;print $4 &quot; &quot;&#125;&#x27;</span><br></pre></td></tr></table></figure>
+<p>Note that we’re testing the <code>username</code> variable against
+the 5th element in the array which contains the username listed in the
+output of influx CLI as shown below:<br />
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$5</span> ~ username</span><br></pre></td></tr></table></figure></p>
+<p>So, now you don’t need to change the command line every time you are
+using a different username. You just need to change the value of
+the <code>INFLUXDB_USERNAME</code> environment variable.</p>
+<p>Let’s put everything into a bash script file.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/usr/bin/bash</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">create config file</span></span><br><span class="line">docker run --rm influxdb:2.0.7 influxd print-config &gt; config.yml</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">create the container</span></span><br><span class="line">docker run --name influxdb -d \  </span><br><span class="line">  -p 8086:8086 \  </span><br><span class="line">  --volume `pwd`/influxdb2:/var/lib/influxdb2 \  </span><br><span class="line">  --volume `pwd`/config.yml:/etc/influxdb2/config.yml \  </span><br><span class="line">  influxdb:2.0.7</span><br><span class="line"><span class="meta prompt_">  </span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">configure influxdb</span></span><br><span class="line">docker exec influxdb influx setup \  </span><br><span class="line">  --bucket $INFLUXDB_BUCKET \  </span><br><span class="line">  --org $INFLUXDB_ORG \  </span><br><span class="line">  --password $INFLUXDB_PASSWORD \  </span><br><span class="line">  --username $INFLUXDB_USERNAME \  </span><br><span class="line"><span class="meta prompt_">  --force# </span><span class="language-bash">get the tokendocker <span class="built_in">exec</span> influxdb influx auth list | \ </span> </span><br><span class="line">awk -v username=$INFLUXDB_USERNAME &#x27;$5 ~ username &#123;print $4 &quot; &quot;&#125;&#x27;</span><br></pre></td></tr></table></figure>
+<p>Note that we use environment variables to provide the information
+for <code>influx setup</code> command.</p>
+<p>We’re done! But I think we might miss something here.<br />
+What if the database server is not ready when we run the setup
+command?</p>
+<p>How can we handle this case?</p>
+<p>Relax, we can use the <code>influx ping</code> command to check the
+server status.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">until docker exec influxdb influx ping  </span><br><span class="line">do  </span><br><span class="line">  echo &quot;Retrying...&quot;  </span><br><span class="line">  sleep 5  </span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>If the server is not ready yet or experiencing a fatal error,
+the <code>docker exec influxdb influx ping</code> command will fail, and
+the commands inside the <code>until</code> block will be executed. This
+way, we can try something like waiting for five seconds before
+retrying.</p>
+<p>Let’s put everything together</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/usr/bin/bash</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">create config file</span></span><br><span class="line">docker run --rm influxdb:2.0.7 influxd print-config &gt; config.yml</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">create the container</span></span><br><span class="line">docker run --name influxdb -d \  </span><br><span class="line">  -p 8086:8086 \  </span><br><span class="line">  --volume `pwd`/influxdb2:/var/lib/influxdb2 \  </span><br><span class="line">  --volume `pwd`/config.yml:/etc/influxdb2/config.yml \  </span><br><span class="line">  influxdb:2.0.7</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">wait</span> <span class="keyword">until</span> the database server is ready</span></span><br><span class="line">until docker exec influxdb influx ping  </span><br><span class="line">do  </span><br><span class="line">  echo &quot;Retrying...&quot;  </span><br><span class="line">  sleep 5  </span><br><span class="line">done</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">configure influxdb</span></span><br><span class="line">docker exec influxdb influx setup \  </span><br><span class="line">  --bucket $INFLUXDB_BUCKET \  </span><br><span class="line">  --org $INFLUXDB_ORG \  </span><br><span class="line">  --password $INFLUXDB_PASSWORD \  </span><br><span class="line">  --username $INFLUXDB_USERNAME \  </span><br><span class="line">  --force</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">get the tokendocker <span class="built_in">exec</span> influxdb influx auth list | \ </span> </span><br><span class="line">awk -v username=$INFLUXDB_USERNAME &#x27;$5 ~ username &#123;print $4 &quot; &quot;&#125;&#x27;</span><br></pre></td></tr></table></figure>
+<p>We’re finally done!</p>
+<p>Thank you for reading! Stay safe and healthy!</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/deployment/" rel="tag"># deployment</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/deployment/%E9%83%A8%E7%BD%B2%E5%8F%82%E8%80%83/" rel="prev" title="部署参考">
+      <i class="fa fa-chevron-left"></i> 部署参考
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/interview/%E4%B8%87%E8%AF%BAcoding/%E9%98%BF%E9%87%8C0923%E7%A7%8B%E6%8B%9B%E7%AC%94%E8%AF%95%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90/" rel="next" title="阿里0923秋招笔试真题解析">
+      阿里0923秋招笔试真题解析 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>

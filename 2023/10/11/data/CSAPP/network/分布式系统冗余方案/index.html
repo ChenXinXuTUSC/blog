@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="分布式系统冗余方案">
+<meta property="og:url" content="http://example.com/2023/10/11/data/CSAPP/network/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%86%97%E4%BD%99%E6%96%B9%E6%A1%88/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:14.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:14.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="CSAPP">
+<meta property="article:tag" content="network">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/CSAPP/network/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%86%97%E4%BD%99%E6%96%B9%E6%A1%88/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>分布式系统冗余方案 | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/CSAPP/network/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%86%97%E4%BD%99%E6%96%B9%E6%A1%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          分布式系统冗余方案
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:14" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:14+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/CSAPP/" itemprop="url" rel="index"><span itemprop="name">CSAPP</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>高可用性一直为分布式系统设计所追求的重要目标。其目的是在错误不可避免发生的计算环境中构建出高可用的系统。常见错误包括计算设备故障、网络传输故障、软件运行故障等。冗余策略是实现系统高可用性的常见方法。该策略通过对计算任务采用多副本的冗余执行，提高任务执行的成功率。</p>
+<p>图 1
+所示冗余策略分为主动冗余和被动冗余。在主动冗余下，一个任务所有的副本同时执行，只要存在一个副本执行成功，则该任务执行成功。该策略的优点是，错误恢复时间很快，几乎接近为零；缺点是浪费计算资源，且副本之间状态同步开销较大。在被动冗余下，一个任务只有一个副本执行，当该副本执行失败，再启动备份的副本执行。该策略的优点是节省计算资源，但是错误恢复时间较慢，可能需要回滚到之前的状态重复执行。</p>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/9s6WJ9ibpxVDqhxcVUyibtqWveYBvBe84mTPiaY7UVnVA2ZgYAlQMkpPmm0r5jt7ichFsCudn42ibFbiah8iaRhV4ibDmQ/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<p>（a）主动冗余</p>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/9s6WJ9ibpxVDqhxcVUyibtqWveYBvBe84mBeJ1ml5qhyxVStfsnX6aO8LzicDVL3OzqoYA5QJDH2L1tEib0y0qUuPA/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<p>（b）被动冗余</p>
+<p>图 1 两种不同类型冗余策略：主动冗余与被动冗余</p>
+<p>总结起来，主动冗余是用资源换时间，而被动冗余是用时间来节省资源。主动冗余适合用在资源较为充分，且对任务执行实时性有较高要求的场景；被动冗余适合任务实时性要求不高，但是系统资源紧张或者负载压力大的场景。</p>
+<p>分布式系统到底该选择哪一种冗余策略呢？最新Time-Sensitive Networks
+(TSN)
+网络中的冗余路径传输协议，采用的是主动冗余策略；而传统TCP/IP网络中的TCP重传机制采用的是被动冗余策略。大数据并行计算框架
+Hapdoop采用的是被动冗余策略，系统检测到存在straggler任务的时候，会启动新的冗余任务替代执行；而最新有关可靠边缘计算大部分文献采用的是主动冗余策略。</p>
+<p>实际系统由于计算资源高度动态特性以及负载的不可预测属性。某一特定的冗余策略往往无法发挥最优的潜能。《中庸》所言：“不偏不倚不极端乃君子之道”。在古人智慧的启发下，华南理工大学的研究团队设计一种新的介于主动冗余与被动冗余之间的智能冗余策略，并将该策略用于现代网络中虚拟网络（VNF）功能服务链的可靠调度之中[1][2]。以下为该工作的具体介绍。</p>
+<p><strong>可靠性感知的服务功能链调度方法</strong></p>
+<p>VNF服务链调度可靠性很重要。为了提高可靠性，采用冗余VNF的机制。冗余VNF服务链的调度，可以通过适当延迟VNF的执行，缓解资源的负载压力。零时间延迟意味着主动冗余模式，即一个VNF所有副本都立即执行，如果某个副本先执行完，则其他的副本将停止执行，该方法存在一定的资源浪费。采用一定延迟执行的方法，即被动冗余方法，推迟某个副本的执行；在其他副本成功执行的前提下，避免冗余副本的执行，从而节省一定资源；但是存在问题是，一旦先执行的副本失败，那么该VNF需要等到接下来副本执行成功才行，导致错误恢复时间长。因此，提出基于强化学习的智能冗余方法，根据当前环境以及资源的使用情况，智能地决策是否延迟副本的执行，以及延迟多长时间。强化学习智能体的动作为所有就绪任务的延迟率，即每一个决策周期延迟执行哪些VNF。该方法具有较好的自适应性。当环境中资源节点发生变化，也不需要重新学习和在此部署RL模型。传统的基于RL的调度方法，直接学习节点选择策略，在新环境下需要重新学习模型。</p>
+<p><strong>1. 服务链调度问题</strong></p>
+<p>服务链调度问题旨在决定计算节点在何时何地部署和处理给定的VNF，以达到特定的目标（如网络资源开销最小、平均完成时间最小等）。VNF在计算节点上的执行需要一定时间完成，但是系统中可以同时存在多个服务链，它们各自的VNF都需要被执行，因此，如何在多个服务链同时存在的情况下，合理安排计算节点上的VNF执行顺序从而实现高效调度成为亟待解决的问题。</p>
+<p>相比于服务链部署问题，服务链调度问题更贴近实际且更加复杂。服务链部署问题考虑的是所有服务链请求和网络资源信息已知的情况下，如何在底层的网络上对VNF进行实例化并分配所需资源，服务链部署问题考虑的是一种VNF放置问题。而服务链调度问题需要考虑时间这一维度，VNF的执行需要一定时间，如何在系统中存在多个服务链时，对网络资源进行分配。</p>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/9s6WJ9ibpxVDqhxcVUyibtqWveYBvBe84mPe9nCqox9fEDevvZgh1Ot5CGW93lhwZD6OgP0j9ia2dcLICfpYNXByw/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<p>图 2 服务功能链调度系统模型</p>
+<p>考虑图 2
+所示的研究场景，网络中的计算节点资源有限，若干个服务功能链请求SFC是随机到达的，一个服务功能链SFC包含了一组有序的虚拟网络功能VNF需要执行，服务功能链请求是时间敏感和可靠性敏感的，调度器需要根据请求的截止时间和可靠性要求来决定该服务链中的每个VNF冗余度，以及每个VNF应该分配到哪个计算节点上执行。此外，如果计算节点需要运行一个与它先前部署的VNF类型不相同的VNF实例，该节点需要花费额外的时间进行重部署。调度器的最终目标是最大化系统中服务链请求在其截止时间内完成的成功率。</p>
+<p><strong>2. 可靠性感知的动态服务链调度方法</strong></p>
+<p>为了解决这个问题，我们提出了一种可靠性感知的动态SFC调度方法（Reliability-aware
+Dynamic SFC Scheduling Approach，RDSSA）。图
+3 展示了RDSSA方法的工作流程。它主要包括三个步骤：</p>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_jpg/9s6WJ9ibpxVDqhxcVUyibtqWveYBvBe84mZyxWCXdPl3xtib9XBLy9VUrUPT4tCxHTkVZ1xK5QdArDYHpKk3ibHviag/640?wx_fmt=jpeg&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<p>图 3 RDSSA工作流程</p>
+<p>（1）<strong>冗余决策</strong>。当有SFC请求时，根据SFC可靠性要求计算VNFs的最优冗余。它指定应该复制SFC中的哪个VNF以及应该部署多少个冗余VNFs。这些未调度的VNFs正在队列中等待。VNF的优先级是基于在相应的证监会截止时间之前的剩余时间。</p>
+<p>（2）<strong>计算节点选择</strong>。基于规则的节点选择方法提供了一种策略，为队列头的VNF选择合适的计算节点。在这个过程中，我们引入了一种名为延迟执行的机制，这意味着调度器可以延迟输入VNF的执行，其目的是减少冗余VNF所消耗的计算资源。</p>
+<p>（3）<strong>基于强化学习的服务链调度</strong>。根据网络环境的变化学习一种推迟策略，如果它决定延迟一个VNF,
+VNF将返回到等待队列。否则，调度程序采用基于规则的方式为VNF分配计算节点。</p>
+<p>图 4 所示基于强化学习的服务链调度方法框架。智能体观测到网络中服务链请求和计算节点的相关信息，这些信息被称为状态（state），状态输入到智能体的策略网络后输出一个调度决策，称为动作（action），动作是智能体认为在当前系统状态下的最优决策，在智能体在执行动作后获得环境反馈的奖励（reward），并以此更新神经网络中的参数。在此，智能体使用嵌入网络（embedding
+network）将原始的状态信息向量编码为输入到强化学习网络的低维特征向量。智能体通过不断地观测系统状态，输出动作触发系统环境的奖励反馈和系统状态更新，智能体通过这种方式在和环境交互的过程中不断学习更优的策略。</p>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_jpg/9s6WJ9ibpxVDqhxcVUyibtqWveYBvBe84mUeyFLx5SRhhickQwJn9rgrYlWGrMlqkKXibgTI8emyjg5F7w9fU78F4A/640?wx_fmt=jpeg&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<p>图 4 基于强化学习的服务链调度方法框架</p>
+<h4 id="调度事件"><strong>调度事件</strong></h4>
+<p>本文提出的调度模型是任务触发的，系统中未被调度的VNF在队列中等待，当VNF等待队列非空的时候，智能体需要做出调度决策。VNF队列的行为如下：</p>
+<p>（1）队列的优先级基于当前时刻距离服务链的截止时间（deadline）的长度，即剩余时间。剩余时间越短的服务链中的VNF在队列中优先级越高。</p>
+<p>（2）新到达的服务链的首个VNF，包括它的所有冗余将被加入队列。</p>
+<p>（3）当一个VNF以及它的所有冗余实例执行完成后，该VNF的后继VNF任务将被添加到队列中，除非前者是所属服务链的最后一个VNF任务。此外，如果一个VNF的所有冗余都失效，我们认为该VNF所属的服务链被终止，后续的VNF将不会被添加到队列中。</p>
+<p>（4）对于某个VNF来说，如果其中一个冗余执行完成，其它的冗余将从队列中移除，如果它们已经部署在计算节点上，它们的执行过程将被终止。</p>
+<p>（5）位于队列头部的VNF将首先由智能体调度器调度。</p>
+<h4 id="状态"><strong>状态</strong></h4>
+<p>状态（state）为智能体的输入，在本文中，状态主要包括：VNF类型、服务链中剩余的VNF数量、服务链的长度、VNF运算量、服务链的剩余时间、计算节点已部署的VNF类型、计算节点的提前时间。VNF提前时间为加权VNF截止时间与预计完成时间之差。</p>
+<h4 id="动作"><strong>动作</strong></h4>
+<p>动作（action）是强化学习智能体的输出，它决定了应该将VNF部署在何处。这里，我们引入了一种叫作“推迟执行”的机制。当存在一个VNF任务需要部署时，服务链调度器或强化学习智能体可以将这个VNF推迟到下一个调度事件。推迟执行可以使一些冗余的VNF不被立即执行，而是暂时留在队列中等待。此时，如果之前已经部署好的VNF可以成功执行完成，这些推迟执行的VNF便可以从队列中移除，从而减少冗余VNF占用的计算资源，提高成功率。基于这个动机，我们在实验中评估了推迟执行对成功率的影响，实验的结果表明，推迟执行显著影响了成功率，这支撑了我们的采用推迟执行机制的动机。然而，采用固定概率的推迟执行不能适应动态变化的计算资源。因此，我们考虑设计一种根据动态环境提供不同推迟执行概率的方法。在本文中，我们采用了不同于其它使用强化学习的相关工作的智能体动作。我们的策略网络输出一个推迟概率，即输入的待调度VNF任务被推迟执行的概率。如果VNF被推迟执行，调度器将不会分配任何计算节点来部署它，VNF将留在队列中等待下一个调度事件。否则，VNF将基于某种规则部署在计算节点上。此外，有了这个动作设计，我们的智能体可以在不改变模型的情况下适应不同数量的计算节点。这是因为我们设计的智能体不是将VNF部署在哪个特定的计算节点上，相反，智能体只提供推迟VNF执行的概率，间接影响着调度的顺序。</p>
+<h4 id="奖励"><strong>奖励</strong></h4>
+<p>奖励（reward）是动作执行后来自环境的反馈。为了指导智能体学习，我们根据服务链调度目标设计了一个奖励函数。每个VNF必须在服务链截止时间之前完成，以提高成功率。我们认为如果一条服务链中的每个VNF都能在其VNF截止时间之前完成，则整个链将满足该截止时间。因此，我们使用VNF提前时间作为奖励，即。当为负数时，由于VNF的滞后完成，我们用一个负的奖励作为惩罚智能体。当为正数时，智能体将因为VNF在VNF截止时间前完成而获得奖励。需要注意的是，在实验中我们对奖励的绝对值进行了限制，以防止训练过程中智能体因为过大的反馈信号而导致网络不收敛。</p>
+<h4 id="服务链状态信息编码"><strong>服务链状态信息编码</strong></h4>
+<p>强化学习的智能体将观测信息作为特征输入传递给策略网络。传统地，特征向量被设计成包含所有的状态信息，但是这种方法不能处理服务链数量和服务链长度都是非固定的情况。在本文中，我们使用了一种卷积神经网络TextCNN，将服务链的状态信息编码成嵌入向量，解决了输入信息维度非固定的问题，实现了可扩展性。TextCNN是一种用于句子分类任务的深度学习方法，我们采用它作为状态信息的编码器，可以将高维稀疏向量压缩为低维稠密向量。我们的嵌入（embedding）层将服务链信息作为输入，输出两个层级的嵌入向量。第一层级是服务链编码，它聚合了关于整个VNF链的信息。SFC嵌入网络将SFC中的每个VNF特征转换为向量。第二层级是全局编码，它归纳了系统中所有的服务链状态信息。同样，全局嵌入网络将所有的SFC嵌入作为输入输出一个全局摘要向量。</p>
+<p><strong>3. 结论</strong></p>
+<p>本文介绍了一种分布式系统中冗余策略的全新智能冗余方法，不同于传统“单一极端”的主动冗余或被动冗余策略，采用强化学习，根据系统可用资源以及负载状态，动态智能地选择“合适中庸”的冗余策略，在有限资源下，保障计算任务的低时延与高可靠性的需求。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/CSAPP/" rel="tag"># CSAPP</a>
+              <a href="/blog/tags/network/" rel="tag"># network</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/CSAPP/database/SQL/%E6%8E%88%E6%9D%83%E8%B4%A6%E6%88%B7/" rel="prev" title="授权账户">
+      <i class="fa fa-chevron-left"></i> 授权账户
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/CSAPP/network/URL%E5%93%AA%E4%BA%9B%E9%83%A8%E5%88%86%E4%B8%8D%E5%8C%BA%E5%88%86%E5%A4%A7%E5%B0%8F%E5%86%99/" rel="next" title="URL哪些部分不区分大小写">
+      URL哪些部分不区分大小写 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E4%BA%8B%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">调度事件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8A%B6%E6%80%81"><span class="nav-number">2.</span> <span class="nav-text">状态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E4%BD%9C"><span class="nav-number">3.</span> <span class="nav-text">动作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A5%96%E5%8A%B1"><span class="nav-number">4.</span> <span class="nav-text">奖励</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E9%93%BE%E7%8A%B6%E6%80%81%E4%BF%A1%E6%81%AF%E7%BC%96%E7%A0%81"><span class="nav-number">5.</span> <span class="nav-text">服务链状态信息编码</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="Makefile 示例">
+<meta property="og:url" content="http://example.com/2023/10/11/data/CSAPP/compiler/GNU%20Make/Makefile%20%E7%A4%BA%E4%BE%8B/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:13.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:13.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="CSAPP">
+<meta property="article:tag" content="compiler">
+<meta property="article:tag" content="GNU Make">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/CSAPP/compiler/GNU%20Make/Makefile%20%E7%A4%BA%E4%BE%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>Makefile 示例 | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/CSAPP/compiler/GNU%20Make/Makefile%20%E7%A4%BA%E4%BE%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Makefile 示例
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:13" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:13+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/CSAPP/" itemprop="url" rel="index"><span itemprop="name">CSAPP</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>What is GNU Make?</p>
+<p><a target="_blank" rel="noopener" href="https://www.gnu.org/software/make/">GNU Make</a> is a
+program that automates the running of shell commands and helps with
+repetitive tasks. It is typically used to transform files into some
+other form, e.g. compiling source code files into programs or
+libraries.</p>
+<p>It does this by tracking prerequisites and executing a hierarchy of
+commands to produce targets.</p>
+<p>Although the GNU Make manual is lengthy, I suggest giving it a read
+as it is the best reference I’ve found:  <a
+target="_blank" rel="noopener" href="https://www.gnu.org/software/make/manual/html_node/index.html">https://www.gnu.org/software/make/manual/html_node/index.html</a></p>
+<p>Let’s dive in!</p>
+<p>When to choose Make</p>
+<p>Make is suitable for building small C/C++ projects or libraries that
+would be included in another project’s build system. Most build systems
+will have a way to integrate Make-based sub-projects.</p>
+<p>For larger projects, you will find a more modern build system easier
+to work with.</p>
+<p>I would suggest a build system other than Make in the following
+situations:</p>
+<ul>
+<li>When the number of targets (or files) being built is (or will
+eventually be) in the hundreds.<br />
+</li>
+<li>A “configure” step is desired, which sets up and persists variables,
+target definitions, and environment configurations.<br />
+</li>
+<li>The project is going to remain internal or private and will not need
+to be built by end users.<br />
+</li>
+<li>You find debugging a frustrating exercise.<br />
+</li>
+<li>You need the build to be cross platform that can build on macOS,
+Linux, and Windows.</li>
+</ul>
+<p>In these situations, you might find using <a
+target="_blank" rel="noopener" href="https://cmake.org/">CMake</a>, <a
+target="_blank" rel="noopener" href="https://bazel.build/">Bazel</a>, <a
+target="_blank" rel="noopener" href="https://mesonbuild.com/">Meson</a>, or another modern build system
+a more pleasurable experience.</p>
+<p>Invoking Make</p>
+<p>Running make will load a file named Makefile from the current
+directory and attempt to update the default goal (more on goals
+later).</p>
+<p>Make will search for files named GNUmakefile, makefile, and Makefile,
+in that order</p>
+<p>You can specify a particular makefile with
+the -f/--file argument:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ make -ffoo.mk</span><br></pre></td></tr></table></figure>
+<p>You can specify any number of goals by listing them as positional
+arguments:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">\# typical goals</span><br><span class="line">$ make clean all</span><br></pre></td></tr></table></figure>
+<p>You can pass Make a directory with the -C argument, and this will run
+Make as if it first cd‘d into that directory.<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ make -Csome/sub/directory</span><br></pre></td></tr></table></figure> Fun fact: git also can be run with -C for the same
+effect!</p>
+<p>Parallel Invocation</p>
+<p>Make can run jobs in parallel if you provide the -j or -l options. A
+guideline I’ve been told is to set the job limit to 1.5 times the number
+of processor cores you have:</p>
+<h1 id="a-machine-with-4-cores-make--j6">a machine with 4 cores:$ make
+-j6</h1>
+<p>Anecdotally, I’ve seen slightly better CPU utilization with
+the -l “load limit” option, vs. the -j “jobs” option. YMMV though!</p>
+<p>There are a few ways to programmatically find the CPU count for the
+current machine. One easy option is to use the
+python multiprocessing.cpu_count() function to get the number of threads
+supported by the system (note on a system with hyper-threading, this
+will use up a lot of your machine’s resources, but is probably
+preferable to letting Make spawn an unlimited number of jobs).</p>
+<p># call the python cpu_count() function in a subshell$ make -l$(python
+-c"import multiprocessing; print(multiprocessing.cpu_count())")</p>
+<p>Output During Parallel Invocation</p>
+<p>If you have a lot of output from the commands Make is executing in
+parallel, you might see output interleaved on stdout. To handle this,
+Make has the option <a
+target="_blank" rel="noopener" href="https://www.gnu.org/software/make/manual/html_node/Parallel-Output.html">--ouput-sync</a>.</p>
+<p>I recommend using --output-sync=recurse, which will print the entire
+output of each target’s recipe when it completes, without interspersing
+other recipe output.</p>
+<p>It also will output an entire recursive Make’s output together if
+your recipe is using recursive make.</p>
+<p>Anatomy of a Makefile</p>
+<p>A Makefile contains rules used to produce targets. Some basic
+components of a Makefile are shown below:</p>
+<h1 id="comments-are-prefixed-with-the-symbol">Comments are prefixed
+with the '#' symbol</h1>
+<h1 id="a-variable-assignment">A variable assignment</h1>
+<p>FOO="hello there!"# A rule creating target "test", with "test.c" as a
+prerequisite<br />
+test:test.c# The contents of a rule is called the "recipe", and is#
+typically composed of one or more shell commands.# It must be indented
+from the target name (historically with        # tabs, spaces are
+permitted)# Using the variable "FOO"<br />
+echo<span class="math inline">\((FOO)# Calling the C compiler using a
+predefined variable naming \# the default C compiler,
+&#39;\)</span>(CC)'<br />
+$(CC)test.c-otest</p>
+<p>Let’s take a look at each part of the example above.</p>
+<p>Variables</p>
+<p>Variables are used with the syntax $(FOO), where FOO is the variable
+name.</p>
+<p>Variables contain purely strings as Make does not have other data
+types. Appending to a variable will add a space and the new content:</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FOO=one  </span><br><span class="line">FOO+=two  </span><br><span class="line"><span class="comment"># FOO is now &quot;one two&quot;  </span></span><br><span class="line">FOO=one  </span><br><span class="line">FOO=<span class="variable">$(FOO)</span>two  </span><br><span class="line"><span class="comment"># FOO is now &quot;onetwo&quot;</span></span><br></pre></td></tr></table></figure>
+<p>Variable Assignment</p>
+<p>In GNU Make syntax, variables are assigned with two “flavors”:</p>
+<ol type="1">
+<li>recursive expansion: variable = expression The expression on the
+right hand side is assigned verbatim to the variable- this behaves much
+like a macro in C/C++, where the expression is evaluated when the
+variable is used:<br />
+FOO=1<br />
+BAR=$(FOO)FOO=2<br />
+# prints BAR=2<br />
+$(infoBAR=$(BAR))<br />
+</li>
+<li>simple expansion: variable := expression This assigns the result of
+an expression to a variable; the expression is expanded at the time of
+assignment:<br />
+FOO=1<br />
+BAR:=$(FOO)FOO=2<br />
+# prints BAR=1<br />
+$(infoBAR=$(BAR))</li>
+</ol>
+<p>Note: the $(info ...) function is being used above to print
+expressions and can be handy when debugging makefiles!*`</p>
+<p>Variables which are not explicitly, <a
+target="_blank" rel="noopener" href="https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html">implicitly</a>,
+nor <a
+target="_blank" rel="noopener" href="https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html">automatically</a> set
+will evaluate to an empty string.</p>
+<p>Environment Variables</p>
+<p>Environment variables are carried into the Make execution
+environment. Consider the following makefile for example:</p>
+<p><span class="math inline">\((infoYOLOvariable=\)</span>(YOLO))</p>
+<p>If we set the variable YOLO in the shell command when running make,
+we’ll set the value:</p>
+<p>$ YOLO="hello there!"make<br />
+YOLO variable =hello there!<br />
+make: ***No targets.  Stop.</p>
+<p>Note: Make prints the “No targets” error because our makefile had no
+targets listed!</p>
+<p>If you use the ?= assignment syntax, Make will only assign that value
+if the variable doesn’t already have a value:</p>
+<p>Makefile:<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">\# default CC to gcc  </span><br><span class="line">CC?=gcc</span><br></pre></td></tr></table></figure></p>
+<p>We can then override $(CC) in that makefile:</p>
+<p>$ CC=clang make</p>
+<p>Another common pattern is to allow inserting additional flags. In the
+makefile, we would append to the variable instead of directly assigning
+to it.</p>
+<p>CFLAGS+=-Wall</p>
+<p>This permits passing extra flags in from the environment:</p>
+<p>$ CFLAGS='-Werror=conversion -Werror=double-promotion'make</p>
+<p>This can be very useful!</p>
+<p>Overriding Variables</p>
+<p>A special category of variable usage is called overriding variables.
+Using this command-line option will override the value set ANYWHERE
+ELSE in the environment or Makefile!</p>
+<p>Makefile:</p>
+<p># the value passed in the make command will override<br />
+# any value set elsewhere<br />
+YOLO="not overridden"<span
+class="math inline">\((info\)</span>(YOLO))</p>
+<p>Command:<br />
+# setting "YOLO" to different values in the environment + makefile +
+overriding# variable, yields the overriding value$ YOLO="environment
+set"make YOLO='overridden!!'overridden!!<br />
+make: ***No targets.  Stop.</p>
+<p>Overriding variables can be confusing, and should be used with
+caution!</p>
+<p>Target-Specific Variables</p>
+<p>These variables are only available in the recipe context. They also
+apply to any prerequisite recipe!</p>
+<p># set the -g value to CFLAGS<br />
+# applies to the prog.o/foo.o/bar.o recipes too!<br />
+prog :CFLAGS = -gprog :prog.o foo.o bar.oecho$(CFLAGS)# will print
+'-g'</p>
+<p>Implicit Variables</p>
+<p>These are pre-defined by Make (unless overridden with any other
+variable type of the same name). Some common examples:</p>
+<ul>
+<li>$(CC) - the C compiler (gcc)<br />
+</li>
+<li>$(AR) - archive program (ar)<br />
+</li>
+<li>$(CFLAGS) - flags for the C compiler</li>
+</ul>
+<p>Full list here:</p>
+<p><a
+target="_blank" rel="noopener" href="https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html">https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html</a></p>
+<p>Automatic Variables</p>
+<p>These are special variables always set by Make and available in
+recipe context. They can be useful to prevent duplicated names (Don’t
+Repeat Yourself).</p>
+<p>A few common automatic variables:</p>
+<p># <span class="math inline">\(@ : the target name, here it would be
+&quot;test.txt&quot; test.txt:echo HEYO &gt;\)</span>@# <span
+class="math inline">\(^ : name of all the prerequisites all.zip:foo.txt
+test.txt# run the gzip command with all the prerequisites
+&quot;\$^&quot;, outputting to the# name of the target,
+&quot;\$@&quot;gzip-c\)</span>^&gt;$@</p>
+<p>See more at:  <a
+target="_blank" rel="noopener" href="https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html">https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html</a></p>
+<p>Targets (Goals)</p>
+<p>Targets are the left hand side in the rule syntax:</p>
+<p>target:prerequisiterecipe</p>
+<p>Targets almost always name files. This is because Make uses
+last-modified time to track if a target is newer or older than its
+prerequisites and whether it needs to be rebuilt!</p>
+<p>When invoking Make, you can specify which target(s) you want to build
+as the goals by specifying it as a positional argument:</p>
+<p># make the 'test.txt' and 'all.zip' targetsmake test.txt all.zip</p>
+<p>If you don’t specify a goal in the command, Make uses the first
+target specified in the makefile, called the “default goal” (you can
+also <a
+target="_blank" rel="noopener" href="https://www.gnu.org/software/make/manual/html_node/Goals.html">override</a> the
+default goal if you need to).</p>
+<p>Phony Targets</p>
+<p>Sometimes it’s useful to have meta-targets like all, clean, test,
+etc. In these cases, you don’t want Make to check for a file
+named all/clean etc.</p>
+<p>Make provides the .PHONY target syntax to mark a target as not
+pointing to a file:</p>
+<p># Say our project builds a program and a library 'foo' and 'foo.a';
+if we want<br />
+# to build both by default we might make an 'all' rule that builds
+both<br />
+.PHONY:allall:foo foo.a</p>
+<p>If you have multiple phony targets, a good pattern might be to append
+each to .PHONY where it’s defined:</p>
+<p># the 'all' rule that builds and tests. Note that it's listed first
+to make it<br />
+# the default rule<br />
+.PHONY:allall:build test# compile foo.c into a program 'foo'<br />
+foo:foo.c$(CC)foo.c -ofoo</p>
+<p># compile foo-lib.c into a library 'foo.a'<br />
+foo.a:foo-lib.c# compile the object file$(CC)foo-lib.c
+-cfoo-lib.o        # use ar to create a static library containing our
+object file. using the# '$@' variable here to specify the rule target
+'foo.a'$(AR)rcs $<span class="citation"
+data-cites="foo-lib.o">@foo-lib.o</span></p>
+<p># a phony rule that builds our project; just contains a prerequisite
+of the<br />
+# library + program<br />
+.PHONY:buildbuild:foo foo.a# a phony rule that runs our test harness.
+has the 'build' target as a<br />
+# prerequisite! Make will make sure (pardon the pun) the build rule
+executes<br />
+# first<br />
+.PHONY:testtest:build./run-tests.sh</p>
+<p>NOTE!!! .PHONY targets are ALWAYS considered out-of-date, so Make
+will ALWAYS run the recipe for those targets (and therfore any target
+that has a .PHONY prerequisite!). Use with caution!!</p>
+<p>Implicit Rules</p>
+<p>Implicit rules are provided by Make. I find using them to be
+confusing since there’s so much behavior happening behind the scenes.
+You will occasionally encounter them in the wild, so be aware.</p>
+<p>Here’s a quick example:</p>
+<p># this will compile 'test.c' with the default $(CC), $(CFLAGS), into
+the program<br />
+# 'test'. it will handle prerequisite tracking on test.c<br />
+test:test.o</p>
+<p>Full list of implicit rules here:</p>
+<p><a
+target="_blank" rel="noopener" href="https://www.gnu.org/software/make/manual/html_node/Catalogue-of-Rules.html">https://www.gnu.org/software/make/manual/html_node/Catalogue-of-Rules.html</a></p>
+<p>Pattern Rules</p>
+<p>Pattern rules let you write a generic rule that applies to multiple
+targets via pattern-matching:</p>
+<p># Note the use of the '<span class="math inline">\(&lt;&#39;
+automatic variable, specifying the first \# prerequisite, which is the
+.c file %.o:%.c\)</span>(CC)-c<span
+class="math inline">\(&lt;-o\)</span>@</p>
+<p>The rule will then be used to make any target matching the pattern,
+which above would be any file matching %.o, e.g. foo.o, bar.o.</p>
+<p>If you use those .o files mentioned above to build a program:</p>
+<p>OBJ_FILES=foo.o bar.o</p>
+<p># Use CC to link foo.o + bar.o into 'program'. Note the use of the
+'<span class="math inline">\(^&#39; \# automatic variable, specifying
+ALL the prerequisites (all the OBJ_FILES) \# should be part of the link
+command program:\)</span>(OBJ_FILES)<span
+class="math inline">\((CC)-o\)</span>@$^</p>
+<p>Prerequisites</p>
+<p>As seen above, these are targets that Make will check before running
+a rule. They can be files or other targets.</p>
+<p>If any prerequisite is newer (modified-time) than the target, Make
+will run the target rule.</p>
+<p>In C projects, you might have a rule that converts a C file to an
+object file, and you want the object file to rebuild if the C file
+changes:</p>
+<p>foo.o:foo.c# use automatic variables for the input and output file
+names<span class="math inline">\((CC)\)</span>^-c$@</p>
+<p>Automatic Prerequisites</p>
+<p>A very important consideration for C language projects is to trigger
+recompilation if an #include header files change for a C file. This is
+done with the -M compiler flag for gcc/clang, which will output
+a .d file you will then import with the Make include directive.</p>
+<p>The .d file will contain the necessary prerequisites for the .c file
+so any header change causes a rebuild. See more details here:</p>
+<p><a
+target="_blank" rel="noopener" href="https://www.gnu.org/software/make/manual/html_node/Automatic-Prerequisites.html">https://www.gnu.org/software/make/manual/html_node/Automatic-Prerequisites.html</a> 
+<a
+target="_blank" rel="noopener" href="http://make.mad-scientist.net/papers/advanced-auto-dependency-generation/">http://make.mad-scientist.net/papers/advanced-auto-dependency-generation/</a></p>
+<p>The basic form might be:</p>
+<p># these are the compiler flags for emitting the dependency tracking
+file. Note<br />
+# the usage of the '<span class="math inline">\(&lt;&#39; automatic
+variable DEPFLAGS=-MMD-MP-MF\)</span>&lt;.d</p>
+<p>test.o:test.c<span class="math inline">\((CC)\)</span>(DEPFLAGS)<span
+class="math inline">\(&lt;-c\)</span>@# bring in the prerequisites by
+including all the .d files. prefix the line with<br />
+# '-' to prevent an error if any of the files do not exist<br />
+-include $(wildcard *.d)</p>
+<p>Order-Only Prerequisites</p>
+<p>These prerequisites will only be built if they don’t exist; if they
+are newer than the target, they will not trigger a target re-build.</p>
+<p>A typical use is to create a directory for output files; emitting
+files to a directory will update its mtime attribute, but we don’t want
+that to trigger a rebuild.</p>
+<p>OUTPUT_DIR=build</p>
+<p># output the .o to the build directory, which we add as an
+order-only<br />
+# prerequisite- anything right of the | pipe is considered
+order-only<br />
+$(OUTPUT_DIR)/test.o:test.c | <span
+class="math inline">\((OUTPUT_DIR)\)</span>(CC)-c<span
+class="math inline">\(^-o\)</span>@# rule to make the directory<br />
+$(OUTPUT_DIR):mkdir-p$@</p>
+<p>Recipe</p>
+<p>The “recipe” is the list of shell commands to be executed to create
+the target. They are passed into a sub-shell (/bin/sh by default). The
+rule is considered successful if the target is updated after the recipe
+runs (but is not an error if this doesn’t happen).</p>
+<p>foo.txt:# a simple recipeecho HEYO &gt;$@</p>
+<p>If any line of the recipe returns a non-zero exit code, Make will
+terminate and print an error message. You can tell Make to ignore
+non-zero exit codes by prefixing with the - character:</p>
+<p>.PHONY:cleanclean:# we don't care if rm fails-rm-r./build</p>
+<p>Prefixing a recipe line with @ will disable echoing that line before
+executing:</p>
+<p>clean:@# this recipe will just print 'About to clean everything!'@#
+prefixing the shell comment lines '#' here also prevents them from@#
+appearing during execution@echo About to clean everything!</p>
+<p>Make will expand variable/function expressions in the recipe context
+before running them, but will otherwise not process it. If you want to
+access shell variables, escape them with $:</p>
+<p>USER=linus</p>
+<p>print-user:# print out the shell variable <span
+class="math inline">\(USERecho\)</span>$USER</p>
+<p># print out the make variable USER<br />
+echo$(USER)</p>
+<p>Advanced Topics</p>
+<p>These features are less frequently encountered, but provide some
+powerful functionality that can enable sophisticated behavior in your
+build.</p>
+<p>Functions</p>
+<p>Make functions are called with the syntax:</p>
+<p>$(function-namearguments)</p>
+<p>where arguments is a comma-delimited list of arguments.</p>
+<p>Built-in Functions</p>
+<p>There are several functions provided by Make. The most common ones I
+use are for text manipulation:  <a
+target="_blank" rel="noopener" href="https://www.gnu.org/software/make/manual/html_node/Text-Functions.html">https://www.gnu.org/software/make/manual/html_node/Text-Functions.html</a> 
+<a
+target="_blank" rel="noopener" href="https://www.gnu.org/software/make/manual/html_node/File-Name-Functions.html">https://www.gnu.org/software/make/manual/html_node/File-Name-Functions.html</a></p>
+<p>For example:</p>
+<p>FILES=$(wildcard*.c)# you can combine function calls; here we strip
+the suffix off of $(FILES) with<br />
+# the <span class="math inline">\((basename) function, then add the .o
+suffix O_FILES=\)</span>(addsuffix.o,<span
+class="math inline">\((basename\)</span>(FILES)))# note that the GNU
+Make Manual suggests an alternate form for this particular<br />
+# operation:<br />
+O_FILES=$(FILES:.c=.o)</p>
+<p>User-Defined Functions</p>
+<p>You can define your own functions as well:</p>
+<p>reverse=<span
+class="math inline">\((2)\)</span>(1)foo=$(callreverse,a,b)</p>
+<p>A more complicated but quite useful example:</p>
+<p># recursive wildcard (use it instead of $(shell find . -name
+'*.c'))<br />
+# taken from <a
+target="_blank" rel="noopener" href="https://stackoverflow.com/a/18258352">https://stackoverflow.com/a/18258352</a><br />
+rwildcard=$(foreachd,$(wildcard<span
+class="math inline">\(1*),\)</span>(callrwildcard,$d/,<span
+class="math inline">\(2)\)</span>(filter$(subst<em>,%,<span
+class="math inline">\(2),\)</span>d))C_FILES=$(callrwildcard,.,</em>.c)</p>
+<p>Shell Function</p>
+<p>You can have Make call a shell expression and capture the result:</p>
+<p>TODAYS_DATE=$(shelldate--iso-8601)</p>
+<p>I’m cautious when using this feature, though; it adds a dependency on
+whatever programs you use, so if you’re calling more exotic programs,
+make sure your build environment is controlled (e.g. in a container or
+with <a
+target="_blank" rel="noopener" href="https://interrupt.memfault.com/blog/conda-developer-environments">Conda</a>).</p>
+<p>Conditionals</p>
+<p>Make has syntax for conditional expressions:</p>
+<p>FOO=yolo<br />
+ifeq(<span
+class="math inline">\((FOO),yolo)\)</span>(infofooisyolo!)else<span
+class="math inline">\((info foo is not yolo :( )endif# testing if a
+variable is set; unset variables are empty ifneq(\)</span>(FOO),)  #
+checking if FOO is blank<br />
+$(infoFOOisunset)endif</p>
+<p>The “complex conditional” syntax is just
+the if-elseif-else combination:</p>
+<p># "complex conditional"<br />
+ifeq(<span
+class="math inline">\((FOO),yolo)\)</span>(infofooisyolo)elseifeq(<span
+class="math inline">\((FOO), heyo)\)</span>(infofooisheyo)else$(info foo
+is not yolo or heyo :( )endif</p>
+<p>include Directive</p>
+<p>You can import other Makefile contents using
+the include directive:</p>
+<p>sources.mk:</p>
+<p>SOURCE_FILES:=.c .c  </p>
+<p>Makefile:</p>
+<p>include
+sources.mkOBJECT_FILES=$(SOURCE_FILES:.c=.o)%.o:%.c$(CC)-c$^-o$@</p>
+<p>Sub-make</p>
+<p>Invoking Make from a Makefile should be done with
+the $(MAKE) variable:</p>
+<p>somelib.a:$(MAKE)-Cpath/to/somelib/directory</p>
+<p>This is often used when building external libraries. It’s also used
+heavily in Kconfig builds (e.g. when building the Linux kernel).</p>
+<p>Note that this approach has some pitfalls:</p>
+<ul>
+<li>Recursive invocation can result in slow builds.<br />
+</li>
+<li>Tracking prerequisites can be tricky; often you will
+see .PHONY used.</li>
+</ul>
+<p>More details on the disadvantages here:</p>
+<p><a
+target="_blank" rel="noopener" href="http://aegis.sourceforge.net/auug97.pdf">http://aegis.sourceforge.net/auug97.pdf</a></p>
+<p>Metaprogramming with eval </p>
+<p>Make’s eval directive allows us to generate Make syntax at
+runtime:</p>
+<p># generate rules for xml-&gt;json in some weird world<br />
+FILES=<span class="math inline">\((wildcardinputfile/*.xml)# create a
+user-defined function that generates rules
+defineGENERATE_RULE=\)</span>(eval# prereq rule for creating output
+directory<br />
+<span class="math inline">\((1)_OUT_DIR=\)</span>(dir<span
+class="math inline">\((1))/\)</span>(1)_out<br />
+<span class="math inline">\((1)_OUT_DIR:mkdir-p\)</span>@# rule that
+calls a script on the input file and produces $@ target<br />
+<span class="math inline">\((1)_OUT_DIR/\)</span>(1).json:$(1) |
+$(1)_OUT_DIR./convert-xml-to-json.sh <span
+class="math inline">\((1)\)</span>@)# add the target to the all
+rule<br />
+all:<span class="math inline">\((1)_OUT_DIR/\)</span>(1).jsonendef</p>
+<p># produce the rules<br />
+.PHONY:allall:<span
+class="math inline">\((foreachfile,\)</span>(FILES),<span
+class="math inline">\((callGENERATE_RULE,\)</span>(file)))</p>
+<p>Note that approaches using this feature of Make can be quite
+confusing, adding helpful comments explaining what the intent is can be
+useful for your future self!</p>
+<p>VPATH</p>
+<p>VPATH is a special Make variable that contains a list of directories
+Make should search when looking for prerequisites and targets.</p>
+<p>It can be used to emit object files or other derived files into
+a ./build directory, instead of cluttering up the src directory:</p>
+<p># This makefile should be invoked from the temporary build directory,
+eg:<br />
+# $ mkdir -p build &amp;&amp; cd ./build &amp;&amp; make -f
+../Makefile<br />
+# Derive the directory containing this Makefile<br />
+MAKEFILE_DIR=<span
+class="math inline">\((shelldirname\)</span>(realpath<span
+class="math inline">\((firstword\)</span>(MAKEFILE_LIST))))# now inform
+Make we should look for prerequisites from the root directory as<br />
+# well as the cwd<br />
+VPATH+=$(MAKEFILE_DIR)SRC_FILES=$(wildcard$(MAKEFILE_DIR)/src/*.c)# Set
+the obj file paths to be relative to the cwd<br />
+OBJ_FILES=$(subst$(MAKEFILE_DIR)/,,$(SRC_FILES:.c=.o))# now we can
+continue as if Make was running from the root directory, and not a<br />
+# subdirectory<br />
+# $(OBJ_FILES) will be built by the pattern rule below<br />
+foo.a:$(OBJ_FILES)$(AR)rcs <span
+class="math inline">\(@\)</span>(OBJ_FILES)# pattern rule; since we
+added ROOT_DIR to VPATH, Make can find prerequisites<br />
+# like <code>src/test.c</code> when running from the build
+directory!<br />
+%.o:%.c# create the directory tree for the output file 👍echo<span
+class="math inline">\(@mkdir-p\)</span>(dir<span
+class="math inline">\(@)# compile\)</span>(CC)-c<span
+class="math inline">\(^-o\)</span>@</p>
+<p>I recommend avoiding use of VPATH. It’s usually simpler to achieve
+the same out-of-tree behavior by outputting the generated files in a
+build directory without needing VPATH.</p>
+<p>touch</p>
+<p>You may see the touch command used to track rules that seem difficult
+to otherwise track; for example, when unpacking a toolchain:</p>
+<p># our tools are stored in tools.tar.gz, and downloaded from a
+server<br />
+TOOLS_ARCHIVE=tools.tar.gz<br />
+TOOLS_URL=https://httpbin.org/get</p>
+<p># the rule to download the tools using wget<br />
+$(TOOLS_ARCHIVE):wget <span
+class="math inline">\((TOOLS_URL)-O\)</span>(TOOLS_ARCHIVE)# rule to
+unpack them<br />
+tools-unpacked.dummy:$(TOOLS_ARCHIVE)# running this command results in a
+directory.. but how do we know it# completed, without a file to
+track?tar xzvf $^# use the touch command to record completion in a dummy
+filetouch$@</p>
+<p>I recommend avoiding the use of touch. However there are some cases
+where it might be unavoidable.</p>
+<p>Debugging Makefiles</p>
+<p>I typically use the Make equivalent of printf,
+the $(info/warning/error) functions, for small problems, for example
+when checking conditional paths that aren’t working:</p>
+<p>ifeq(<span
+class="math inline">\((CC),clang)\)</span>(errorwhoops,clangnotsupported!)endif</p>
+<p>For debugging why a rule is running when it shouldn’t (or vice
+versa), you can use the --debug options:  <a
+target="_blank" rel="noopener" href="https://www.gnu.org/software/make/manual/html_node/Options-Summary.html">https://www.gnu.org/software/make/manual/html_node/Options-Summary.html</a></p>
+<p>I recommend redirecting stdout to a file when using this option, it
+can produce a lot of output.</p>
+<p>Profiling</p>
+<p>For profiling a make invocation (e.g. for attempting to improve
+compilation times), this tool can be useful:</p>
+<p><a
+target="_blank" rel="noopener" href="https://github.com/rocky/remake">https://github.com/rocky/remake</a></p>
+<p>Check out the tips here for compilation-related performance
+improvements:</p>
+<p><a
+target="_blank" rel="noopener" href="https://interrupt.memfault.com/blog/improving-compilation-times-c-cpp-projects">https://interrupt.memfault.com/blog/improving-compilation-times-c-cpp-projects</a></p>
+<p>Using a Verbose Flag</p>
+<p>If your project includes a lot of compiler flags (search paths, lots
+of warning flags, etc.), then you may want to simplify the output of
+Make rules. It can be useful to have a toggle to easily see the full
+output, for example:</p>
+<p>ifeq($(V),1)Q:=elseQ:=@<br />
+endif%.o:%.c# prefix the compilation command with the
+$(Q)variable        # use echo to print a simple "Compiling x.c" to show
+progress@echo Compiling <span
+class="math inline">\((notdir@^)\)</span>(Q)<span
+class="math inline">\((CC)-c\)</span>^-o$@</p>
+<p>To enable printing out the full compilation commands, set
+the V environment variable like so:</p>
+<p>$ V=1 make</p>
+<p>Full Example</p>
+<p>Here’s an annotated example of a complete build process for an
+example C project. You can see this example and the source tree <a
+target="_blank" rel="noopener" href="https://github.com/memfault/interrupt/tree/master/example/gnu-make-guidelines">here</a>.</p>
+<p># Makefile for building the 'example' binary from C sources<br />
+# Verbose flag<br />
+ifeq($(V),1)Q:=elseQ:=@<br />
+endif# The build folder, for all generated output. This should normally
+be included<br />
+# in a .gitignore rule<br />
+BUILD_FOLDER:=build</p>
+<p># Default all rule will build the 'example' target, which here is an
+executable<br />
+.PHONY:all:$(BUILD_FOLDER)/example# List of C source files. Putting this
+in a separate variable, with a file on<br />
+# each line, makes it easy to add files later (and makes it easier to
+see<br />
+# additions in pull requests). Larger projects might use a wildcard to
+locate<br />
+# source files automatically.<br />
+SRC_FILES=/example.c /main.c</p>
+<h1
+id="generate-a-list-of-.o-files-from-the-.c-files.-prefix-them-with-the-build">Generate
+a list of .o files from the .c files. Prefix them with the build</h1>
+<h1 id="folder-to-output-the-files-there">folder to output the files
+there</h1>
+<p>OBJ_FILES=<span
+class="math inline">\((addprefix\)</span>(BUILD_FOLDER)/,<span
+class="math inline">\((SRC_FILES:.c=.o))# Generate a list of depfiles,
+used to track includes. The file name is the same # as the object files
+with the .d extension added DEP_FILES=\)</span>(addsuffix.d,<span
+class="math inline">\((OBJ_FILES))# Flags to generate the .d
+dependency-tracking files when we compile.  It&#39;s # named the same as
+the target file with the .d extension
+DEPFLAGS=-MMD-MP-MF\)</span>@.d</p>
+<h1 id="include-the-dependency-tracking-files">Include the dependency
+tracking files</h1>
+<p>-include $(DEP_FILES)# List of include dirs. These are put into
+CFLAGS.<br />
+INCLUDE_DIRS=/</p>
+<h1
+id="prefix-the-include-dirs-with--i-when-passing-them-to-the-compiler">Prefix
+the include dirs with '-I' when passing them to the compiler</h1>
+<p>CFLAGS+=<span
+class="math inline">\((addprefix-I,\)</span>(INCLUDE_DIRS))# Set some
+compiler flags we need. Note that we're appending to the CFLAGS<br />
+# variable<br />
+CFLAGS+=-std=c11 -Wall-Werror-ffunction-sections-fdata-sections-Og-g3#
+Our project requires some linker flags: garbage collect sections, output
+a<br />
+# .map file<br />
+LDFLAGS+=-Wl,--gc-sections,-Map,$@.map</p>
+<h1 id="set-ldlibs-to-specify-linking-with-libm-the-math-library">Set
+LDLIBS to specify linking with libm, the math library</h1>
+<p>LDLIBS+=-lm# The rule for compiling the SRC_FILES into
+OBJ_FILES<br />
+$(BUILD_FOLDER)/%.o:%.c@echo Compiling <span
+class="math inline">\((notdir\)</span>&lt;)@# Create the folder
+structure for the output file@mkdir-p<span
+class="math inline">\((dir\)</span>@)<span
+class="math inline">\((Q)\)</span>(CC)<span
+class="math inline">\((CFLAGS)\)</span>(DEPFLAGS)-c<span
+class="math inline">\(&lt;-o\)</span>@# The rule for building the
+executable "example", using OBJ_FILES as<br />
+# prerequisites. Since we're not relying on an implicit rule, we need
+to<br />
+# explicity list CFLAGS, LDFLAGS, LDLIBS<br />
+<span
+class="math inline">\((BUILD_FOLDER)/example:\)</span>(OBJ_FILES)<span
+class="citation" data-cites="echo">@echo</span> Linking <span
+class="math inline">\((notdir\)</span>@)<span
+class="math inline">\((Q)\)</span>(CC)<span
+class="math inline">\((CFLAGS)\)</span>(LDFLAGS)<span
+class="math inline">\(^\)</span>(LDLIBS)-o<span class="math inline">\(@#
+Remove debug information for a smaller executable. An embedded project
+might # instead using [arm-none-eabi-]objcopy to convert the ELF file to
+a raw binary # suitable to be written to an embedded device
+STRIPPED_OUTPUT=\)</span>(BUILD_FOLDER)/example-stripped</p>
+<p><span
+class="math inline">\((STRIPPED_OUTPUT):\)</span>(BUILD_FOLDER)/example@echo
+Stripping <span class="math inline">\((notdir\)</span>@)<span
+class="math inline">\((Q)objcopy --strip-debug\)</span>^<span
+class="math inline">\(@# Since all our generated output is placed into
+the build folder, our clean rule # is simple. Prefix the recipe line
+with &#39;-&#39; to not error if the build folder # doesn&#39;t exist
+(the -f flag for rm also has this effect)
+.PHONY:cleanclean:-rm-rf\)</span>(BUILD_FOLDER)</p>
+<p>Recommendations</p>
+<p>A list of recommendations for getting the most of Make:</p>
+<ol type="1">
+<li>Targets should usually be real files.<br />
+</li>
+<li>Always use $(MAKE) when issuing sub-make commands.<br />
+</li>
+<li>Try to avoid using .PHONY targets. If the rule generates any file
+artifact, consider using that as the target instead of a phony
+name!<br />
+</li>
+<li>Try to avoid using implicit rules.<br />
+</li>
+<li>For C files, make sure to use .d automatic include tracking!<br />
+</li>
+<li>Use metaprogramming with caution.<br />
+</li>
+<li>Use automatic variables in rules. Always try to use $@ for a recipe
+output path, so your rule and Make have the exact same path.<br />
+</li>
+<li>Use comments liberally in Makefiles, especially if there is
+complicated behavior or subtle syntax used. Your co-workers (and future
+self) will thank you.<br />
+</li>
+<li>Use the -j or -l options to run Make in parallel!<br />
+</li>
+<li>Try to avoid using the touch command to track rule completion</li>
+</ol>
+<p>来自 &lt;<a
+target="_blank" rel="noopener" href="https://interrupt.memfault.com/blog/gnu-make-guidelines">https://interrupt.memfault.com/blog/gnu-make-guidelines</a>&gt;</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/CSAPP/" rel="tag"># CSAPP</a>
+              <a href="/blog/tags/compiler/" rel="tag"># compiler</a>
+              <a href="/blog/tags/GNU-Make/" rel="tag"># GNU Make</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/CSAPP/compiler/GNU%20Make/Makefile%E8%A7%84%E5%88%99/" rel="prev" title="Makefile规则">
+      <i class="fa fa-chevron-left"></i> Makefile规则
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/CSAPP/database/CAP%E5%AE%9A%E7%90%86/" rel="next" title="CAP定理">
+      CAP定理 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#a-machine-with-4-cores-make--j6"><span class="nav-number">1.</span> <span class="nav-text">a machine with 4 cores:$ make
+-j6</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#comments-are-prefixed-with-the-symbol"><span class="nav-number">2.</span> <span class="nav-text">Comments are prefixed
+with the &#39;#&#39; symbol</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#a-variable-assignment"><span class="nav-number">3.</span> <span class="nav-text">A variable assignment</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#generate-a-list-of-.o-files-from-the-.c-files.-prefix-them-with-the-build"><span class="nav-number">4.</span> <span class="nav-text">Generate
+a list of .o files from the .c files. Prefix them with the build</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#folder-to-output-the-files-there"><span class="nav-number">5.</span> <span class="nav-text">folder to output the files
+there</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#include-the-dependency-tracking-files"><span class="nav-number">6.</span> <span class="nav-text">Include the dependency
+tracking files</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#prefix-the-include-dirs-with--i-when-passing-them-to-the-compiler"><span class="nav-number">7.</span> <span class="nav-text">Prefix
+the include dirs with &#39;-I&#39; when passing them to the compiler</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#set-ldlibs-to-specify-linking-with-libm-the-math-library"><span class="nav-number">8.</span> <span class="nav-text">Set
+LDLIBS to specify linking with libm, the math library</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>

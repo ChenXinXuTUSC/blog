@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="茄子科技0830秋招笔试真题解析">
+<meta property="og:url" content="http://example.com/2023/10/11/data/interview/%E4%B8%87%E8%AF%BAcoding/%E8%8C%84%E5%AD%90%E7%A7%91%E6%8A%800830%E7%A7%8B%E6%8B%9B%E7%AC%94%E8%AF%95%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:27.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:27.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="interview">
+<meta property="article:tag" content="万诺coding">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/interview/%E4%B8%87%E8%AF%BAcoding/%E8%8C%84%E5%AD%90%E7%A7%91%E6%8A%800830%E7%A7%8B%E6%8B%9B%E7%AC%94%E8%AF%95%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>茄子科技0830秋招笔试真题解析 | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/interview/%E4%B8%87%E8%AF%BAcoding/%E8%8C%84%E5%AD%90%E7%A7%91%E6%8A%800830%E7%A7%8B%E6%8B%9B%E7%AC%94%E8%AF%95%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          茄子科技0830秋招笔试真题解析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:27" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:27+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/interview/" itemprop="url" rel="index"><span itemprop="name">interview</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>前言</strong></p>
+<p>本场难度比较低。不过越简单的笔试就越要注意一些细节，争取ak。</p>
+<p>茄子招人其实不多，不过年薪还是很可观的，不比一线大厂低，大家可以试一试。</p>
+<p>最后吐槽一句，腾讯的面试真没啥面的必要，面了大概率搞你心态而已。</p>
+<h2 id="第一题">第一题</h2>
+<p>由于某种众所周知的原因，食堂只开放了一个打饭窗口，已知一共会有n位学生陆陆续续进到食堂。</p>
+<p>牛牛知道这n位学生的相关信息，首先将这n位学生编号为1,2,...; n.</p>
+<p>每位学生的信息格式如下</p>
+<p>l:到达食堂的时间。</p>
+<p>s:强壮程度</p>
+<p>a:打饭耗时</p>
+<p>b:用餐耗时。</p>
+<p>r(r&gt;l）:开班会的时间</p>
+<p>学生按照到达食堂的时间进行排队，依次排到打饭窗口队伍的队尾，如果相同时间到达，则强壮程度值更高的排在前面，如果也同样强壮，则编号小的排在前面。</p>
+<p>当轮到某位学生打饭时，会耗费 a
+个单位时间，之后立即轮到排在这位学生后面的学生打饭；</p>
+<p>打完饭之后会耗费b个单位时间用餐。</p>
+<p>当且仅当用完餐时，尚未开始班会，才有可够赶上，即:如果从t时刻开始打饭，那么，当旦仅当t+a+b&lt;r时，才有可能赶上班会，否则，他/她将选择不吃这顿颈，直接去班会地点。</p>
+<p>一旦某位学生发现自己按照现有排队情况无法赶上班会，则他/她会直接走出对列，前往班会地点，即使已经珍到他/她打饭，他/她也会直接离开，不会产生任何其它时间消耗。</p>
+<p>假设每一位学生都足够聪明，请你判断每位学生是否能够用餐。</p>
+<p><strong>输入描述</strong></p>
+<p>本题为多组测试数据，第一行输入一个正整数
+T(1&lt;=T&lt;=1000),代表测试数据的组数。</p>
+<p>对于每组测试数据，第一行输入一个正整数
+n(1&lt;=n&lt;=10^5)，代表到食堂就餐的学生数量。</p>
+<p>接下去n行，第i+1行输入五个正整数l,s,a,b,r(1&lt;=l,s,a,b&lt;=10<sup>4;1&lt;=r&lt;=10</sup>9;l&lt;r)，表示编号为i的这位学生的相关信息，具体含义如题所述。</p>
+<p>题目保证，所有测试数据的n之和不会超过10^5。</p>
+<p><strong>输出描述</strong></p>
+<p>对于每组测试数据，一行输出一个长度为n的01串，其中，第i个字符为1，则说明编号为i的这位学生能够顺利用餐;否则，说明这位学生来不及用餐。</p>
+<p><strong>示例1</strong></p>
+<p><strong>输入</strong><br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">2  </span><br><span class="line">3  </span><br><span class="line">1 3 1 1 5  </span><br><span class="line">1 1 1 3 7  </span><br><span class="line">1 3 2 1 5  </span><br><span class="line">6  </span><br><span class="line">2 5 5 3 6  </span><br><span class="line">4 1 3 5 6  </span><br><span class="line">1 3 2 3 13  </span><br><span class="line">4 2 5 3 9  </span><br><span class="line">4 2 2 1 6  </span><br><span class="line">1 1 5 3 14</span><br></pre></td></tr></table></figure></p>
+<p><strong>输出</strong><br />
+<code>110   001001</code></p>
+<p><strong>说明</strong></p>
+<p>以第一组测试数据为例，根据规则，打饭窗口的队伍顺序从前往后的学生编号依次为
+1，3，2，因为他们三位同时间到达食堂，1，3号学生比2号学生更强壮，在1号和3号学生同样强壮的前提下，编号小的排在前面。</p>
+<p>1号学生在1时刻到达食堂，打饭耗时1，用餐耗时1，在3
+时刻结束用餐，而班会在时刻5的时候才开始，所以他能赶上也就可以安心吃饭;</p>
+<p>3 号学生在1号学生打完饭后，也就是2 时刻开始打饭，打饭耗时 2，用餐耗时
+1，如果选择用餐的话，他/她会在时刻5的时候结束用餐，此时班会正好开始，来不及，所以这位同学不会选择吃饭，也就不会产生打饭耗时。</p>
+<p>由于3号学生没有选择就餐，所以，在1号学生打完饭之后就轮到了2号，也就是2时刻开始打饭，打饭耗时1，用餐耗时
+3，如果选择用餐的话，他/她会在时刻6的时候结束用餐，距离班会还有一个单位时间，能够赶上，所以这位同学可以安心吃饭。</p>
+<p>综上，1，2 号同学可以吃饭，而 3 号同学不会选择就餐，因此，输出为
+110。</p>
+<p><strong>思路与代码</strong></p>
+<p>模拟题。</p>
+<p>/<em>用结构体存储每个学生信息，并进行&lt;重写，之后根据输入信息，判断每一名同学是否来的及班会，并用字符串存储结果</em>/<br />
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span>  </span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;  </span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">stu</span> &#123;  </span><br><span class="line"> <span class="type">int</span> L，s, a, b, r, id;  </span><br><span class="line"> <span class="type">bool</span> <span class="keyword">operator</span>&lt;(stu&amp; t) &#123;  </span><br><span class="line">  <span class="keyword">if</span> (L != t.L) <span class="keyword">return</span> L &lt; t.L;  </span><br><span class="line">  <span class="keyword">if</span> (s != t.s) <span class="keyword">return</span> s &gt; t.s;  </span><br><span class="line">  <span class="keyword">return</span> id &lt; t.id;  </span><br><span class="line"> &#125;  </span><br><span class="line">&#125;a[<span class="number">100010</span>];  </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">solve</span><span class="params">()</span> </span>&#123;  </span><br><span class="line"> <span class="type">int</span> ni  </span><br><span class="line">  cin &gt;&gt; n;  </span><br><span class="line"> <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;  </span><br><span class="line">  cin &gt;&gt; a[i].L &gt;&gt; a[i].s &gt;&gt; a[i].a &gt;&gt; a[i].b &gt;&gt; a[i].ri  </span><br><span class="line">   a[i].id = i;  </span><br><span class="line"> &#125;  </span><br><span class="line"> <span class="built_in">sort</span>(a + <span class="number">1</span>，a + <span class="number">1</span> + n);  </span><br><span class="line"> <span class="type">int</span> t = <span class="number">0</span>;  </span><br><span class="line"> string ans;  </span><br><span class="line">        ans.<span class="built_in">resize</span>(n);  </span><br><span class="line"> <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;  </span><br><span class="line">  t = <span class="built_in">max</span>(t，a[i].L);  </span><br><span class="line">  <span class="keyword">if</span> (t + a[i].a + a[i].b &lt; a[i].r) &#123;  </span><br><span class="line">   t += a[i].ai  </span><br><span class="line">          ans[a[i].id<span class="number">-1</span>] = <span class="string">&#x27;1&#x27;</span>;  </span><br><span class="line">  &#125;  </span><br><span class="line">  <span class="keyword">else</span> &#123;  </span><br><span class="line">   ans[a[i].id<span class="number">-1</span>] = <span class="string">&#x27;0&#x27;</span>;  </span><br><span class="line">  &#125;  </span><br><span class="line">  </span><br><span class="line"> &#125;  </span><br><span class="line"> cout &lt;&lt; ans &lt;&lt; <span class="string">&quot;\n&quot;</span>;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;  </span><br><span class="line"> <span class="type">int</span> T;  </span><br><span class="line"> cin &gt;&gt; T;  </span><br><span class="line"> <span class="keyword">while</span> (T--) &#123;  </span><br><span class="line">  <span class="built_in">solve</span>();  </span><br><span class="line">  </span><br><span class="line"> &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="第二题">第二题</h2>
+<p>编写一个函数，将一个字符串中的空格替换成“%100”。</p>
+<p><strong>输入描述</strong></p>
+<p>输入一段字符串。</p>
+<p><strong>输出描述</strong></p>
+<p>输出替换空格后的字符串。</p>
+<p><strong>示例1</strong></p>
+<p><strong>输入</strong></p>
+<p>Welcome To Chinatelecom</p>
+<p><strong>输出</strong></p>
+<p>Welcome%100To%100Chinatelecom</p>
+<p><strong>思路与代码</strong></p>
+<p>打卡题。</p>
+<p>直接模拟即可。<br />
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*这里注意字符串的输入方式，cin输入是不行的，因为遇到空格就停止了*/</span>  </span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span>  </span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;  </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;  </span><br><span class="line"> tring s;  </span><br><span class="line"> <span class="built_in">getline</span>(cin, s);  </span><br><span class="line"> string ans = <span class="string">&quot;&quot;</span>  </span><br><span class="line"> <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; s.<span class="built_in">length</span>(); i++)&#123;  </span><br><span class="line">           <span class="keyword">if</span> (s[i]--<span class="string">&#x27;&#x27;)   ans += &quot;%100&quot;;  </span></span><br><span class="line"><span class="string">           else            ans += s[i];   </span></span><br><span class="line"><span class="string"> &#125;    </span></span><br><span class="line"><span class="string"> cout &lt;&lt; ans;  </span></span><br><span class="line"><span class="string"> return 0;  </span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/interview/" rel="tag"># interview</a>
+              <a href="/blog/tags/%E4%B8%87%E8%AF%BAcoding/" rel="tag"># 万诺coding</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/interview/%E4%B8%87%E8%AF%BAcoding/%E9%98%BF%E9%87%8C0923%E7%A7%8B%E6%8B%9B%E7%AC%94%E8%AF%95%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90/" rel="prev" title="阿里0923秋招笔试真题解析">
+      <i class="fa fa-chevron-left"></i> 阿里0923秋招笔试真题解析
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/interview/%E4%B8%87%E8%AF%BAcoding/%E8%85%BE%E8%AE%AF0910%E7%A7%8B%E6%8B%9B%E7%AC%94%E8%AF%95%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90/" rel="next" title="腾讯0910秋招笔试真题解析">
+      腾讯0910秋招笔试真题解析 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">第一题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">第二题</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>

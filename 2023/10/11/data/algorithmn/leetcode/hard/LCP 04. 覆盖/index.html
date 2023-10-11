@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="LCP 04. 覆盖">
+<meta property="og:url" content="http://example.com/2023/10/11/data/algorithmn/leetcode/hard/LCP%2004.%20%E8%A6%86%E7%9B%96/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:19.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:19.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="algorithmn">
+<meta property="article:tag" content="leetcode">
+<meta property="article:tag" content="hard">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/algorithmn/leetcode/hard/LCP%2004.%20%E8%A6%86%E7%9B%96/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>LCP 04. 覆盖 | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/algorithmn/leetcode/hard/LCP%2004.%20%E8%A6%86%E7%9B%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LCP 04. 覆盖
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:19" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:19+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/algorithmn/" itemprop="url" rel="index"><span itemprop="name">algorithmn</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="困难">[<span style="color:red;">困难</span>]</h2>
+<p>你有一块棋盘，棋盘上有一些格子已经坏掉了。你还有无穷块大小为<code>1 * 2</code>的多米诺骨牌，你想把这些骨牌<strong>不重叠</strong>地覆盖在<strong>完好</strong>的格子上，请找出你最多能在棋盘上放多少块骨牌？这些骨牌可以横着或者竖着放。</p>
+<p>输入：<code>n, m</code>代表棋盘的大小；<code>broken</code>是一个<code>b * 2</code>的二维数组，其中每个元素代表棋盘上每一个坏掉的格子的位置。</p>
+<p>输出：一个整数，代表最多能在棋盘上放的骨牌数。</p>
+<p><strong>示例 1：</strong></p>
+<p><strong>输入：</strong> n = 2, m = 3, broken = [[1, 0], [1, 1]]<br />
+<strong>输出：</strong> 2<br />
+<strong>解释：</strong> 我们最多可以放两块骨牌：[[0, 0], [0, 1]]以及[[0,
+2], [1, 2]]。（见下图）</p>
+<p><img
+src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2019/09/09/domino_example_1.jpg" /></p>
+<p><strong>示例 2：</strong></p>
+<p><strong>输入：</strong> n = 3, m = 3, broken = []<br />
+<strong>输出：</strong> 4<br />
+<strong>解释：</strong> 下图是其中一种可行的摆放方式</p>
+<p><img
+src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2019/09/09/domino_example_2.jpg" /></p>
+<p><strong>限制：</strong></p>
+<ol type="1">
+<li><code>1 &lt;= n &lt;= 8</code><br />
+</li>
+<li><code>1 &lt;= m &lt;= 8</code><br />
+</li>
+<li><code>0 &lt;= b &lt;= n * m</code></li>
+</ol>
+<p>本题可以转化为二分图问题，将网格的相邻格子涂成不同颜色，这样就得到了两个不同颜色的格子集合。这样涂色后的棋盘，一个骨牌需要占据两个不同颜色的格子，可以把顾盼抽象为连接两个集合中对应点的一条边；这样，放置最多的骨牌问题就转化为了求解二分图的最大匹配问题，也即给定两个集合找到匹配最多的匹配方式。二分图的定义可以参考<a
+target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/is-graph-bipartite/">785.
+判断二分图</a><br />
+<img
+src="https://pic.leetcode-cn.com/1630982158-ZqfjKv-image.png" /><br />
+二分图最大匹配问题，一般可以用匈牙利算法解决。在介绍匈牙利算法之前，我们需要明确一些专有名词：<br />
+1.
+匹配集合：我们最终的目标是最大化边的数量，这些边将加入匹配集合。<br />
+2.
+匹配边、匹配点：在二分图中，如果我们本次将两个点连成的边加入匹配集合，就说我们当前将这条边作为了匹配边，边的两个端点均称作匹配点。<br />
+3.
+未匹配边、未匹配点：在二分图中，如果一个点有一条以上的边，并且其中某一条边已经被加入了匹配集合成为了匹配边，那么剩余的边均称作未匹配边，这些边的另一个端点称为未匹配点。<br />
+4.
+增广路：以未匹配边开始和结束，且未匹配边与匹配边交替出现的路径。<br />
+<img
+src="https://pic.leetcode-cn.com/1630983504-mVLUxa-image.png" /><br />
+为了便于大家理解，我们通过下图（红框和篮框分别表示二分图中的两部分，黑色圆圈表示不同的点。黄色和绿色线条都表示点之间的边）来解释上面
+4 个概念：</p>
+<p>我们首先将 1 号点和 5
+号点之间的边放入匹配集合，该边就变成了匹配边（黄色标识）。111 和 555
+号点就均变为了匹配点，此时，这两个点连接的其他边（(1,7),(2,5),(4,5)）就称作未匹配边，对应的点
+2,4,7 就均称作未匹配点。我们其次将 333 号点和 666
+号点之间的边放入匹配集合，该边就变成了匹配边，这两个点变为了匹配点。由于这两个点没有连其他的边，所以不会出现新的未匹配边。</p>
+<p>此时，我们发现，路径 2−5−1−7 就是一条 未匹配边-匹配边-未匹配边
+组合的增广路径。</p>
+<p>明确了这些概念后，我们便来看我们的匈牙利算法：</p>
+<ol type="1">
+<li>初始时，最大匹配集合为空。<br />
+</li>
+<li>我们先找到一组匹配边，加入匹配集合。<br />
+</li>
+<li>找到一条增广路径，我们将其中的所有匹配边变为未匹配边，将所有的未匹配边变为匹配边。<br />
+</li>
+<li>循环步骤 ，直到图中不存在增广路径。算法结束<br />
+匈牙利算法中，最重要的便是步骤 。我们来深入理解一下：</li>
+</ol>
+<p>对于一条增广路径，根据其定义，必定含有 k+1 条未匹配边以及 k
+条匹配边。那么，步骤 3
+的作用，其实就是将未匹配边和匹配边互换，这样，该路径上就会更新为 kkk
+条未匹配边以及 k+1 条匹配边，这样匹配边的数量就比互换之前多了 1
+个。结合刚才的图片来看：<br />
+<img
+src="https://pic.leetcode-cn.com/1630984075-avxQSO-image.png" /><br />
+我们将增广路径 2−5−1−7 上的未匹配边 (2,5),(1,7) 变为匹配边，将匹配边
+(5,1)
+变为未匹配边，图中总匹配边数就从原来的两条（(1,5),(3,6)）变成了三条（(2,5),(1,7),(3,6)）。</p>
+<p>以上就是我们的匈牙利算法啦！在代码中，我们使用了二分图模板
+BinaryGraph 类初始化二分图，利用其中的 add 函数完成加边，并利用其中的
+solve 方法即可直接求得最大匹配。</p>
+<p>作者：算法小爱<br />
+链接：https://leetcode.cn/problems/broken-board-dominoes/solutions/983247/suan-fa-xiao-ai-cong-ling-dao-yi-jiao-hu-8b4k/<br />
+来源：力扣（LeetCode）<br />
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">BipartiteGraph</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; graph;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; seta; <span class="comment">// set A</span></span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; setb; <span class="comment">// set B</span></span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; visi; <span class="comment">// visited or not</span></span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> num_a = <span class="number">0</span>;    <span class="comment">// number of elements in set A</span></span><br><span class="line">    <span class="type">int</span> num_b = <span class="number">0</span>;    <span class="comment">// number of elements in set B</span></span><br><span class="line">    <span class="type">int</span> stamp = <span class="number">0</span>;    <span class="comment">// time stamp of each step</span></span><br><span class="line">    <span class="type">int</span> match = <span class="number">0</span>;    <span class="comment">// maximum matches magnitude</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">BipartiteGraph</span>() = <span class="keyword">delete</span>;</span><br><span class="line">    <span class="built_in">BipartiteGraph</span>(<span class="type">int</span> na, <span class="type">int</span> nb) : <span class="built_in">num_a</span>(na), <span class="built_in">num_b</span>(nb)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">assert</span>(na &gt;= <span class="number">0</span> &amp;&amp; nb &gt;= <span class="number">0</span>);</span><br><span class="line">        seta = <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(na, <span class="number">-1</span>);</span><br><span class="line">        setb = <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(nb, <span class="number">-1</span>);</span><br><span class="line">        visi = <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(na);</span><br><span class="line">        graph.<span class="built_in">resize</span>(na);</span><br><span class="line"></span><br><span class="line">        stamp = <span class="number">0</span>;</span><br><span class="line">        match = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span> src, <span class="type">int</span> dst)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="built_in">assert</span>(src &gt;= <span class="number">0</span> &amp;&amp; dst &gt;= <span class="number">0</span>);</span><br><span class="line">        graph[src].<span class="built_in">push_back</span>(dst);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> vtx)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        visi[vtx] = stamp;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">const</span> <span class="type">int</span>&amp; nbg : graph[vtx])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (setb[nbg] == <span class="number">-1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                seta[vtx] = nbg;</span><br><span class="line">                setb[nbg] = vtx;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">const</span> <span class="type">int</span>&amp; nbg : graph[vtx])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (visi[setb[nbg]] != stamp &amp;&amp; <span class="built_in">dfs</span>(setb[nbg]))</span><br><span class="line">            &#123;</span><br><span class="line">                seta[vtx] = nbg;</span><br><span class="line">                setb[nbg] = vtx;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">solve</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            stamp++;</span><br><span class="line">            <span class="type">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">            <span class="comment">// find all augment paths</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; num_a; ++i)</span><br><span class="line">                <span class="keyword">if</span> (seta[i] == <span class="number">-1</span> &amp;&amp; <span class="built_in">dfs</span>(i)) cnt++;</span><br><span class="line">            <span class="comment">// if there is no augment path anymore, exit</span></span><br><span class="line">            <span class="keyword">if</span> (!cnt) <span class="keyword">break</span>;</span><br><span class="line">            match += cnt;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> match;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> dirs[<span class="number">4</span>][<span class="number">2</span>] = &#123;</span><br><span class="line">        &#123;<span class="number">0</span>, <span class="number">1</span>&#125;,</span><br><span class="line">        &#123;<span class="number">0</span>, <span class="number">-1</span>&#125;,</span><br><span class="line">        &#123;<span class="number">1</span>, <span class="number">0</span>&#125;,</span><br><span class="line">        &#123;<span class="number">-1</span>, <span class="number">0</span>&#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">domino</span><span class="params">(<span class="type">int</span> n, <span class="type">int</span> m, vector&lt;vector&lt;<span class="type">int</span>&gt;&gt;&amp; broken)</span> </span>&#123;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">isok</span>(n, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(m, <span class="number">1</span>));</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">const</span> vector&lt;<span class="type">int</span>&gt;&amp; pos : broken)</span><br><span class="line">            isok[pos[<span class="number">0</span>]][pos[<span class="number">1</span>]] = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="function">BipartiteGraph <span class="title">bg</span><span class="params">(n * m, m * n)</span></span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; m; ++j)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// broken position, skipped</span></span><br><span class="line">                <span class="keyword">if</span> (!isok[i][j]) <span class="keyword">continue</span>;</span><br><span class="line">                <span class="comment">// we only need to build edges from one side</span></span><br><span class="line">                <span class="keyword">if</span> ((i + j) % <span class="number">2</span> == <span class="number">1</span>) <span class="keyword">continue</span>;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> d = <span class="number">0</span>; d &lt; <span class="number">4</span>; ++d)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="type">int</span> drow = i + dirs[d][<span class="number">0</span>];</span><br><span class="line">                    <span class="type">int</span> dcol = j + dirs[d][<span class="number">1</span>];</span><br><span class="line">                    <span class="keyword">if</span> (drow &lt; <span class="number">0</span> || drow &gt;= n) <span class="keyword">continue</span>;</span><br><span class="line">                    <span class="keyword">if</span> (dcol &lt; <span class="number">0</span> || dcol &gt;= m) <span class="keyword">continue</span>;</span><br><span class="line">                    <span class="keyword">if</span> (!isok[drow][dcol]) <span class="keyword">continue</span>;</span><br><span class="line">                    bg.<span class="built_in">add</span>(i * m + j, drow * m + dcol);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> bg.<span class="built_in">solve</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/algorithmn/" rel="tag"># algorithmn</a>
+              <a href="/blog/tags/leetcode/" rel="tag"># leetcode</a>
+              <a href="/blog/tags/hard/" rel="tag"># hard</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/algorithmn/leetcode/midium/1004.%20%E6%9C%80%E5%A4%A7%E8%BF%9E%E7%BB%AD1%E7%9A%84%E4%B8%AA%E6%95%B0%20III/" rel="prev" title="1004. 最大连续1的个数 III">
+      <i class="fa fa-chevron-left"></i> 1004. 最大连续1的个数 III
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/algorithmn/leetcode/midium/57.%20%E6%8F%92%E5%85%A5%E5%8C%BA%E9%97%B4/" rel="next" title="57. 插入区间">
+      57. 插入区间 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%B0%E9%9A%BE"><span class="nav-number">1.</span> <span class="nav-text">[困难]</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>

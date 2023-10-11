@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="常用寄存器 - 参考一">
+<meta property="og:url" content="http://example.com/2023/10/11/data/CSAPP/os/assemble/%E5%B8%B8%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8%20-%20%E5%8F%82%E8%80%83%E4%B8%80/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:15.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:15.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="CSAPP">
+<meta property="article:tag" content="os">
+<meta property="article:tag" content="assemble">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/CSAPP/os/assemble/%E5%B8%B8%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8%20-%20%E5%8F%82%E8%80%83%E4%B8%80/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>常用寄存器 - 参考一 | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/CSAPP/os/assemble/%E5%B8%B8%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8%20-%20%E5%8F%82%E8%80%83%E4%B8%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          常用寄存器 - 参考一
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:15" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:15+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/CSAPP/" itemprop="url" rel="index"><span itemprop="name">CSAPP</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="通用寄存器-general-register">通用寄存器 (general register)</h2>
+<p>通用寄存器是平时运行程序会使用到的寄存器，也是最多接触的寄存器</p>
+<table>
+<thead>
+<tr class="header">
+<th>64-bit</th>
+<th>32-bit</th>
+<th>16-bit</th>
+<th>8-bit (low)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>RAX</td>
+<td>EAX</td>
+<td>AX</td>
+<td>AL</td>
+</tr>
+<tr class="even">
+<td>RBX</td>
+<td>EBX</td>
+<td>BX</td>
+<td>BL</td>
+</tr>
+<tr class="odd">
+<td>RCX</td>
+<td>ECX</td>
+<td>CX</td>
+<td>CL</td>
+</tr>
+<tr class="even">
+<td>RDX</td>
+<td>EDX</td>
+<td>DX</td>
+<td>DL</td>
+</tr>
+<tr class="odd">
+<td>RSI</td>
+<td>ESI</td>
+<td>SI</td>
+<td>SIL</td>
+</tr>
+<tr class="even">
+<td>RDI</td>
+<td>EDI</td>
+<td>DI</td>
+<td>DIL</td>
+</tr>
+<tr class="odd">
+<td>RBP</td>
+<td>EBP</td>
+<td>BP</td>
+<td>BPL</td>
+</tr>
+<tr class="even">
+<td>RSP</td>
+<td>ESP</td>
+<td>SP</td>
+<td>SPL</td>
+</tr>
+<tr class="odd">
+<td>R8</td>
+<td>R8D</td>
+<td>R8W</td>
+<td>R8B</td>
+</tr>
+<tr class="even">
+<td>R9</td>
+<td>R9D</td>
+<td>R9W</td>
+<td>R9B</td>
+</tr>
+<tr class="odd">
+<td>R10</td>
+<td>R10D</td>
+<td>R10W</td>
+<td>R10B</td>
+</tr>
+<tr class="even">
+<td>R11</td>
+<td>R11D</td>
+<td>R11W</td>
+<td>R11B</td>
+</tr>
+<tr class="odd">
+<td>R12</td>
+<td>R12D</td>
+<td>R12W</td>
+<td>R12B</td>
+</tr>
+<tr class="even">
+<td>R13</td>
+<td>R13D</td>
+<td>R13W</td>
+<td>R13B</td>
+</tr>
+<tr class="odd">
+<td>R14</td>
+<td>R14D</td>
+<td>R14W</td>
+<td>R14B</td>
+</tr>
+<tr class="even">
+<td>R15</td>
+<td>R15D</td>
+<td>R15W</td>
+<td>R15B</td>
+</tr>
+</tbody>
+</table>
+<p>其中16位的寄存器中，可以访问其高8位的数据</p>
+<table>
+<thead>
+<tr class="header">
+<th>16-bit</th>
+<th>8-bit (high)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AX</td>
+<td>AH</td>
+</tr>
+<tr class="even">
+<td>BX</td>
+<td>BH</td>
+</tr>
+<tr class="odd">
+<td>CX</td>
+<td>CH</td>
+</tr>
+<tr class="even">
+<td>DX</td>
+<td>DH</td>
+</tr>
+</tbody>
+</table>
+<h3 id="位寄存器">32位寄存器</h3>
+<ul>
+<li>eax：通常用来执行加法，函数调用的返回值一般也放在这里面<br />
+</li>
+<li>ebx：数据存取<br />
+</li>
+<li>ecx：通常用作计数器，比如for循环<br />
+</li>
+<li>edx：暂不清楚<br />
+</li>
+<li>esp：栈顶指针，指向栈的顶部<br />
+</li>
+<li>ebp：栈底指针，指向栈的底部，通常用ebp+偏移量的形式来定位函数存放在栈中的局部变量<br />
+</li>
+<li>edi：字符串操作时，用于存放数据源的地址<br />
+</li>
+<li>esi：字符串操作时，用于存放目的地址的，和edi两个经常搭配一起使用，执行字符串的复制等操作</li>
+</ul>
+<h3 id="位的寄存器">64位的寄存器</h3>
+<ul>
+<li>rax：通常用于存储函数调用返回值<br />
+</li>
+<li>rsp：栈顶指针，指向栈的顶部<br />
+</li>
+<li>rdi：第一个入参<br />
+</li>
+<li>rsi：第二个入参<br />
+</li>
+<li>rdx：第三个入参<br />
+</li>
+<li>rcx：第四个入参<br />
+</li>
+<li>r8：第五个入参<br />
+</li>
+<li>r9：第六个入参<br />
+</li>
+<li>rbx：数据存储，遵循Callee Save原则<br />
+</li>
+<li>rbp：数据存储，遵循Callee Save原则<br />
+</li>
+<li>r12~r15：数据存储，遵循Callee Save原则<br />
+</li>
+<li>r10~r11：数据存储，遵循Caller Save原则</li>
+</ul>
+<h2 id="特殊寄存器-special-registers">特殊寄存器 (Special
+registers)</h2>
+<ul>
+<li>指针寄存器(instruction pointer, RIP.)<br />
+X86-64的RIP可以切分成32位的EIP 和
+16位IP，CPU是几位模式下就只能使用对应的指针寄存器。<br />
+</li>
+<li>状态寄存器(status register, RFLAGS)</li>
+</ul>
+<p>RFLAGS也有32位和16位版本，分别是EFLAGS 和 FLAGS。但是EFLAGS 和
+FLAGS可以同时使用。</p>
+<p><img
+src="https://pic3.zhimg.com/80/v2-fcc30c2e490560fae0b761a5d5546e7a_720w.webp" /></p>
+<p>32位的状态寄存器</p>
+<ul>
+<li>CF： 进位标志<br />
+</li>
+<li>PF ： 奇偶标志<br />
+</li>
+<li>ZF ： 零标志<br />
+</li>
+<li>SF ： 符号标志<br />
+</li>
+<li>OF ： 补码溢出标志<br />
+</li>
+<li>TF： 跟踪标志<br />
+</li>
+<li>IF ： 中断标志</li>
+</ul>
+<h2 id="段寄存器-segment-registers">段寄存器 (Segment registers)</h2>
+<p>X86-64一共有6个段寄存器: CS, SS, DS, ES, FS, and GS。</p>
+<ul>
+<li>除了长模式以外的所有CPU运行模式里，都有一个段选择器 selector,
+表示当前使用GDT 还是 LDT。 同时，还需要一个段描述符descriptor,
+提供了段的基址和范围。（Linux中基本不使用分段）<br />
+</li>
+<li>长模式中，除了 FS 和 GS
+之外的所有内容都被视为在一个具有零基地址和64位范围的平面地址空间中。 FS
+和 GS 作为特殊情况保留，但不再使用段描述符表，取而代之的是，访问保存在
+FSBASE 和 GSBASE 中的MSR寄存器中的基地址。</li>
+</ul>
+<p><img
+src="https://pic2.zhimg.com/80/v2-226ccb6abac9ef805dc9b0644c989415_720w.webp" /></p>
+<p>段寄存器（16位）</p>
+<h2 id="调试寄存器debug-registers">调试寄存器(Debug registers)</h2>
+<p>帮助和加速软件调试器的寄存器，如GDB。</p>
+<ul>
+<li>有6个调试寄存器，分为两种类型：DR0到DR3包含线性地址，每个地址都与一个断点条件相关。<br />
+</li>
+<li>DR6和DR7是调试状态和控制寄存器。DR6的低位表示遇到了哪些调试条件（在进入调试异常处理程序时），而DR7控制哪些断点地址被启用以及它们的断点条件（例如，当某一地址被写入时）。<br />
+</li>
+<li>DR4heDR5不清楚具体使用。但它们确实被使用于编码，但分别被当做DR6和DR7，或者在<a
+href="https://link.zhihu.com/?target=http%3A//CR4.DE">http://CR4.DE</a>[位3]=1时产生#UD异常。</li>
+</ul>
+<h2 id="控制寄存器-control-registers">控制寄存器 (Control
+registers)</h2>
+<p>x86-64 定义了一组控制寄存器，可用于管理和检查 CPU 的状态。有 16
+个“主”控制寄存器，所有这些都可以通过<a
+href="https://link.zhihu.com/?target=https%3A//www.felixcloutier.com/x86/mov-1">MOV
+variant</a>变体访问:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CR0</td>
+<td>Basic CPU operation flags</td>
+</tr>
+<tr class="even">
+<td>CR1</td>
+<td>Reserved</td>
+</tr>
+<tr class="odd">
+<td>CR2</td>
+<td>Page-fault linear address</td>
+</tr>
+<tr class="even">
+<td>CR3</td>
+<td>Virtual addressing state</td>
+</tr>
+<tr class="odd">
+<td>CR4</td>
+<td>Protected mode operation flags</td>
+</tr>
+<tr class="even">
+<td>CR5</td>
+<td>Reserved</td>
+</tr>
+<tr class="odd">
+<td>CR6</td>
+<td>Reserved</td>
+</tr>
+<tr class="even">
+<td>CR7</td>
+<td>Reserved</td>
+</tr>
+<tr class="odd">
+<td>CR8</td>
+<td>Task priority register (TPR)</td>
+</tr>
+<tr class="even">
+<td>CR9</td>
+<td>Reserved</td>
+</tr>
+<tr class="odd">
+<td>CR10</td>
+<td>Reserved</td>
+</tr>
+<tr class="even">
+<td>CR11</td>
+<td>Reserved</td>
+</tr>
+<tr class="odd">
+<td>CR12</td>
+<td>Reserved</td>
+</tr>
+<tr class="even">
+<td>CR13</td>
+<td>Reserved</td>
+</tr>
+<tr class="odd">
+<td>CR14</td>
+<td>Reserved</td>
+</tr>
+<tr class="even">
+<td>CR15</td>
+<td>Reserved</td>
+</tr>
+</tbody>
+</table>
+<p>所有reserved的控制寄存器在访问时都会产生保护模式异常，不把它们算在本文里。</p>
+<p>除了 “主”CRn控制寄存器之外，还有
+“扩展”控制寄存器，由XSAVE功能集引入。截至目前，XCR0是唯一指定的扩展控制寄存器。</p>
+<p>扩展控制寄存器使用<a
+href="https://link.zhihu.com/?target=https%3A//www.felixcloutier.com/x86/xgetbv">XGETBV</a> 和 <a
+href="https://link.zhihu.com/?target=https%3A//www.felixcloutier.com/x86/xsetbv">XSETBV</a>而不是MOV的变种。</p>
+<h3 id="cr0">CR0</h3>
+<ul>
+<li>PG：开启分页模式<br />
+</li>
+<li>CD：控制Cache高速缓存功能，CD=1关闭该功能<br />
+</li>
+<li>NW：控制使用通写还是回写，用于维护内存数据一致性，NW=1关闭该功能，数据一致性即通过MESI协议<br />
+</li>
+<li>AM：控制启用内存对齐自动检查<br />
+</li>
+<li>WP：控制开启内存写保护，WP=0开启写保护，对只读页面尝试写入将触发异常，这一机制常常被用来实现写时复制功能<br />
+</li>
+<li>PE：如果PE=1，则保护模式启动，如果PE=0，则在实模式下运行</li>
+</ul>
+<p><img
+src="https://pic4.zhimg.com/80/v2-3c15147ea855ff1cbf719fff8ec9e16f_720w.webp" /></p>
+<p>CR0寄存器</p>
+<h3 id="cr1">CR1</h3>
+<p>保留</p>
+<p><img
+src="https://pic3.zhimg.com/80/v2-b0c11341c00fcdd9f4b5fe11c7985f7a_720w.webp" /></p>
+<h3 id="cr2">CR2</h3>
+<p><img
+src="https://pic4.zhimg.com/80/v2-63417d23faf777d9b7b769887ba47b63_720w.webp" /></p>
+<p>x86架构中的CR2寄存器是页故障线性地址寄存器，也称为页故障地址寄存器（Page
+Fault Linear Address Register）。当CPU检测到一个页故障（Page
+Fault）时，它会将故障发生时的线性地址存储在CR2寄存器中，这个地址指向导致页故障的页面。</p>
+<p>内核可以通过读取CR2寄存器来获取引起页故障的地址，然后对该地址所在的页面进行处理，比如进行页面的分配或者进行页面的交换。CR2寄存器的值可以在中断或异常处理例程中读取。</p>
+<p>在保护模式下，访问CR2寄存器需要使用特殊的指令，比如MOV CR2,
+EAX将EAX寄存器的值写入CR2寄存器，或MOV EAX,
+CR2将CR2寄存器的值读取到EAX寄存器中。在x86_64架构下，CR2寄存器的大小为64位。</p>
+<h3 id="cr3">CR3</h3>
+<p><img
+src="https://pic2.zhimg.com/80/v2-91a4db9747f7ebee754f0e00b3392c65_720w.webp" /></p>
+<p>cr3寄存器和MMU密切相关，保存了当前进程所使用的虚拟地址空间的页目录地址，可以说是整个虚拟地址翻译中的顶级指挥棒，在进程空间切换的时候，CR3也将同步切换。</p>
+<p>cr3寄存器的高20位用于保存页目录地址，0-11位记录标记位，所以页目录地址必须是4KB的整数倍。</p>
+<h3 id="cr4">CR4</h3>
+<p><img
+src="https://pic2.zhimg.com/80/v2-0dbb34c8df6baf127c634953c0a7c341_720w.webp" /></p>
+<p>用于控制CPU的特性和操作系统的行为。它的作用如下：</p>
+<ol type="1">
+<li>控制分页机制：x86CR4寄存器的最重要作用是控制分页机制。在64位x86处理器中，x86CR4寄存器的第5位（PAE）控制是否启用物理地址扩展（Physical
+Address Extension，PAE）模式，第7位（PSE）控制是否启用页大小扩展（Page
+Size Extension，PSE）模式，第12位（PCIDE）控制是否启用页表缓存（Page
+Directory Cache，PDC）。<br />
+</li>
+<li>启用SMEP和SMAP保护机制：x86CR4寄存器的第20和第21位控制启用Supervisor
+Mode Execution Protection（SMEP）和Supervisor Mode Access
+Prevention（SMAP）保护机制。<br />
+</li>
+<li>启用虚拟化扩展：x86CR4寄存器的第13位控制是否启用虚拟化扩展（Virtualization
+Extension，VME）。<br />
+</li>
+<li>其他：x86CR4寄存器还控制着其他一些特性，如Debugging
+Extensions（DE）、Machine Check Exception（MCE）和Page Attribute
+Table（PAT）等。</li>
+</ol>
+<p>在Linux内核中，x86CR4寄存器的主要作用是控制分页机制和启用SMEP和SMAP保护机制。</p>
+<h2 id="system-table-pointer-registers">System table pointer
+registers</h2>
+<p>这就是英特尔SDM对这些寄存器的称呼。这些寄存器保存着各种保护模式表的大小和指针。</p>
+<ul>
+<li>据我所知，它们有四个：GDTR：存放GDT的大小和基址。<br />
+</li>
+<li>LDTR：保存LDT的大小和基址。<br />
+</li>
+<li>IDTR：保存IDT的大小和基址。<br />
+</li>
+<li>TR：保存TSS的选择器和TSS的基址。</li>
+</ul>
+<p>GDTR、LDTR和IDTR在64位模式下都是80位：16个低位是寄存器的表的大小，高64位是表的其实地址。</p>
+<p>TR同样也是80位。16位用于选择器（其行为与段选择器相同），然后另外64位用于TSS的基本地址。</p>
+<h3 id="gdtr48bit">GDTR(48bit)</h3>
+<p>全局描述符表寄存器，CPU现在使用的是分页的内存管理方式，分段的信息存储在GDTR上。在64位的长模式中CS、DS的偏移为0，边界为0xffff。长度这就存储在一个叫全局描述符表（GDT）的表格中，并用gdtr寄存器指向这个表。这个表中的每一项都描述了一个内存段的信息。</p>
+<p><img
+src="https://pic4.zhimg.com/80/v2-742429507d1a575cdceb8ea5831790df_720w.webp" /></p>
+<h3 id="ldtr16bit">LDTR(16bit)</h3>
+<p>局部描述符表寄存器，这个寄存器和上面的gdtr一样，同样指向的是一个段描述符表（LDT）。不同的是，GDT是全局唯一，LDT是局部使用的，可以创建多个，随着任务段切换而切换（下文介绍任务寄存器会提到）。</p>
+<h3 id="idtr48bit">IDTR(48bit)</h3>
+<p>中断描述符表寄存器，指向了中断描述符表IDT，这个表的每一项都是一个中断处理描述符，当CPU执行过程中发生了硬中断、异常、软中断时，将自动从这个表中定位对应的表项，里面记录了发生中断、异常时该去哪里执行处理函数。</p>
+<p><img
+src="https://pic4.zhimg.com/80/v2-742429507d1a575cdceb8ea5831790df_720w.webp" /></p>
+<h2 id="msrmodel-specific-register">MSR（Model Specific Register）</h2>
+<p>MSR（Model Specific
+Register）是x86架构中的概念，指的是在x86架构处理器中，一系列用于控制CPU运行、功能开关、调试、跟踪程序执行、监测CPU性能等方面的寄存器。</p>
+<p>到Intel
+Pentium处理器的时候，Intel正式引入RDMSR和WRMSR两个指令用于读和写MSR寄存器，这个时候MSR就算被正式引入。在引入RDMSR和WRMSR指令的同时，也引入了CPUID指令，该指令用于指明具体的CPU芯片中，哪些功能是可用的，或者这些功能对应的MSR寄存器是否存在，软件可以通过CPUID指令查询某些功能是否在当前CPU上是否支持。</p>
+<p>每个MSR寄存器都会有一个相应的ID，即MSR
+Index，或者也叫作MSR寄存器地址，当执行RDMSR或者WRMSR指令的时候，只要提供MSR
+Index就能让CPU知道目标MSR寄存器。这些MSR寄存器的编号（MSR
+Index）、名字及其各个数据区域的定义可以在Intel x86架构手册”Intel 64 and
+IA-32 Architectures Software Developer’s Manual”的<a
+href="https://link.zhihu.com/?target=https%3A//software.intel.com/sites/default/files/managed/22/0d/335592-sdm-vol-4.pdf">Volume
+4</a>中找到。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/CSAPP/" rel="tag"># CSAPP</a>
+              <a href="/blog/tags/os/" rel="tag"># os</a>
+              <a href="/blog/tags/assemble/" rel="tag"># assemble</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/CSAPP/os/assemble/%E5%B8%B8%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8%20-%20%E5%8F%82%E8%80%83%E4%BA%8C/" rel="prev" title="常用寄存器 - 参考二">
+      <i class="fa fa-chevron-left"></i> 常用寄存器 - 参考二
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/CSAPP/os/assemble/%E5%B8%A6%E5%86%92%E5%8F%B7%E5%92%8C%E4%B8%8D%E5%B8%A6%E5%86%92%E5%8F%B7%E7%9A%84%E6%A0%87%E7%AD%BE/" rel="next" title="带冒号和不带冒号的标签">
+      带冒号和不带冒号的标签 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8-general-register"><span class="nav-number">1.</span> <span class="nav-text">通用寄存器 (general register)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%8D%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">1.1.</span> <span class="nav-text">32位寄存器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%8D%E7%9A%84%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">1.2.</span> <span class="nav-text">64位的寄存器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E6%AE%8A%E5%AF%84%E5%AD%98%E5%99%A8-special-registers"><span class="nav-number">2.</span> <span class="nav-text">特殊寄存器 (Special
+registers)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8-segment-registers"><span class="nav-number">3.</span> <span class="nav-text">段寄存器 (Segment registers)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E8%AF%95%E5%AF%84%E5%AD%98%E5%99%A8debug-registers"><span class="nav-number">4.</span> <span class="nav-text">调试寄存器(Debug registers)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8-control-registers"><span class="nav-number">5.</span> <span class="nav-text">控制寄存器 (Control
+registers)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cr0"><span class="nav-number">5.1.</span> <span class="nav-text">CR0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cr1"><span class="nav-number">5.2.</span> <span class="nav-text">CR1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cr2"><span class="nav-number">5.3.</span> <span class="nav-text">CR2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cr3"><span class="nav-number">5.4.</span> <span class="nav-text">CR3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cr4"><span class="nav-number">5.5.</span> <span class="nav-text">CR4</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#system-table-pointer-registers"><span class="nav-number">6.</span> <span class="nav-text">System table pointer
+registers</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#gdtr48bit"><span class="nav-number">6.1.</span> <span class="nav-text">GDTR(48bit)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ldtr16bit"><span class="nav-number">6.2.</span> <span class="nav-text">LDTR(16bit)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idtr48bit"><span class="nav-number">6.3.</span> <span class="nav-text">IDTR(48bit)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#msrmodel-specific-register"><span class="nav-number">7.</span> <span class="nav-text">MSR（Model Specific Register）</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>

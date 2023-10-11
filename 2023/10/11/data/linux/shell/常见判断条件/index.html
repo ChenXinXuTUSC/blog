@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="常见判断条件">
+<meta property="og:url" content="http://example.com/2023/10/11/data/linux/shell/%E5%B8%B8%E8%A7%81%E5%88%A4%E6%96%AD%E6%9D%A1%E4%BB%B6/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:35.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:35.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="shell">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/linux/shell/%E5%B8%B8%E8%A7%81%E5%88%A4%E6%96%AD%E6%9D%A1%E4%BB%B6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>常见判断条件 | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/linux/shell/%E5%B8%B8%E8%A7%81%E5%88%A4%E6%96%AD%E6%9D%A1%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          常见判断条件
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:35" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:35+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>IF使用基础</p>
+<p>单分支语句结构</p>
+<p>双分支语句结构</p>
+<p>多分支语句结构</p>
+<p>条件表达式</p>
+<p>文件表达式</p>
+<p>数字表达式</p>
+<p>字符串表达式</p>
+<p>&amp;&amp;  || 使用</p>
+<p>test与[  ]</p>
+<p>[  ]  与[[  ]]</p>
+<p>IF使用基础</p>
+<p>单分支语句结构<br />
+    if [ 条件表达式 ]; then<br />
+        指令<br />
+    fi</p>
+<p>双分支语句结构<br />
+    if [ 条件表达式 ]; then<br />
+        指令一<br />
+    else<br />
+        指令二<br />
+    fi</p>
+<p>多分支语句结构<br />
+    if [ -f file ]; then<br />
+       echo "yes yes yes"<br />
+    elif [ -z file ]; then<br />
+       echo "yes yes"<br />
+    else<br />
+       echo "nonono"<br />
+    fi</p>
+<p>注意 if 的结构为 if then  else  fi<br />
+从上面三个结构中可以看出，条件表达式的左右，以及[
+]的左右都要有空格。</p>
+<p>条件表达式</p>
+<p>文件表达式</p>
+<p>文件属性</p>
+<p>-a file 如果file存在则为真</p>
+<p>-b file 如果file存在且为块文件则为真</p>
+<p>-c file 如果file存在且为字符文件则为真</p>
+<p>-d file 如果file存在且是目录则为真</p>
+<p>-e file 如果file存在则为真</p>
+<p>-f file 如果file存在且为普通文件则为真</p>
+<p>-g file
+如果file存在且置位设置-组ID则为真，见参考【1】第4.4、12.3节</p>
+<p>-h file 如果file存在且为符号连接则为真</p>
+<p>-k file 如果file存在且其粘性位置位则为真，参考man chmod</p>
+<p>-p file 如果file存在且为命令管道（FIFO）则为真</p>
+<p>-r file 如果file存在且可读则为真</p>
+<p>-s file 如果file存在且文件长度大于0则为真</p>
+<p>-t fd 如果文件描述符fd打开且指向为终端则为真</p>
+<p>-u file 如果file存在且设置-用户-ID置位则为真，见参考【1】第4.4节</p>
+<p>-w file 如果file存在且可写则为真</p>
+<p>-x file 如果file存在且可执行</p>
+<p>-G file 如果file存在且由有效组ID拥有则为真，见参考【1】第4.4节</p>
+<p>-L file 如果file存在且为符号连接则为真</p>
+<p>-N file 如果file存在且在上次读后有修改（modified）则为真</p>
+<p>-O file 如果file存在且由有效用户ID拥有则为真，见参考【1】第4.4节</p>
+<p>-S file 如果file存在且是一个套接字则为真</p>
+<p>file1 -ef file2 如果file1和file2指向同一个设备的inode则为真</p>
+<p>file1 -nt file2
+如果file1比file新（modified），或者file1存在file2不存在在为真</p>
+<p>file1 -ot file2
+如果file1比file旧（modified），或者file1存在file2不存在在为真</p>
+<p>   -r file　　　　　用户可读为真<br />
+   -w file　　　　　用户可写为真<br />
+   -x file　　　　　用户可执行为真<br />
+   -f file　　　　　文件为正规文件为真<br />
+   -d file　　　　　文件为目录为真<br />
+   -c file　　　　　文件为字符特殊文件为真<br />
+   -b file　　　　　文件为块特殊文件为真<br />
+   -s file　　　　　文件大小非0时为真<br />
+   -t file　　　　　当文件描述符(默认为1)指定的设备为终端时为真</p>
+<p>数字表达式</p>
+<p>   int1 -eq int2　　　　两数相等为真<br />
+   int1 -ne int2　　　　两数不等为真<br />
+   int1 -gt int2　　　　int1大于int2为真<br />
+   int1 -ge int2　　　　int1大于等于int2为真<br />
+   int1 -lt int2　　　　int1小于int2为真<br />
+   int1 -le int2　　　　int1小于等于int2为真</p>
+<p>不要用=&lt;&gt;符号，如果要用的话</p>
+<p>   整数比较<br />
+   -eq       等于,如:if [ "$a" -eq "$b" ]<br />
+   -ne       不等于,如:if [ "$a" -ne "$b" ]<br />
+   -gt       大于,如:if [ "$a" -gt "$b" ]<br />
+   -ge       大于等于,如:if [ "$a" -ge "$b" ]<br />
+   -lt       小于,如:if [ "$a" -lt "$b" ]<br />
+   -le       小于等于,如:if [ "$a" -le "$b" ]<br />
+   &lt;       小于(需要双括号),如:(("$a" &lt; "$b"))<br />
+   &lt;=       小于等于(需要双括号),如:(("$a" &lt;= "$b"))<br />
+   &gt;       大于(需要双括号),如:(("$a" &gt; "$b"))<br />
+   &gt;=       大于等于(需要双括号),如:(("$a" &gt;= "$b"))</p>
+<p>字符串表达式</p>
+<p>字符串测试</p>
+<p>-z string</p>
+<p>如果string长度为0则为真</p>
+<p>string</p>
+<p>-n string</p>
+<p>如果string长度不为0则为真</p>
+<p>string1 == string2</p>
+<p>string1 = string2</p>
+<p>如果string1和string2相等则为真，=只应由test使用</p>
+<p>string1 != string2</p>
+<p>如果字符串不相等则为真</p>
+<p>string1 &lt; string2</p>
+<p>如果按字典序string1在string2之前则为真</p>
+<p>string1 &gt; string2</p>
+<p>如果按字典序string1在string2之后则为真</p>
+<p>    str1 = str2　　　　　　当两个串有相同内容、长度时为真</p>
+<p>    str1 != str2　　　　　 当串str1和str2不等时为真</p>
+<p>    -n str1　　　　　　　 当串的长度大于0时为真(串非空)</p>
+<p>    -z str1　　　　　　　 当串的长度为0时为真(空串)</p>
+<p>    str1　　　　　　　　 当串str1为非空时为真</p>
+<p>&amp;&amp;  ||使用</p>
+<p>在[  ]中不能用 &amp;&amp;  ||</p>
+<p>要用</p>
+<p>    -a 　 　　　　　 与</p>
+<p>    -o　　　　　　　 或</p>
+<p>    !　　　　　　　　非</p>
+<p>如</p>
+<p>    if [ $score -ge 0 -a $score -lt 60 ];</p>
+<p>    then echo "sorry,you are lost!"</p>
+<p>    elif [ $score -ge 60 -a $score -lt 85 ];</p>
+<p>    then echo "just soso!"</p>
+<p>    elif [ $score -le 100 -a $score -ge 85 ];</p>
+<p>    then echo "good job!"</p>
+<p>    else echo "input score is wrong , the range is [0-100]!"</p>
+<p>    fi</p>
+<p>如果一定要用&amp;&amp; ||则要到[[  ]]中使用，</p>
+<p>test与[  ]</p>
+<p>格式1：test <测试表达式></p>
+<p>格式2：[<条件表达式>]</p>
+<p>格式1和格式2是等价的。</p>
+<p>test 一般在linux界面用，[   ]一般在if表达式用</p>
+<p>如</p>
+<p>    1、测试文件是否存在</p>
+<p>    [root@node01 ~]# test -f file&amp;&amp; echo 1||echo 0</p>
+<p>    0</p>
+<p>    [root@node01 ~]# touch file</p>
+<p>    [root@node01 ~]# test -f file&amp;&amp; echo 1||echo 0</p>
+<p>    1</p>
+<p>    [root@node01 ~]# test ! -f file&amp;&amp; echo 1||echo 0 取反</p>
+<p>    0</p>
+<p>    2、中括号</p>
+<p>    [root@node01 ~]# [ -f file ]&amp;&amp; echo 1||echo 0</p>
+<p>    1</p>
+<p>    [root@node01 ~]# rm file</p>
+<p>    [root@node01 ~]# [ -f file ]&amp;&amp; echo 1||echo 0</p>
+<p>    0</p>
+<p>    [root@node01 ~]# [ ! -f file ]&amp;&amp; echo 1||echo 0</p>
+<p>    1</p>
+<p>[  ]  与[[  ]]</p>
+<p>[[ ]]，这是内置在shell中的一个命令，它就比刚才说的[
+]强大的多了。支持字符串的模式匹配（使用=~操作符时甚至支持shell的正则表达式）。简直强大的令人发指！逻辑组合可以不使用test的-a,-o而使用&amp;&amp;,||这样更亲切的形式(针对c、Java程序员)。</p>
+<ol type="1">
+<li>首先，尽管很相似，但是从概念上讲，二者是不同层次的东西。</li>
+</ol>
+<p>"[["，是关键字，许多shell(如ash bsh)并不支持这种方式。ksh,
+bash(据说从2.02起引入对[[的支持)等支持。</p>
+<p>"["是一条命令，
+与test等价，大多数shell都支持。在现代的大多数sh实现中，"["与"test"是内部(builtin)命令，换句话说执行"test"/"["时不会调用/some/path/to/test这样的外部命令(如果有这样的命令的话)。</p>
+<p>2.[[]]结构比Bash版本的[]更通用。在[[和]]之间的所有的字符都不会被文件扩展或是标记分割，但是会有参数引用和命令替换。</p>
+<p>用[[ ... ]]结构比用[ ...
+]更能防止脚本里的许多逻辑错误。比如说，&amp;&amp;,||,<和>操作符能在一个[[]]测试里通过，但在[]结构会发生错误。</p>
+<p>3.[ ...
+]为shell命令，所以在其中的表达式应是它的命令行参数，所以串比较操作符"&gt;"
+与"&lt;"必须转义，否则就变成IO改向操作符了(请参看上面2中的例子)。在[[中"\\&lt;"与"&gt;"不需转义；</p>
+<p>由于"[["是关键字，不会做命令行扩展，因而相对的语法就稍严格些。例如</p>
+<p>在[ ...
+]中可以用引号括起操作符，因为在做命令行扩展时会去掉这些引号，而在[[ ...
+]]则不允许这样做。</p>
+<p>4.[[ ... ]]进行算术扩展，而[ ... ]不做</p>
+<p>5.[[ ... &amp;&amp; ... &amp;&amp; ...  ]] 和 [ ... -a ... -a ...]
+不一样，[[ ]] 是逻辑短路操作，而 [ ] 不会进行逻辑短路</p>
+<p>————————————————</p>
+<p>版权声明：本文为CSDN博主「xushiyu1996818」的原创文章，遵循CC 4.0
+BY-SA版权协议，转载请附上原文出处链接及本声明。</p>
+<p>原文链接：https://blog.csdn.net/xushiyu1996818/article/details/84545103</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/linux/" rel="tag"># linux</a>
+              <a href="/blog/tags/shell/" rel="tag"># shell</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/linux/shell/%E5%B8%B8%E8%A7%81%E6%8E%A7%E5%88%B6%E6%B5%81%E7%A8%8B/" rel="prev" title="常见控制流程">
+      <i class="fa fa-chevron-left"></i> 常见控制流程
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/linux/shell/%E5%8D%95%E5%BC%95%E5%8F%B7%E3%80%81%E5%8F%8C%E5%BC%95%E5%8F%B7%E3%80%81%E5%8F%8D%E5%BC%95%E5%8F%B7%E7%9A%84%E5%B1%95%E5%BC%80%E5%8C%BA%E5%88%AB/" rel="next" title="单引号、双引号、反引号的展开区别">
+      单引号、双引号、反引号的展开区别 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>

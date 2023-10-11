@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="1654. 到家的最少跳跃次数">
+<meta property="og:url" content="http://example.com/2023/10/11/data/algorithmn/leetcode/hard/1654.%20%E5%88%B0%E5%AE%B6%E7%9A%84%E6%9C%80%E5%B0%91%E8%B7%B3%E8%B7%83%E6%AC%A1%E6%95%B0/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:18.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:18.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="algorithmn">
+<meta property="article:tag" content="leetcode">
+<meta property="article:tag" content="hard">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/algorithmn/leetcode/hard/1654.%20%E5%88%B0%E5%AE%B6%E7%9A%84%E6%9C%80%E5%B0%91%E8%B7%B3%E8%B7%83%E6%AC%A1%E6%95%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>1654. 到家的最少跳跃次数 | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/algorithmn/leetcode/hard/1654.%20%E5%88%B0%E5%AE%B6%E7%9A%84%E6%9C%80%E5%B0%91%E8%B7%B3%E8%B7%83%E6%AC%A1%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          1654. 到家的最少跳跃次数
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:18" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:18+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/algorithmn/" itemprop="url" rel="index"><span itemprop="name">algorithmn</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="困难">[<span style="color:red;">困难</span>]</h2>
+<p>有一只跳蚤的家在数轴上的位置 <code>x</code> 处。请你帮助它从位置 <code>0</code> 出发，到达它的家。</p>
+<p>跳蚤跳跃的规则如下：</p>
+<ul>
+<li>它可以 <strong>往前</strong> 跳恰好 <code>a</code> 个位置（即往右跳）。<br />
+</li>
+<li>它可以 <strong>往后</strong> 跳恰好 <code>b</code> 个位置（即往左跳）。<br />
+</li>
+<li>它不能 <strong>连续</strong> 往后跳 <code>2</code> 次。<br />
+</li>
+<li>它不能跳到任何 <code>forbidden</code> 数组中的位置。</li>
+</ul>
+<p>跳蚤可以往前跳 <strong>超过</strong> 它的家的位置，但是它 <strong>不能跳到负整数</strong> 的位置。</p>
+<p>给你一个整数数组 <code>forbidden</code> ，其中 <code>forbidden[i]</code> 是跳蚤不能跳到的位置，同时给你整数 <code>a</code>， <code>b</code> 和 <code>x</code> ，请你返回跳蚤到家的最少跳跃次数。如果没有恰好到达 <code>x</code> 的可行方案，请你返回 <code>-1</code> 。</p>
+<p><strong>示例 1：</strong></p>
+<p><strong>输入：</strong> forbidden = [14,4,18,1,15], a = 3, b = 15, x
+= 9<br />
+<strong>输出：</strong> 3<br />
+<strong>解释：</strong> 往前跳 3 次（0 -&gt; 3 -&gt; 6 -&gt;
+9），跳蚤就到家了。</p>
+<p><strong>示例 2：</strong></p>
+<p><strong>输入：</strong> forbidden = [8,3,16,6,12,20], a = 15, b = 13,
+x = 11<br />
+<strong>输出：</strong>-1</p>
+<p><strong>示例 3：</strong></p>
+<p><strong>输入：</strong> forbidden = [1,6,2,14,5,17,4], a = 16, b = 9,
+x = 7<br />
+<strong>输出：</strong> 2<br />
+<strong>解释：</strong> 往前跳一次（0 -&gt; 16），然后往回跳一次（16
+-&gt; 7），跳蚤就到家了。</p>
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= forbidden.length &lt;= 1000</code><br />
+</li>
+<li><code>1 &lt;= a, b, forbidden[i] &lt;= 2000</code><br />
+</li>
+<li><code>0 &lt;= x &lt;= 2000</code><br />
+</li>
+<li><code>forbidden</code> 中所有位置互不相同。<br />
+</li>
+<li>位置 <code>x</code> 不在 <code>forbidden</code> 中。</li>
+</ul>
+<p>这题看到的第一眼是想用动态规划做的，但是仔细想想，题目有限制不能连续往后跳跃，这要怎么在动态规划中表达出来呢？仔细一看这题，甚至有可能是一道数论题，因为是否能到达目的地
+<strong>x</strong> 可以被表示为：<br />
+<span class="math display">\[  
+am + bn = x  
+\]</span><br />
+所以只要找到合适的 <span class="math inline">\((m,n)\)</span>
+就代表此题是可解的数论题；但真的是这样吗？我们发现，题目中的
+“它不能 <strong>连续</strong> 往后跳 <code>2</code> 次”
+这个限制，使得很多方法都没有办法很好的处理这个情况。我个人最开始尝试用动态规划的时候，想的是前进的规划分配一个数组
+<span class="math inline">\(dpf\)</span>，后退的规划也分配一个数组 <span
+class="math inline">\(dpb\)</span>，然后考虑如何结合这两个数组来完成动态规划。</p>
+<p>那么如果从模拟的角度来看，BFS 或者 DFS
+是否可行呢？可以预见的是，DFS很难可行，因为当题目给定的前进步数 a
+和后退步数 b 比较小的时候，而终点 x
+又比较远的话，堆栈可能无法承受这么深的递归调用。</p>
+<p>从模拟的角度来说，我们还能很快地根据 a，b
+的大小进行分类讨论（假设跳蚤是聪明的，不会绕路，也就是说，能第一次到达的位置，绝不会兜兜转转的去其他地方再回来此处，也就不会发生先前进几步再后退回来或者怎样）：<br />
+1. 当 a = b 时：此时跳蚤只能不断地前进，并且每次前进的长度是一样的都是
+a，因为后退是没有意义地，正如题目所说，跳蚤需要找到一条步数最少的路径，后退一次只会增加无用功。<br />
+2. 当 a &gt; b
+时：此时就算跳蚤能在前进的过程中选择后退，跳蚤至少也要前进 (a-b)
+的距离，因此等价于跳蚤每次可以前进 a 或者前进 (a-b) 的距离。<br />
+3. 当 a &lt; b
+时：此时跳蚤既可以前进又可以后退，这种情况就比较麻烦了，我们很难直接通过数论的方式解出一个前进后退组合来确定跳蚤是否能到达终点
+x。</p>
+<p>以上是个人的一些思考了，可惜虽然算是与正确题解沾上了一点边，但是离正确的解法还是差了很多的，因为这题的官方题解还包括了一段比较难的边界证明。</p>
+<h2 id="官方题解">官方题解</h2>
+<h3 id="分类讨论">分类讨论</h3>
+<p>求最短路径一般需要用广度优先搜索，但是此题中的图是个无限图，如果不限制搜索的范围，无法处理无解的情况。因此，解决此题的关键是找出搜索的范围，其中下限已经由题目给出，不能跳到负整数的位置，我们还需要找出搜索的上限，下面分情况讨论：<br />
+==a =
+b==：此时为了次数最少，跳蚤没有必要向后跳，只需要一直往前跳。当它超过
+xxx 却没有遇到 xxx，表示它再也跳不到 xxx 了，此时的上限可以设置为
+xxx。</p>
+<p>==a &gt; b==：题目规定，跳蚤不能连续往后跳 2
+次，因此这只跳蚤运动轨迹中，任意连续的两次跳跃，总的行程一定是在前进的，前进了
+a−b
+的距离。即使它某一步是在后退，这一步的前一步和后一步（如果有的话）一定是在前进。此时跳蚤运动的上限为
+x+b，在这个上限的情况下，跳蚤往回跳一步可以到达
+x。在大于这个上限的情况下，即使跳蚤马上往回跳一步，所处的位置也大于
+x，而且跳蚤接下来前进的次数必然会大于等于后退的次数，再也无法到达
+x。因此在这种情况下，上限为 x+b。</p>
+<p>==a &lt; b==：在这种情况下，上限为 <span
+class="math inline">\(max(max(forbidden)+a+b,x)\)</span>。接下来证明这一点。为了方便，记
+<span class="math inline">\(max⁡(forbidden) =
+f\)</span>。首先，需要将数轴上大于等于 0 的位置分为三个区域：<br />
+1. <span class="math inline">\([0, f]\)</span>，禁止区。所有 <span
+class="math inline">\(forbidden\)</span> 中的位置都位于这个区域<br />
+2. <span
+class="math inline">\((f,max(f+a+b,x)]\)</span>，安全区，它的右边界是 a
+&lt; b 情况下我们想要证明的广度优先搜索的上限<br />
+3. <span class="math inline">\((\max(f+a+b, x),
++\infty)\)</span>，界外区。</p>
+<p>这三个区域合起来组成了数轴上大于等于 0 的所有部分，注意 x
+可能位于禁止区或者安全区，但不会是 forbidden 数组中的元素。</p>
+<p>假设某个步数最少的路径中的一段路径，我们用一组点 <span
+class="math inline">\(C, \dots, H\)</span> 表示这些位置。假设点<span
+class="math inline">\(C\)</span>（或者说位置也行，点就是一个位置）是这段路径中第一个进入界外区（前进进入）的点，而点
+<span class="math inline">\(H\)</span>
+是第一个离开界外区（后退离开）的点。因为 <span
+class="math inline">\(x\)</span>
+只可能位于禁止区或者安全区，因此如果这条路径存在入口点 <span
+class="math inline">\(C\)</span>，那么必然存在退出点 <span
+class="math inline">\(H\)</span>， 因为我们已经假设了这是一条能到达终点
+<span class="math inline">\(x\)</span>
+的路径，所以我们出了界外区的话是一定会折返的。</p>
+<p>如下图，横坐标为步数，纵坐标为与原点的距离。箭头朝右上表示前进，箭头朝右下表示后退。<br />
+<img
+src="https://assets.leetcode-cn.com/solution-static/1654/1.png" /></p>
+<p>接下来，我们通过交换线段 <span class="math inline">\(BC\)</span>
+和线段 <span
+class="math inline">\(GH\)</span>，并保持其他线段的的方向不变，来使得点
+<span class="math inline">\(C\)</span> 不再位于界外区（看纵坐标，点
+<span class="math inline">\(C\)</span>
+由前进到达改变为后退到达，因又因为 <span
+class="math inline">\(C\)</span>
+是第一个<strong>进入</strong>界外区的点，并且已知我们现在的讨论情况是
+后退距离大于前进距离 的情况，所以改为后退到达的话，点 <span
+class="math inline">\(C\)</span> 一定在安全区界限之下）。如下图，线段
+<span class="math inline">\(BC&#39;\)</span> 变为后退而线段 <span
+class="math inline">\(G&#39;H\)</span> 变为前进。<br />
+<img
+src="https://assets.leetcode-cn.com/solution-static/1654/2.png" /></p>
+<h3 id="边界证明">边界证明</h3>
+<p>我们从以下几个方面论证这种交换的可行性：</p>
+<p>交换前，点 <span class="math inline">\(C，D，\dots，F，G\)</span>
+全都位于界外区，与原点的距离大于 <span
+class="math inline">\(f+a+b\)</span>。通过交换，这些点与原点的距离缩小了
+<span class="math inline">\(a+b\)</span>，仍然大于 <span
+class="math inline">\(f\)</span>。因此，这些点不会落到 <span
+class="math inline">\(forbidden\)</span>
+中。交换后不会增加这个路径的步数，也不会影响点 <span
+class="math inline">\(H\)</span> 之后的点的位置。</p>
+<p>交换不会造成两次倒退。交换后，前进的线段 <span
+class="math inline">\(BC\)</span> 变为后退的线段 <span
+class="math inline">\(BC&#39;\)</span>，但是 <span
+class="math inline">\(BC&#39;\)</span> 的前一段 <span
+class="math inline">\(AB\)</span> 一定是前进的。可以利用反证法证明，如果
+<span class="math inline">\(AB\)</span> 是后退的，又因为 <span
+class="math inline">\(a&lt;b\)</span>（前进距离小于后退距离），那么点
+<span class="math inline">\(A\)</span> 就会在界外区，这样的话点 <span
+class="math inline">\(C\)</span> 就不会是第一个界外区的点，因此 <span
+class="math inline">\(AB\)</span>一定是前进的。<span
+class="math inline">\(BC&#39;\)</span> 的后一段 <span
+class="math inline">\(C&#39;D&#39;\)</span>
+一定也是前进的。这里需要分为两种情况：<br />
+1. <span class="math inline">\(CD\)</span> 原本就是前进的，那么 <span
+class="math inline">\(C&#39;D&#39;\)</span>
+会保持原来前进的方向。通过交换，我们不会造成两次倒退。<br />
+2. <span class="math inline">\(CD\)</span> 原本是后退的，那么点 <span
+class="math inline">\(D\)</span> 就是我们前面讨论的第一个离开界外区的点
+<span class="math inline">\(H\)</span>，因为 <span
+class="math inline">\(a&lt;b\)</span>。这样一来，我们其实是交换了前进的
+<span class="math inline">\(BC\)</span> 和后退的 <span
+class="math inline">\(CD\)</span>，得到了后退的 <span
+class="math inline">\(BC’\)</span> 和前进的 <span
+class="math inline">\(C’D\)</span>，仍然不会造成两次倒退。</p>
+<p>通过这样的交换，我们使得一个有效路径第一个进入界外区的点，不再位于界外区。新的路径，第一个进入界外区的点，可能位于点
+<span class="math inline">\(C\)</span> 和点 <span
+class="math inline">\(H\)</span> 之间，也可能位于点 <span
+class="math inline">\(H\)</span>
+之后，也可能不存在这样的点。总之，我们可以不停地寻找第一个进入界外区的点，然后经过上述的交换，使得最终的路径的所有点都位于禁止区和安全区。这样，我们就证明出，如果某个输入有解，那么至少有一条最短路径，它的所有点都处于上限
+<span class="math inline">\(max⁡(f+a+b,x)\)</span>
+之内。因此在这种情况下，上限为 <span
+class="math inline">\(max(max(forbidden)+a+b,x)\)</span>。</p>
+<p>综合以上三种情况，广度优先搜索的上限是
+max(max(forbidden)+a,x)+b。</p>
+<p>在进行广度优先搜索时，除了需要注意到上下限，不能达到
+forbiddenforbidden
+数组中的坐标，还需要注意到达每个坐标时，都会有前进到达还是后退到达两种状态。如果是前进到达时，下一步可以选择前进或者后退；如果是后退到达时，下一步只能选择前进。因此广度优先搜索的每个元素，需要保存三个信息，坐标，方向和步数。在代码中，我们用
+111 表示前进，−1-1−1 表示后退，用哈希集合 visitedvisited
+来记录已经达到过的位置和方向状态。在搜索的过程中，如果坐标第一次为
+xxx，则返回当前步数。当队列为空时，表示 xxx 不可到达，返回 −1-1−1。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">minimumJumps</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; forbidden, <span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">        queue&lt;tuple&lt;<span class="type">int</span>, <span class="type">int</span>, <span class="type">int</span>&gt;&gt; posdirstpQueue;</span><br><span class="line">        unordered_set&lt;<span class="type">int</span>&gt; visitedSet;</span><br><span class="line">        <span class="function">unordered_set&lt;<span class="type">int</span>&gt; <span class="title">forbdenSet</span><span class="params">(forbidden.begin(), forbidden.end())</span></span>;</span><br><span class="line">        posdirstpQueue.<span class="built_in">emplace</span>(<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>); <span class="comment">// add the start point</span></span><br><span class="line">        visitedSet.<span class="built_in">emplace</span>(<span class="number">0</span>);           <span class="comment">// add the start point</span></span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> lower = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> upper = <span class="built_in">max</span>(*<span class="built_in">max_element</span>(forbidden.<span class="built_in">begin</span>(), forbidden.<span class="built_in">end</span>()) + a, x) + b;</span><br><span class="line">        <span class="keyword">while</span> (!posdirstpQueue.<span class="built_in">empty</span>())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">auto</span> [pos, dir, stp] = posdirstpQueue.<span class="built_in">front</span>();</span><br><span class="line">            posdirstpQueue.<span class="built_in">pop</span>();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (pos == x) <span class="keyword">return</span> stp; <span class="comment">// first reached path steps</span></span><br><span class="line">            </span><br><span class="line">            <span class="type">int</span> nxtPos = pos + a;</span><br><span class="line">            <span class="type">int</span> nxtDir = +<span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (lower &lt;= nxtPos &amp;&amp; nxtPos &lt;= upper &amp;&amp; !visitedSet.<span class="built_in">count</span>(nxtPos * nxtDir) &amp;&amp; !forbdenSet.<span class="built_in">count</span>(nxtPos))</span><br><span class="line">            &#123;</span><br><span class="line">                posdirstpQueue.<span class="built_in">emplace</span>(nxtPos, nxtDir, stp + <span class="number">1</span>);</span><br><span class="line">                visitedSet.<span class="built_in">emplace</span>(nxtPos * nxtDir);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// if we use forward to reach this position, we can backward</span></span><br><span class="line">            <span class="keyword">if</span> (dir &gt; <span class="number">0</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                nxtPos = pos - b;</span><br><span class="line">                nxtDir = <span class="number">-1</span>;</span><br><span class="line">                <span class="keyword">if</span> (lower &lt;= nxtPos &amp;&amp; nxtPos &lt;= upper &amp;&amp; !visitedSet.<span class="built_in">count</span>(nxtPos * nxtDir) &amp;&amp; !forbdenSet.<span class="built_in">count</span>(nxtPos))</span><br><span class="line">                &#123;</span><br><span class="line">                    posdirstpQueue.<span class="built_in">emplace</span>(nxtPos, nxtDir, stp + <span class="number">1</span>);</span><br><span class="line">                    visitedSet.<span class="built_in">emplace</span>(nxtPos * nxtDir);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">// no valid solution</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/algorithmn/" rel="tag"># algorithmn</a>
+              <a href="/blog/tags/leetcode/" rel="tag"># leetcode</a>
+              <a href="/blog/tags/hard/" rel="tag"># hard</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/algorithmn/leetcode/hard/1782.%20%E7%BB%9F%E8%AE%A1%E7%82%B9%E5%AF%B9%E7%9A%84%E6%95%B0%E7%9B%AE/" rel="prev" title="1782. 统计点对的数目">
+      <i class="fa fa-chevron-left"></i> 1782. 统计点对的数目
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/algorithmn/leetcode/hard/123.%20%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E4%BD%B3%E6%97%B6%E6%9C%BA%20III/" rel="next" title="123. 买卖股票的最佳时机 III">
+      123. 买卖股票的最佳时机 III <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%B0%E9%9A%BE"><span class="nav-number">1.</span> <span class="nav-text">[困难]</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%98%E6%96%B9%E9%A2%98%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">官方题解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%B1%BB%E8%AE%A8%E8%AE%BA"><span class="nav-number">2.1.</span> <span class="nav-text">分类讨论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%B9%E7%95%8C%E8%AF%81%E6%98%8E"><span class="nav-number">2.2.</span> <span class="nav-text">边界证明</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>

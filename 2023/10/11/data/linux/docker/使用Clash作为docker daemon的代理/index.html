@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="使用Clash作为docker daemon的代理">
+<meta property="og:url" content="http://example.com/2023/10/11/data/linux/docker/%E4%BD%BF%E7%94%A8Clash%E4%BD%9C%E4%B8%BAdocker%20daemon%E7%9A%84%E4%BB%A3%E7%90%86/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:34.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:34.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="docker">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/linux/docker/%E4%BD%BF%E7%94%A8Clash%E4%BD%9C%E4%B8%BAdocker%20daemon%E7%9A%84%E4%BB%A3%E7%90%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>使用Clash作为docker daemon的代理 | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/linux/docker/%E4%BD%BF%E7%94%A8Clash%E4%BD%9C%E4%B8%BAdocker%20daemon%E7%9A%84%E4%BB%A3%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用Clash作为docker daemon的代理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:34" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:34+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="docker-daemon">docker daemon</h2>
+<p>docker向各个仓库拉取镜像的时候默认是不走代理的，并且拉取镜像的操作由docker
+daemon来完成，因此如果是公司内部网络或者需要翻墙的外网仓库，往往就需要配置docker
+daemon这个systemd
+service服务启动时的环境变量了（==注意，环境变量是相对于进程而言的，每个进程有自己的环境变量，我们平时ssh登录的终端进程环境变量，systemd中的服务是不知道的，因为很多systemd管理的服务比连接进来的终端先启动，它们并没有什么特殊的环境变量==），通过在<code>/etc/systemd/system</code>目录下创建<code>docker.service.d</code>目录，并在其中存放docker服务相关的配置文件（.conf），这样docker相关的服务在启动时会读取这些配置文件。</p>
+<p>在配置目录中新建任意名称的配置文件.conf，在其中填入如下内容：<br />
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">cat</span> /etc/systemd/system/docker.service.d/proxy.conf</span> </span><br><span class="line">[Service]</span><br><span class="line">Environment=&quot;HTTP_PROXY=http://127.0.0.1:7890&quot;</span><br><span class="line">Environment=&quot;HTTPS_PROXY=http://127.0.0.1:7890/&quot;</span><br><span class="line">Environment=&quot;NO_PROXY=localhost,127.0.0.1&quot;</span><br></pre></td></tr></table></figure></p>
+<p>启动docker后，在使用docker拉取其他仓库的镜像时，只要仓库网址解析出的IP地址不在<code>NO_PROXY</code>列表中，则分流使用HTTP和HTTPS的代理发送请求。</p>
+<p>如果还没有安装docker程序，请参考<a
+target="_blank" rel="noopener" href="https://docs.docker.com/engine/install/">docker官方网站</a>的教程安装，或者尝试使用以下脚本安装（适用于Debian系列Linux发行版）：<br />
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install \</span><br><span class="line">    ca-certificates \</span><br><span class="line">	curl \</span><br><span class="line">	gnupg</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sudo mkdir -m 0755 -p /etc/apt/keyrings</span><br><span class="line">curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg</span><br><span class="line"></span><br><span class="line">echo \</span><br><span class="line">	&quot;deb [arch=&quot;$(dpkg --print-architecture)&quot; signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \</span><br><span class="line">	&quot;$(. /etc/os-release &amp;&amp; echo &quot;$VERSION_CODENAME&quot;)&quot; stable&quot; | \</span><br><span class="line">	  sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null</span><br><span class="line"></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</span><br><span class="line">sudo docker run hello-world</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">add current use to docker group</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">so that sudo is not  needed  at</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">each time</span></span><br><span class="line">sudo groupadd docker</span><br><span class="line">sudo usermod -aG docker $&#123;USER&#125;</span><br><span class="line">sudo newgrp docker</span><br></pre></td></tr></table></figure></p>
+<h2 id="clash">Clash</h2>
+<p>Clash是一款基于Golang编写的，可以试用规则分流的代理终端，在win下具有图形界面，在Linux下具有良好的终端输出（方便我们直接将输出重定向到日志文件中进行后处理）。</p>
+<p>安装Clash可以直接在<a
+target="_blank" rel="noopener" href="https://github.com/Dreamacro/clash">Clash的GitHub仓库</a>下载Linux
+amd64
+v3版本的二进制文件，就是单个文件，非常方便使用，不用安装，因此就不会污染系统目录了。</p>
+<p>至于clash的订阅文件，只能各显神通了，毕竟这是一个先有鸡还是先有蛋的问题，没有梯子就没办法获取到订阅文件（有时候运气好可以穿墙），可以直接bing或者baidu搜索便宜的一两块钱的机场，或者找其他人的代理服务器先白嫖代理一下，下载完代理文件之后就可以用自己的梯子一直续费了。clash的一个比较优质的机场是<a
+target="_blank" rel="noopener" href="https://dogess.work/user">dogess</a>。可以拿到订阅URL之后，使用<code>wget &lt;url&gt; -O config.yaml</code>
+来下载配置文件到yaml文件中，然后就可以和Country.mmdb文件一起作为Clash的依赖配置项使用了。</p>
+<p>Clash运行需要两个文件，其一是<a
+target="_blank" rel="noopener" href="https://github.com/Dreamacro/maxmind-geoip/releases/download/20230812/Country.mmdb">Country.mmdb</a>，用来定义路由网络，分流导向等。还有就是各个代理服务器节点信息的配置文件，这个需要去各个机场购买才有，并且也必须是clash能够解析的yaml格式文件，如果是其他类型的解析协议比如shadowsocks（SS），shadowsocksR（SSR），可以在网上找一些订阅链接转换器转换成clash的yaml订阅节点配置文件。<br />
+&gt; <code>Country.mmdb</code> 文件利用 GeoIP2
+服务能识别互联网用户的地点位置，以供规则分流时使用。</p>
+<p>把clash下载下来之后，使用<code>./clash -d .</code>来运行clash，其中<code>-d</code>参数指的是两个依赖文件的存放目录路径，成功运行，没有接收到代理请求之前，应该会输出如下内容：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ cat programfiles/clash/clash.log </span><br><span class="line">nohup: ignoring input</span><br><span class="line">time=&quot;2023-07-27T10:52:03+08:00&quot; level=info msg=&quot;Start initial compatible provider 🍃 Proxies&quot;</span><br><span class="line">time=&quot;2023-07-27T10:52:03+08:00&quot; level=info msg=&quot;Start initial compatible provider ☁️ Others&quot;</span><br><span class="line">time=&quot;2023-07-27T10:52:03+08:00&quot; level=info msg=&quot;Start initial compatible provider 🍂 Domestic&quot;</span><br><span class="line">time=&quot;2023-07-27T10:52:03+08:00&quot; level=info msg=&quot;Start initial compatible provider ⭐️ Auto&quot;</span><br><span class="line">time=&quot;2023-07-27T10:52:03+08:00&quot; level=info msg=&quot;Mixed(http+socks) proxy listening at: [::]:7890&quot;</span><br><span class="line">time=&quot;2023-07-27T10:52:03+08:00&quot; level=info msg=&quot;DNS server listening at: [::]:5353&quot;</span><br><span class="line">time=&quot;2023-07-27T10:52:03+08:00&quot; level=info msg=&quot;RESTful API listening at: [::]:9090&quot;</span><br></pre></td></tr></table></figure>
+如果从端口监听到了转发请求，一样会输出信息，主要是本地ip:port和目的ip:port：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">time=&quot;2023-07-27T10:52:10+08:00&quot; level=info msg=&quot;[TCP] 127.0.0.1:39466 --&gt; registry-1.docker.io:443 match Match() using ☁️ Others[香港-03]&quot;</span><br><span class="line">time=&quot;2023-07-27T10:52:11+08:00&quot; level=info msg=&quot;[TCP] 127.0.0.1:39482 --&gt; auth.docker.io:443 match Match() using ☁️ Others[香港-03]&quot;</span><br><span class="line">time=&quot;2023-07-27T10:52:44+08:00&quot; level=warning msg=&quot;[TCP] dial ☁️ Others (match Match/) 127.0.0.1:47064 --&gt; registry-1.docker.io:443 error: a1jexzshnphscpcr.wudaki972.me:9011 connect error: dial tcp4 112.47.7.133:9011: i/o timeout&quot;</span><br><span class="line">time=&quot;2023-07-27T10:52:47+08:00&quot; level=info msg=&quot;[TCP] 127.0.0.1:47432 --&gt; registry-1.docker.io:443 match Match() using ☁️ Others[香港-03]&quot;</span><br><span class="line">time=&quot;2023-07-27T10:52:47+08:00&quot; level=info msg=&quot;[TCP] 127.0.0.1:47448 --&gt; auth.docker.io:443 match Match() using ☁️ Others[香港-03]&quot;</span><br><span class="line">time=&quot;2023-07-27T10:52:48+08:00&quot; level=info msg=&quot;[TCP] 127.0.0.1:47464 --&gt; registry-1.docker.io:443 match Match() using ☁️ Others[香港-03]&quot;</span><br><span class="line">time=&quot;2023-07-27T10:52:49+08:00&quot; level=info msg=&quot;[TCP] 127.0.0.1:47480 --&gt; registry-1.docker.io:443 match Match() using ☁️ Others[香港-03]&quot;</span><br><span class="line">time=&quot;2023-07-27T10:52:50+08:00&quot; level=info msg=&quot;[TCP] 127.0.0.1:47494 --&gt; registry-1.docker.io:443 match Match() using ☁️ Others[香港-03]&quot;</span><br><span class="line">time=&quot;2023-07-27T10:52:50+08:00&quot; level=info msg=&quot;[TCP] 127.0.0.1:47510 --&gt; registry-1.docker.io:443 match Match() using ☁️ Others[香港-03]&quot;</span><br><span class="line">time=&quot;2023-07-27T10:52:50+08:00&quot; level=info msg=&quot;[TCP] 127.0.0.1:47518 --&gt; registry-1.docker.io:443 match Match() using ☁️ Others[香港-03]&quot;</span><br><span class="line">time=&quot;2023-07-27T10:52:51+08:00&quot; level=info msg=&quot;[TCP] 127.0.0.1:47542 --&gt; production.cloudflare.docker.com:443 match Match() using ☁️ Others[香港-03]&quot;</span><br><span class="line">time=&quot;2023-07-27T10:52:51+08:00&quot; level=info msg=&quot;[TCP] 127.0.0.1:47530 --&gt; production.cloudflare.docker.com:443 match Match() using ☁️ Others[香港-03]&quot;</span><br></pre></td></tr></table></figure></p>
+<p>为了让clash的启动和关闭更加便捷，我写了两个简单的启动和关闭脚本，如下所示</p>
+<p>启动脚本：<br />
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/usr/bin/env bash</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">gsettings <span class="built_in">set</span> org.gnome.system.proxy mode <span class="string">&#x27;manual&#x27;</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">gsettings <span class="built_in">set</span> org.gnome.system.proxy.http port 7890</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">gsettings <span class="built_in">set</span> org.gnome.system.proxy.http host <span class="string">&#x27;127.0.0.1&#x27;</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">gsettings <span class="built_in">set</span> org.gnome.system.proxy.https port 7890</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">gsettings <span class="built_in">set</span> org.gnome.system.proxy.https host <span class="string">&#x27;127.0.0.1&#x27;</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">gsettings <span class="built_in">set</span> org.gnome.system.proxy.socks port 7891</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">gsettings <span class="built_in">set</span> org.gnome.system.proxy.socks host <span class="string">&#x27;127.0.0.1&#x27;</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">gsettings <span class="built_in">set</span> org.gnome.system.proxy ignore-hosts <span class="string">&quot;[&#x27;localhost&#x27;, &#x27;127.0.0.0/8&#x27;, &#x27;::1&#x27;]&quot;</span></span></span><br><span class="line"></span><br><span class="line">clash_home=$(dirname $(command -v clash))</span><br><span class="line"></span><br><span class="line">read -p &quot;specify a configure directory under the clash root: &quot; confdir</span><br><span class="line">if [ ! -n &quot;$&#123;confdir&#125;&quot; ]; then</span><br><span class="line">	echo &quot;no dir specified, use clash root as conf dir&quot;</span><br><span class="line">	confdir=$&#123;clash_home&#125;</span><br><span class="line">else</span><br><span class="line">	if [ ! -d $&#123;confdir&#125; ]; then</span><br><span class="line">		echo &quot;specified confdir not exists, use clash root as conf dir&quot;</span><br><span class="line">		confdir=$&#123;clash_home&#125;</span><br><span class="line">	fi</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">nohup $&#123;clash_home&#125;/clash -d $&#123;confdir&#125; &gt; $&#123;clash_home&#125;/clash.log 2&gt;&amp;1 &amp;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="variable">$&#123;clash_home&#125;</span>/clash -d <span class="variable">$&#123;confdir&#125;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">export HTTP_PROXY=http://127.0.0.1:7890</span><br><span class="line">export HTTPS_PROXY=http://127.0.0.1:7890</span><br></pre></td></tr></table></figure> 关闭脚本：<br />
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">clash_procid=$(ps -ef | grep clash | grep -v grep | awk &#x27;&#123;print $2&#125;&#x27;)</span><br><span class="line">if [ -n &quot;$&#123;clash_procid&#125;&quot; ]; then</span><br><span class="line">	echo &quot;$&#123;clash_procid&#125;&quot; | xargs kill -SIGKILL</span><br><span class="line">	unset HTTP_PROXY</span><br><span class="line">	unset HTTPS_PROXY</span><br><span class="line">	unset FTP_PROXY</span><br><span class="line">	unset ALL_PROXY</span><br><span class="line">else</span><br><span class="line">	echo &quot;no clash process found...&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure></p>
+<p>以后在使用docker前就必须打开clash代理才能让docker正常拉取仓库镜像，因为已经配置了docker
+daemon的代理环境变量了，如果不需要代理可以把docker.service.d下的代理配置文件删除或者注释内容后重启docker服务。开启clash代理后，docker往clash监听代理请求的端口发送拉取镜像请求，然后clash安排这些请求去能穿墙的节点服务器帮忙获取http
+response。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/linux/" rel="tag"># linux</a>
+              <a href="/blog/tags/docker/" rel="tag"># docker</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/linux/docker/%E5%89%8D%E5%8F%B0%E8%BF%90%E8%A1%8C%E5%92%8C%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C%E5%8C%BA%E5%88%AB/" rel="prev" title="前台运行和后台运行区别">
+      <i class="fa fa-chevron-left"></i> 前台运行和后台运行区别
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/linux/docker/golang%E9%95%9C%E5%83%8Fdockerfile%E7%A4%BA%E4%BE%8B/" rel="next" title="golang镜像dockerfile示例">
+      golang镜像dockerfile示例 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-daemon"><span class="nav-number">1.</span> <span class="nav-text">docker daemon</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#clash"><span class="nav-number">2.</span> <span class="nav-text">Clash</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>

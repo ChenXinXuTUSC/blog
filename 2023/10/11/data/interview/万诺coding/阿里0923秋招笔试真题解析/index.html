@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="阿里0923秋招笔试真题解析">
+<meta property="og:url" content="http://example.com/2023/10/11/data/interview/%E4%B8%87%E8%AF%BAcoding/%E9%98%BF%E9%87%8C0923%E7%A7%8B%E6%8B%9B%E7%AC%94%E8%AF%95%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:27.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:27.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="interview">
+<meta property="article:tag" content="万诺coding">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/interview/%E4%B8%87%E8%AF%BAcoding/%E9%98%BF%E9%87%8C0923%E7%A7%8B%E6%8B%9B%E7%AC%94%E8%AF%95%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>阿里0923秋招笔试真题解析 | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/interview/%E4%B8%87%E8%AF%BAcoding/%E9%98%BF%E9%87%8C0923%E7%A7%8B%E6%8B%9B%E7%AC%94%E8%AF%95%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          阿里0923秋招笔试真题解析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:27" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:27+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/interview/" itemprop="url" rel="index"><span itemprop="name">interview</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>前言：</strong></p>
+<p>题目难度适中，最近的难度来看应该算是比较简单的了，大家且行且珍惜</p>
+<h2 id="第一题">第一题</h2>
+<p>小红有一个长度为n的数组a，她每次操作可以删掉一个三元组
+(x,y,z)，要求x&lt;y&lt;z,y是x的倍数，z是y的倍数。小红想知道最多可以执行多少次操作。</p>
+<p><strong>输入描述</strong></p>
+<p>第一行一个整数几，表示数组的长度。</p>
+<p>第二行n 个整数a1,a2，...,an，表示数组的元素</p>
+<p>数据范围：<br />
+<code>1&lt;=n&lt;=10^5</code><br />
+<code>1&lt;=ai&lt;=6</code></p>
+<p><strong>输出描述</strong></p>
+<p><strong>示例1</strong></p>
+<p><strong>输入</strong></p>
+<p><code>7   1 1 2 3 4 5 6</code></p>
+<p><strong>输出</strong></p>
+<p><code>2</code></p>
+<p><strong>说明</strong></p>
+<p>先删除(1,2,4)，再删除(1,3,6)</p>
+<p><strong>思路和代码</strong></p>
+<p>全排列，把所有情况列举一遍存在数组里，把所有情况暴力枚举一遍，输出结果。<br />
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span>  </span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;  </span><br><span class="line"><span class="type">int</span> dir[<span class="number">3</span>][<span class="number">3</span>]=&#123;&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">4</span>&#125;,&#123;<span class="number">1</span>,<span class="number">3</span>,<span class="number">6</span>&#125;,&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">6</span>&#125;&#125;;  </span><br><span class="line"><span class="type">int</span> mp[<span class="number">6</span>][<span class="number">3</span>]=&#123;&#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>&#125;,&#123;<span class="number">0</span>,<span class="number">2</span>,<span class="number">1</span>&#125;,&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">0</span>&#125;,&#123;<span class="number">1</span>,<span class="number">0</span>,<span class="number">2</span>&#125;,&#123;<span class="number">2</span>,<span class="number">1</span>,<span class="number">0</span>&#125;,&#123;<span class="number">2</span>,<span class="number">0</span>,<span class="number">1</span>&#125;&#125;;  </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">    <span class="type">int</span> n;  </span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>,&amp;n);  </span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">cnt</span><span class="params">(<span class="number">7</span>)</span></span>;  </span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;  </span><br><span class="line">        <span class="type">int</span> x;  </span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>,&amp;x);  </span><br><span class="line">        cnt[x]++;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="type">int</span> ans=<span class="number">0</span>;  </span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">6</span>;i++)&#123;  </span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">c</span><span class="params">(<span class="number">7</span>)</span></span>;  </span><br><span class="line">        <span class="type">int</span> sum=<span class="number">0</span>;  </span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> k=<span class="number">1</span>;k&lt;=<span class="number">6</span>;k++) c[k]=cnt[k];  </span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;<span class="number">3</span>;j++)&#123;  </span><br><span class="line">            <span class="type">int</span> id=mp[i][j];  </span><br><span class="line">            <span class="type">int</span> minn=<span class="number">0x3f3f3f3f</span>;  </span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> k=<span class="number">0</span>;k&lt;<span class="number">3</span>;k++) minn=<span class="built_in">min</span>(minn,c[dir[id][k]]);  </span><br><span class="line">            sum+=minn;  </span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> k=<span class="number">0</span>;k&lt;<span class="number">3</span>;k++) c[dir[id][k]]-=minn;  </span><br><span class="line">        &#125;  </span><br><span class="line">        ans = <span class="built_in">max</span>(ans, sum);  </span><br><span class="line">    &#125;  </span><br><span class="line">    cout &lt;&lt; ans &lt;&lt; endl;     </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="第二题">第二题</h2>
+<p>小红有一个字符串s，只包含小写字母。如果一个字符串中，不包含连续的三个相同的字母，并且不存在两个相同的字母紧挨着两个相同的字母，那么这个字符串就是合法的。例如，字符串“aaa”是不合法的，字符串"aabb"也是不合法的。字符串”aab”是合法的。</p>
+<p>小红想知道，最少需要删除多少个字符，才能使得字符串变成合法的。</p>
+<p><strong>输入描述</strong></p>
+<p>第一行一个字符串s，长度不超过10^5，只包含小写字母。</p>
+<p><strong>输出描述</strong></p>
+<p>输出一个整数，表示最少需要删除的字符个数。</p>
+<p><strong>示例1</strong></p>
+<p><strong>输入</strong></p>
+<p><code>aabbaa</code></p>
+<p><strong>输出</strong></p>
+<p><code>1</code></p>
+<p><strong>说明</strong></p>
+<p>删除一个字符b，得到 aabaa，是一个合法的字符串。</p>
+<p><strong>思路和代码</strong></p>
+<p>1、预处理字符串：为了方便后续的处理，代码将字符串<code>s</code>末尾添加了一个特殊字符<code>'#'</code>。2、遍历字符串：计算相同字符连续出现的次数，并将字符及其重复次数拼接到字符串<code>t</code>中。</p>
+<p>3、构建向数组a<code>：根据字符串</code>t<code>构建了一个整数向量</code>a<code>，其中向量中的每个元素表示相应位置的字符出现的次数。如果连续的字符出现两次（如"aa"），则将2添加到向量</code>a`中，否则添加1。</p>
+<p>4、处理连续的重复字符：如果向量<code>a</code>中的连续两个元素都是2（表示连续的字符出现了两次），则将第二个元素减少1，同时增加<code>ans</code>的值，以确保删除字符以最小化重复子串的数量。<br />
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span>  </span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;  </span><br><span class="line"><span class="type">const</span> <span class="type">int</span> maxn=<span class="number">2e5</span>+<span class="number">5</span>;  </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">    string s;  </span><br><span class="line">    cin&gt;&gt;s;  </span><br><span class="line">    <span class="type">int</span> n=s.<span class="built_in">size</span>();  </span><br><span class="line">    s+=<span class="string">&#x27;#&#x27;</span>;  </span><br><span class="line">    <span class="type">int</span> cnt=<span class="number">0</span>,ans=<span class="number">0</span>;  </span><br><span class="line">    string t;  </span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;=n;i++)&#123;  </span><br><span class="line">        <span class="keyword">if</span>(i==<span class="number">0</span> || s[i]==s[i<span class="number">-1</span>]) cnt++;  </span><br><span class="line">        <span class="keyword">else</span>&#123;  </span><br><span class="line">            t+=<span class="built_in">string</span>(<span class="built_in">min</span>(<span class="number">2</span>,cnt),s[i<span class="number">-1</span>]);  </span><br><span class="line">            ans+=cnt-<span class="built_in">min</span>(<span class="number">2</span>,cnt);  </span><br><span class="line">            cnt=<span class="number">1</span>;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="type">int</span> m=t.<span class="built_in">size</span>();  </span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; a;  </span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;m;i++)&#123;  </span><br><span class="line">        <span class="keyword">if</span>(i!=m<span class="number">-1</span>&amp;&amp;t[i]==t[i+<span class="number">1</span>])&#123;  </span><br><span class="line">            a.<span class="built_in">push_back</span>(<span class="number">2</span>);  </span><br><span class="line">            i+=<span class="number">1</span>;  </span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;  </span><br><span class="line">            a.<span class="built_in">push_back</span>(<span class="number">1</span>);  </span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="type">int</span> sz=a.<span class="built_in">size</span>();  </span><br><span class="line">        <span class="keyword">if</span>(sz&gt;=<span class="number">2</span>&amp;&amp;a[sz<span class="number">-1</span>]==<span class="number">2</span>&amp;&amp;a[sz<span class="number">-2</span>]==<span class="number">2</span>)&#123;  </span><br><span class="line">            a[sz<span class="number">-1</span>]--;  </span><br><span class="line">            ans++;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    cout&lt;&lt;ans&lt;&lt;endl;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="第三题">第三题</h2>
+<p>小红拿到了一个有根树，根节点为1号节点，每个节点到其每个孩子有条有向边。小红想取一条路径，满足路径上所有节点的权值都不相等。小红想知道，自己有多少种选择方案?</p>
+<p><strong>输入描述</strong></p>
+<p>第一行输入一个正整数n，代表节点的数量。</p>
+<p>第二行输入n一1个正整数ai，代表2号节点到n号节点每个节点的父亲编号。</p>
+<p>第三行输入n个正整数vi，代表1号节点到n号节点每个节点的权值。</p>
+<p><code>2&lt;=n&lt;=2* 10^5   1&lt;=ai&lt;=i&lt;2* 10^5   1&lt;=vi&lt;=10^9</code></p>
+<p><strong>输出描述</strong></p>
+<p>小红选择路径的方案数。</p>
+<p><strong>示例1</strong></p>
+<p><strong>输入</strong></p>
+<p><code>5   1 1 1 2   1 1 2 2 2</code></p>
+<p><strong>输出</strong></p>
+<p><code>8</code></p>
+<p><strong>说明</strong></p>
+<p>路径上有一个节点，有5种取法。路径上有两个节点的取法有:
+1-3、1-4、2-5</p>
+<p><strong>思路与代码</strong></p>
+<p>深度优先搜索（DFS）：程序通过<code>dfs</code>函数进行深度优先搜索，遍历树的每个节点，并计算节点的深度。</p>
+<ul>
+<li><p>dfs<code>函数的参数包括当前节点</code>u<code>，其父节点</code>fa<code>，以及当前节点的深度</code>dd`。</p></li>
+<li><p>在进入当前节点<code>u</code>之前，记录节点<code>u</code>上一次出现的深度，即<code>p[a[u]]</code>，并将当前节点的深度<code>dd</code>保存在<code>p[a[u]]</code>中。</p></li>
+<li><p>计算当前节点<code>u</code>与其最近出现的节点之间的深度差距，即<code>gap = dd - near[u]</code>，并将其加到结果<code>res</code>中。</p></li>
+<li><p>遍历节点<code>u</code>的所有子节点，如果子节点不是其父节点<code>fa</code>，则递归调用<code>dfs</code>函数，并将深度加1。</p></li>
+<li><p>在递归回溯时，将节点<code>u</code>上一次出现的深度还原回<code>p[a[u]]</code>。</p></li>
+<li></li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span>  </span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;  </span><br><span class="line"><span class="type">const</span> <span class="type">int</span> maxn=<span class="number">2e5</span>+<span class="number">5</span>;  </span><br><span class="line">unordered_map&lt;<span class="type">int</span>,<span class="type">int</span>&gt; p;  </span><br><span class="line">vector&lt;<span class="type">int</span>&gt; e[maxn];  </span><br><span class="line"><span class="type">int</span> n;  </span><br><span class="line"><span class="type">int</span> a[maxn],near[maxn];  </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">readIn</span><span class="params">()</span></span>&#123;  </span><br><span class="line">    cin&gt;&gt;n;  </span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">2</span>;i&lt;=n;i++)&#123;  </span><br><span class="line">        <span class="type">int</span> x;  </span><br><span class="line">        cin&gt;&gt;x;  </span><br><span class="line">        e[x].<span class="built_in">push_back</span>(i);  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++) cin&gt;&gt;a[i];  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> fa,<span class="type">int</span> dd)</span></span>;  </span><br><span class="line"><span class="type">long</span> <span class="type">long</span> res=<span class="number">0</span>;  </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">    <span class="built_in">readIn</span>();  </span><br><span class="line">    <span class="built_in">dfs</span>(<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>);  </span><br><span class="line">    cout&lt;&lt;res&lt;&lt;endl;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> fa,<span class="type">int</span> dd)</span></span>&#123;  </span><br><span class="line">    <span class="type">int</span> pre=p[a[u]];  </span><br><span class="line">    p[a[u]]=dd;  </span><br><span class="line">    near[u]=<span class="built_in">max</span>(pre,near[fa]);  </span><br><span class="line">    <span class="type">int</span> gap=dd-near[u];  </span><br><span class="line">    res+=gap;  </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> v:e[u])&#123;  </span><br><span class="line">        <span class="keyword">if</span>(v==fa) <span class="keyword">continue</span>;  </span><br><span class="line">        <span class="built_in">dfs</span>(v,u,dd+<span class="number">1</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">    p[a[u]]=pre;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/interview/" rel="tag"># interview</a>
+              <a href="/blog/tags/%E4%B8%87%E8%AF%BAcoding/" rel="tag"># 万诺coding</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/deployment/%E9%83%A8%E7%BD%B2InfluxDB%EF%BC%8Cdocker%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C/" rel="prev" title="部署InfluxDB，docker容器运行">
+      <i class="fa fa-chevron-left"></i> 部署InfluxDB，docker容器运行
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/interview/%E4%B8%87%E8%AF%BAcoding/%E8%8C%84%E5%AD%90%E7%A7%91%E6%8A%800830%E7%A7%8B%E6%8B%9B%E7%AC%94%E8%AF%95%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90/" rel="next" title="茄子科技0830秋招笔试真题解析">
+      茄子科技0830秋招笔试真题解析 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">第一题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">第二题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">第三题</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="深入理解元数据锁">
+<meta property="og:url" content="http://example.com/2023/10/11/data/CSAPP/database/SQL/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%85%83%E6%95%B0%E6%8D%AE%E9%94%81/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:14.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:14.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="CSAPP">
+<meta property="article:tag" content="database">
+<meta property="article:tag" content="SQL">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/CSAPP/database/SQL/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%85%83%E6%95%B0%E6%8D%AE%E9%94%81/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>深入理解元数据锁 | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/CSAPP/database/SQL/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%85%83%E6%95%B0%E6%8D%AE%E9%94%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深入理解元数据锁
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:14" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:14+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/CSAPP/" itemprop="url" rel="index"><span itemprop="name">CSAPP</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>前言：</p>
+<p>当你在<a
+target="_blank" rel="noopener" href="https://cloud.tencent.com/product/cdb?from=10680">MySQL</a>中执行一条SQL时，语句并没有在你预期的时间内执行完成，这时候我们通常会登陆到<a
+target="_blank" rel="noopener" href="https://cloud.tencent.com/product/cdb?from=10680">MySQL数据库</a>上查看是不是出了什么问题，通常会使用的一个命令就是
+show processlist，看看有哪些session，这些session在做什么事情。当你看到
+waiting for table metadata lock
+时，那就是遇到MDL元数据锁了。本篇文章将会介绍MDL锁的产生与排查过程。</p>
+<p>1.什么是MDL锁</p>
+<p>MDL全称为metadata
+lock，即元数据锁。MDL锁主要作用是维护表元数据的数据一致性，在表上有活动事务（显式或隐式）的时候，不可以对元数据进行写入操作。因此从MySQL5.5版本开始引入了MDL锁，来保护表的元数据信息，用于解决或者保证DDL操作与DML操作之间的一致性。</p>
+<p>对于引入MDL，其主要解决了2个问题，一个是事务隔离问题，比如在可重复隔离级别下，会话A在2次查询期间，会话B对表结构做了修改，两次查询结果就会不一致，无法满足可重复读的要求；另外一个是数据复制的问题，比如会话A执行了多条更新语句期间，另外一个会话B做了表结构变更并且先提交，就会导致slave在重做时，先重做alter，再重做update时就会出现复制错误的现象。</p>
+<p>元数据锁是server层的锁，表级锁，每执行一条DML、DDL语句时都会申请MDL锁，DML操作需要MDL读锁，DDL操作需要MDL写锁（MDL加锁过程是系统自动控制，无法直接干预，读读共享，读写互斥，写写互斥），申请MDL锁的操作会形成一个队列，队列中写锁获取优先级高于读锁。一旦出现写锁等待，不但当前操作会被阻塞，同时还会阻塞后续该表的所有操作。事务一旦申请到MDL锁后，直到事务执行完才会将锁释放。（这里有种特殊情况如果事务中包含DDL操作，mysql会在DDL操作语句执行前，隐式提交commit，以保证该DDL语句操作作为一个单独的事务存在，同时也保证元数据排他锁的释放）。</p>
+<p>注意：支持事务的InnoDB引擎表和不支持事务的MyISAM引擎表，都会出现Metadata
+Lock Wait等待现象。一旦出现Metadata Lock
+Wait等待现象，后续所有对该表的访问都会阻塞在该等待上，导致连接堆积，业务受影响。</p>
+<p>2.模拟与查找MDL锁</p>
+<p>MDL锁通常发生在DDL操作挂起的时候，原因是有未提交的事务对该表进行DML操作。而MySQL的会话那么多，不知道哪个会话的操作没有及时提交影响了DDL。通常我们排查这类问题，往往需要从information_schema.innodb_trx表中查询当前在执行的事务，但当SQL已经执行过了，没有commit，这个时候这个表中是看不到SQL的。</p>
+<p>在MySQL5.7中，performance_schema库中新增了metadata_locks表，专门记录MDL的相关信息。首先要开启MDL锁记录，执行如下SQL开启：</p>
+<p>UPDATE performance_schema.setup_instruments</p>
+<p>SET ENABLED = 'YES', TIMED = 'YES'</p>
+<p>WHERE NAME = 'wait/lock/metadata/sql/mdl';</p>
+<h1 id="会话1-事务中执行dml操作">会话1 事务中执行DML操作</h1>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">begin</span>;</span><br><span class="line">Query OK, <span class="number">0</span> <span class="keyword">rows</span> affected (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">insert</span> <span class="keyword">into</span> student_tb (stu_id,stu_name) <span class="keyword">values</span> (<span class="number">1009</span>,<span class="string">&#x27;xin&#x27;</span>);</span><br><span class="line">Query OK, <span class="number">1</span> <span class="type">row</span> affected (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> student_tb;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+--------+----------+---------------------+---------------------+</span></span><br><span class="line"><span class="operator">|</span> increment_id <span class="operator">|</span> stu_id <span class="operator">|</span> stu_name <span class="operator">|</span> create_time         <span class="operator">|</span> update_time         <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+--------+----------+---------------------+---------------------+</span></span><br><span class="line"><span class="operator">|</span>            <span class="number">1</span> <span class="operator">|</span>   <span class="number">1001</span> <span class="operator">|</span> from1    <span class="operator">|</span> <span class="number">2019</span><span class="number">-11</span><span class="number">-28</span> <span class="number">16</span>:<span class="number">36</span>:<span class="number">14</span> <span class="operator">|</span> <span class="number">2019</span><span class="number">-11</span><span class="number">-28</span> <span class="number">16</span>:<span class="number">36</span>:<span class="number">14</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>            <span class="number">2</span> <span class="operator">|</span>   <span class="number">1002</span> <span class="operator">|</span> dfsfd    <span class="operator">|</span> <span class="number">2019</span><span class="number">-11</span><span class="number">-28</span> <span class="number">16</span>:<span class="number">36</span>:<span class="number">14</span> <span class="operator">|</span> <span class="number">2019</span><span class="number">-11</span><span class="number">-28</span> <span class="number">16</span>:<span class="number">36</span>:<span class="number">14</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>            <span class="number">3</span> <span class="operator">|</span>   <span class="number">1003</span> <span class="operator">|</span> fdgfg    <span class="operator">|</span> <span class="number">2019</span><span class="number">-11</span><span class="number">-28</span> <span class="number">16</span>:<span class="number">36</span>:<span class="number">14</span> <span class="operator">|</span> <span class="number">2019</span><span class="number">-11</span><span class="number">-28</span> <span class="number">16</span>:<span class="number">36</span>:<span class="number">14</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>            <span class="number">4</span> <span class="operator">|</span>   <span class="number">1004</span> <span class="operator">|</span> sdfsdf   <span class="operator">|</span> <span class="number">2019</span><span class="number">-11</span><span class="number">-28</span> <span class="number">16</span>:<span class="number">36</span>:<span class="number">14</span> <span class="operator">|</span> <span class="number">2019</span><span class="number">-11</span><span class="number">-28</span> <span class="number">16</span>:<span class="number">36</span>:<span class="number">14</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>            <span class="number">5</span> <span class="operator">|</span>   <span class="number">1005</span> <span class="operator">|</span> dsfsdg   <span class="operator">|</span> <span class="number">2019</span><span class="number">-11</span><span class="number">-28</span> <span class="number">16</span>:<span class="number">36</span>:<span class="number">14</span> <span class="operator">|</span> <span class="number">2019</span><span class="number">-11</span><span class="number">-28</span> <span class="number">16</span>:<span class="number">36</span>:<span class="number">14</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>            <span class="number">6</span> <span class="operator">|</span>   <span class="number">1006</span> <span class="operator">|</span> fgd      <span class="operator">|</span> <span class="number">2019</span><span class="number">-11</span><span class="number">-28</span> <span class="number">16</span>:<span class="number">36</span>:<span class="number">14</span> <span class="operator">|</span> <span class="number">2019</span><span class="number">-11</span><span class="number">-28</span> <span class="number">16</span>:<span class="number">36</span>:<span class="number">14</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>            <span class="number">7</span> <span class="operator">|</span>   <span class="number">1007</span> <span class="operator">|</span> fgds     <span class="operator">|</span> <span class="number">2019</span><span class="number">-11</span><span class="number">-28</span> <span class="number">16</span>:<span class="number">36</span>:<span class="number">14</span> <span class="operator">|</span> <span class="number">2019</span><span class="number">-11</span><span class="number">-28</span> <span class="number">16</span>:<span class="number">36</span>:<span class="number">14</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>            <span class="number">8</span> <span class="operator">|</span>   <span class="number">1008</span> <span class="operator">|</span> dgfsa    <span class="operator">|</span> <span class="number">2019</span><span class="number">-11</span><span class="number">-28</span> <span class="number">16</span>:<span class="number">36</span>:<span class="number">14</span> <span class="operator">|</span> <span class="number">2019</span><span class="number">-11</span><span class="number">-28</span> <span class="number">16</span>:<span class="number">36</span>:<span class="number">14</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>            <span class="number">9</span> <span class="operator">|</span>   <span class="number">1009</span> <span class="operator">|</span> xin      <span class="operator">|</span> <span class="number">2019</span><span class="number">-11</span><span class="number">-28</span> <span class="number">17</span>:<span class="number">05</span>:<span class="number">29</span> <span class="operator">|</span> <span class="number">2019</span><span class="number">-11</span><span class="number">-28</span> <span class="number">17</span>:<span class="number">05</span>:<span class="number">29</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+--------+----------+---------------------+---------------------+</span></span><br></pre></td></tr></table></figure>
+<h1 id="会话2-对该表加字段-执行ddl操作-发现ddl挂起">会话2 对该表加字段
+执行DDL操作 发现DDL挂起</h1>
+<p>mysql&gt; alter table student_tb add stu_age int after stu_name;</p>
+<h1 id="会话3-查询所有会话-发现发生mdl锁">会话3 查询所有会话
+发现发生MDL锁</h1>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> processlist;</span><br><span class="line"><span class="operator">+</span><span class="comment">----+------+-----------+--------+---------+------+---------------------------------+-------------------------------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="operator">|</span> Id <span class="operator">|</span> <span class="keyword">User</span> <span class="operator">|</span> Host      <span class="operator">|</span> db     <span class="operator">|</span> Command <span class="operator">|</span> <span class="type">Time</span> <span class="operator">|</span> State                           <span class="operator">|</span> Info                                                  <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">+</span><span class="comment">----+------+-----------+--------+---------+------+---------------------------------+-------------------------------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="operator">|</span> <span class="number">31</span> <span class="operator">|</span> root <span class="operator">|</span> localhost <span class="operator">|</span> testdb <span class="operator">|</span> Sleep   <span class="operator">|</span>  <span class="number">125</span> <span class="operator">|</span>                                 <span class="operator">|</span> <span class="keyword">NULL</span>                                                  <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">|</span> <span class="number">32</span> <span class="operator">|</span> root <span class="operator">|</span> localhost <span class="operator">|</span> testdb <span class="operator">|</span> Query   <span class="operator">|</span>    <span class="number">7</span> <span class="operator">|</span> Waiting <span class="keyword">for</span> <span class="keyword">table</span> metadata lock <span class="operator">|</span> <span class="keyword">alter</span> <span class="keyword">table</span> student_tb <span class="keyword">add</span> stu_age <span class="type">int</span> after stu_name <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">|</span> <span class="number">33</span> <span class="operator">|</span> root <span class="operator">|</span> localhost <span class="operator">|</span> testdb <span class="operator">|</span> Query   <span class="operator">|</span>    <span class="number">0</span> <span class="operator">|</span> starting                        <span class="operator">|</span> <span class="keyword">show</span> processlist                                      <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">+</span><span class="comment">----+------+-----------+--------+---------+------+---------------------------------+-------------------------------------------------------+</span></span><br></pre></td></tr></table></figure>
+<h1
+id="会话3-查看metadata_locks表记录-发现student_tb表有mdl锁冲突">会话3
+查看metadata_locks表记录 发现student_tb表有MDL锁冲突</h1>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> performance_schema.metadata_locks;</span><br><span class="line"></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------+--------------------+----------------+-----------------------+---------------------+---------------+-------------+--------+-----------------+----------------+</span></span><br><span class="line"></span><br><span class="line"><span class="operator">|</span> OBJECT_TYPE <span class="operator">|</span> OBJECT_SCHEMA      <span class="operator">|</span> OBJECT_NAME    <span class="operator">|</span> OBJECT_INSTANCE_BEGIN <span class="operator">|</span> LOCK_TYPE           <span class="operator">|</span> LOCK_DURATION <span class="operator">|</span> LOCK_STATUS <span class="operator">|</span> SOURCE <span class="operator">|</span> OWNER_THREAD_ID <span class="operator">|</span> OWNER_EVENT_ID <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------+--------------------+----------------+-----------------------+---------------------+---------------+-------------+--------+-----------------+----------------+</span></span><br><span class="line"></span><br><span class="line"><span class="operator">|</span> <span class="keyword">TABLE</span>       <span class="operator">|</span> testdb             <span class="operator">|</span> student_tb     <span class="operator">|</span>        <span class="number">94189250717664</span> <span class="operator">|</span> SHARED_WRITE        <span class="operator">|</span> TRANSACTION   <span class="operator">|</span> GRANTED     <span class="operator">|</span>        <span class="operator">|</span>              <span class="number">56</span> <span class="operator">|</span>             <span class="number">34</span> <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">|</span> <span class="keyword">GLOBAL</span>      <span class="operator">|</span> <span class="keyword">NULL</span>               <span class="operator">|</span> <span class="keyword">NULL</span>           <span class="operator">|</span>       <span class="number">139764477045472</span> <span class="operator">|</span> INTENTION_EXCLUSIVE <span class="operator">|</span> STATEMENT     <span class="operator">|</span> GRANTED     <span class="operator">|</span>        <span class="operator">|</span>              <span class="number">57</span> <span class="operator">|</span>             <span class="number">18</span> <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">|</span> SCHEMA      <span class="operator">|</span> testdb             <span class="operator">|</span> <span class="keyword">NULL</span>           <span class="operator">|</span>       <span class="number">139764477697808</span> <span class="operator">|</span> INTENTION_EXCLUSIVE <span class="operator">|</span> TRANSACTION   <span class="operator">|</span> GRANTED     <span class="operator">|</span>        <span class="operator">|</span>              <span class="number">57</span> <span class="operator">|</span>             <span class="number">18</span> <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">|</span> <span class="keyword">TABLE</span>       <span class="operator">|</span> testdb             <span class="operator">|</span> student_tb     <span class="operator">|</span>       <span class="number">139764477697904</span> <span class="operator">|</span> SHARED_UPGRADABLE   <span class="operator">|</span> TRANSACTION   <span class="operator">|</span> GRANTED     <span class="operator">|</span>        <span class="operator">|</span>              <span class="number">57</span> <span class="operator">|</span>             <span class="number">18</span> <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">|</span> <span class="keyword">TABLE</span>       <span class="operator">|</span> testdb             <span class="operator">|</span> student_tb     <span class="operator">|</span>       <span class="number">139764477697696</span> <span class="operator">|</span> EXCLUSIVE           <span class="operator">|</span> TRANSACTION   <span class="operator">|</span> PENDING     <span class="operator">|</span>        <span class="operator">|</span>              <span class="number">57</span> <span class="operator">|</span>             <span class="number">18</span> <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">|</span> <span class="keyword">TABLE</span>       <span class="operator">|</span> performance_schema <span class="operator">|</span> metadata_locks <span class="operator">|</span>       <span class="number">139764544135120</span> <span class="operator">|</span> SHARED_READ         <span class="operator">|</span> TRANSACTION   <span class="operator">|</span> GRANTED     <span class="operator">|</span>        <span class="operator">|</span>              <span class="number">58</span> <span class="operator">|</span>             <span class="number">20</span> <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------+--------------------+----------------+-----------------------+---------------------+---------------+-------------+--------+-----------------+----------------+</span></span><br></pre></td></tr></table></figure>
+<h1 id="会话3-联合其他系统表-查找出会话id">会话3 联合其他系统表
+查找出会话ID</h1>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> m.<span class="operator">*</span>,t.PROCESSLIST_ID <span class="keyword">from</span> performance_schema.metadata_locks m <span class="keyword">left</span> <span class="keyword">join</span> performance_schema.threads t <span class="keyword">on</span> m.owner_thread_id<span class="operator">=</span>t.thread_id;</span><br><span class="line"></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------+--------------------+----------------+-----------------------+---------------------+---------------+-------------+--------+-----------------+----------------+----------------+</span></span><br><span class="line"><span class="operator">|</span> OBJECT_TYPE <span class="operator">|</span> OBJECT_SCHEMA      <span class="operator">|</span> OBJECT_NAME    <span class="operator">|</span> OBJECT_INSTANCE_BEGIN <span class="operator">|</span> LOCK_TYPE           <span class="operator">|</span> LOCK_DURATION <span class="operator">|</span> LOCK_STATUS <span class="operator">|</span> SOURCE <span class="operator">|</span> OWNER_THREAD_ID <span class="operator">|</span> OWNER_EVENT_ID <span class="operator">|</span> PROCESSLIST_ID <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------+--------------------+----------------+-----------------------+---------------------+---------------+-------------+--------+-----------------+----------------+----------------+</span></span><br><span class="line"></span><br><span class="line"><span class="operator">|</span> <span class="keyword">TABLE</span>       <span class="operator">|</span> testdb             <span class="operator">|</span> student_tb     <span class="operator">|</span>        <span class="number">94189250717664</span> <span class="operator">|</span> SHARED_WRITE        <span class="operator">|</span> TRANSACTION   <span class="operator">|</span> GRANTED     <span class="operator">|</span>        <span class="operator">|</span>              <span class="number">56</span> <span class="operator">|</span>             <span class="number">34</span> <span class="operator">|</span>             <span class="number">31</span> <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">|</span> <span class="keyword">GLOBAL</span>      <span class="operator">|</span> <span class="keyword">NULL</span>               <span class="operator">|</span> <span class="keyword">NULL</span>           <span class="operator">|</span>       <span class="number">139764477045472</span> <span class="operator">|</span> INTENTION_EXCLUSIVE <span class="operator">|</span> STATEMENT     <span class="operator">|</span> GRANTED     <span class="operator">|</span>        <span class="operator">|</span>              <span class="number">57</span> <span class="operator">|</span>             <span class="number">18</span> <span class="operator">|</span>             <span class="number">32</span> <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">|</span> SCHEMA      <span class="operator">|</span> testdb             <span class="operator">|</span> <span class="keyword">NULL</span>           <span class="operator">|</span>       <span class="number">139764477697808</span> <span class="operator">|</span> INTENTION_EXCLUSIVE <span class="operator">|</span> TRANSACTION   <span class="operator">|</span> GRANTED     <span class="operator">|</span>        <span class="operator">|</span>              <span class="number">57</span> <span class="operator">|</span>             <span class="number">18</span> <span class="operator">|</span>             <span class="number">32</span> <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">|</span> <span class="keyword">TABLE</span>       <span class="operator">|</span> testdb             <span class="operator">|</span> student_tb     <span class="operator">|</span>       <span class="number">139764477697904</span> <span class="operator">|</span> SHARED_UPGRADABLE   <span class="operator">|</span> TRANSACTION   <span class="operator">|</span> GRANTED     <span class="operator">|</span>        <span class="operator">|</span>              <span class="number">57</span> <span class="operator">|</span>             <span class="number">18</span> <span class="operator">|</span>             <span class="number">32</span> <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">|</span> <span class="keyword">TABLE</span>       <span class="operator">|</span> testdb             <span class="operator">|</span> student_tb     <span class="operator">|</span>       <span class="number">139764477697696</span> <span class="operator">|</span> EXCLUSIVE           <span class="operator">|</span> TRANSACTION   <span class="operator">|</span> PENDING     <span class="operator">|</span>        <span class="operator">|</span>              <span class="number">57</span> <span class="operator">|</span>             <span class="number">18</span> <span class="operator">|</span>             <span class="number">32</span> <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">|</span> <span class="keyword">TABLE</span>       <span class="operator">|</span> performance_schema <span class="operator">|</span> metadata_locks <span class="operator">|</span>       <span class="number">139764544135120</span> <span class="operator">|</span> SHARED_READ         <span class="operator">|</span> TRANSACTION   <span class="operator">|</span> GRANTED     <span class="operator">|</span>        <span class="operator">|</span>              <span class="number">58</span> <span class="operator">|</span>             <span class="number">22</span> <span class="operator">|</span>             <span class="number">33</span> <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">|</span> <span class="keyword">TABLE</span>       <span class="operator">|</span> performance_schema <span class="operator">|</span> threads        <span class="operator">|</span>       <span class="number">139764549217280</span> <span class="operator">|</span> SHARED_READ         <span class="operator">|</span> TRANSACTION   <span class="operator">|</span> GRANTED     <span class="operator">|</span>        <span class="operator">|</span>              <span class="number">58</span> <span class="operator">|</span>             <span class="number">22</span> <span class="operator">|</span>             <span class="number">33</span> <span class="operator">|</span></span><br><span class="line"></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------+--------------------+----------------+-----------------------+---------------------+---------------+-------------+--------+-----------------+----------------+----------------+</span></span><br></pre></td></tr></table></figure>
+<h1
+id="结果解读从上面结果明显可以看出会话31持有student_tb表的shared_write锁">结果解读：从上面结果明显可以看出会话31持有student_tb表的SHARED_WRITE锁，</h1>
+<h1
+id="需要等待其提交后或手动杀掉该会话方可解除mdl锁">需要等待其提交后或手动杀掉该会话方可解除MDL锁。</h1>
+<p>3.如何优化与避免MDL锁</p>
+<p>MDL锁一旦发生会对业务造成极大影响，因为后续所有对该表的访问都会被阻塞，造成连接积压。我们日常要尽量避免MDL锁的发生，下面给出几点优化建议可供参考：</p>
+<ul>
+<li>开启metadata_locks表记录MDL锁。<br />
+</li>
+<li>设置参数lock_wait_timeout为较小值，使被阻塞端主动停止。<br />
+</li>
+<li>规范使用事务，及时提交事务，避免使用大事务。<br />
+</li>
+<li>增强监控告警，及时发现MDL锁。<br />
+</li>
+<li>DDL操作及备份操作放在业务低峰期执行。<br />
+</li>
+<li>少用工具开启事务进行查询，图形化工具要及时关闭。</li>
+</ul>
+<p>总结：</p>
+<p>本篇文章主要分三方面来详解MDL锁，首先介绍了MDL锁产生的原因及作用，然后我们模拟出MDL锁，并给出查找及解决方法，最后给出几点避免MDL锁的建议。其实，MDL锁在DB<a
+target="_blank" rel="noopener" href="https://cloud.tencent.com/solution/operation?from=10680">运维</a>过程中经常遇到，它不是洪水猛兽，只是为了保护数据库对象，保证数据一致性。希望大家看完这篇文章后能对MDL锁有更清晰的认识。</p>
+<p>来自 &lt;<a
+target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1553461">https://cloud.tencent.com/developer/article/1553461</a>&gt;</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/CSAPP/" rel="tag"># CSAPP</a>
+              <a href="/blog/tags/database/" rel="tag"># database</a>
+              <a href="/blog/tags/SQL/" rel="tag"># SQL</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/CSAPP/database/SQL/%E9%9D%9E%E7%A9%BA%E5%80%BC%E6%9F%A5%E8%AF%A2/" rel="prev" title="非空值查询">
+      <i class="fa fa-chevron-left"></i> 非空值查询
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/CSAPP/database/SQL/%E6%9F%A5%E7%9C%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E5%8D%A0%E7%94%A8%E5%A4%A7%E5%B0%8F/" rel="next" title="查看数据库表占用大小">
+      查看数据库表占用大小 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%9A%E8%AF%9D1-%E4%BA%8B%E5%8A%A1%E4%B8%AD%E6%89%A7%E8%A1%8Cdml%E6%93%8D%E4%BD%9C"><span class="nav-number">1.</span> <span class="nav-text">会话1 事务中执行DML操作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%9A%E8%AF%9D2-%E5%AF%B9%E8%AF%A5%E8%A1%A8%E5%8A%A0%E5%AD%97%E6%AE%B5-%E6%89%A7%E8%A1%8Cddl%E6%93%8D%E4%BD%9C-%E5%8F%91%E7%8E%B0ddl%E6%8C%82%E8%B5%B7"><span class="nav-number">2.</span> <span class="nav-text">会话2 对该表加字段
+执行DDL操作 发现DDL挂起</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%9A%E8%AF%9D3-%E6%9F%A5%E8%AF%A2%E6%89%80%E6%9C%89%E4%BC%9A%E8%AF%9D-%E5%8F%91%E7%8E%B0%E5%8F%91%E7%94%9Fmdl%E9%94%81"><span class="nav-number">3.</span> <span class="nav-text">会话3 查询所有会话
+发现发生MDL锁</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%9A%E8%AF%9D3-%E6%9F%A5%E7%9C%8Bmetadata_locks%E8%A1%A8%E8%AE%B0%E5%BD%95-%E5%8F%91%E7%8E%B0student_tb%E8%A1%A8%E6%9C%89mdl%E9%94%81%E5%86%B2%E7%AA%81"><span class="nav-number">4.</span> <span class="nav-text">会话3
+查看metadata_locks表记录 发现student_tb表有MDL锁冲突</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%9A%E8%AF%9D3-%E8%81%94%E5%90%88%E5%85%B6%E4%BB%96%E7%B3%BB%E7%BB%9F%E8%A1%A8-%E6%9F%A5%E6%89%BE%E5%87%BA%E4%BC%9A%E8%AF%9Did"><span class="nav-number">5.</span> <span class="nav-text">会话3 联合其他系统表
+查找出会话ID</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C%E8%A7%A3%E8%AF%BB%E4%BB%8E%E4%B8%8A%E9%9D%A2%E7%BB%93%E6%9E%9C%E6%98%8E%E6%98%BE%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%87%BA%E4%BC%9A%E8%AF%9D31%E6%8C%81%E6%9C%89student_tb%E8%A1%A8%E7%9A%84shared_write%E9%94%81"><span class="nav-number">6.</span> <span class="nav-text">结果解读：从上面结果明显可以看出会话31持有student_tb表的SHARED_WRITE锁，</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9C%80%E8%A6%81%E7%AD%89%E5%BE%85%E5%85%B6%E6%8F%90%E4%BA%A4%E5%90%8E%E6%88%96%E6%89%8B%E5%8A%A8%E6%9D%80%E6%8E%89%E8%AF%A5%E4%BC%9A%E8%AF%9D%E6%96%B9%E5%8F%AF%E8%A7%A3%E9%99%A4mdl%E9%94%81"><span class="nav-number">7.</span> <span class="nav-text">需要等待其提交后或手动杀掉该会话方可解除MDL锁。</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>

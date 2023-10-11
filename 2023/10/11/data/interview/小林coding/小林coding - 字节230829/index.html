@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="小林coding - 字节230829">
+<meta property="og:url" content="http://example.com/2023/10/11/data/interview/%E5%B0%8F%E6%9E%97coding/%E5%B0%8F%E6%9E%97coding%20-%20%E5%AD%97%E8%8A%82230829/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:28.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:28.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="interview">
+<meta property="article:tag" content="小林coding">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/interview/%E5%B0%8F%E6%9E%97coding/%E5%B0%8F%E6%9E%97coding%20-%20%E5%AD%97%E8%8A%82230829/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>小林coding - 字节230829 | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/interview/%E5%B0%8F%E6%9E%97coding/%E5%B0%8F%E6%9E%97coding%20-%20%E5%AD%97%E8%8A%82230829/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          小林coding - 字节230829
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:28" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:28+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/interview/" itemprop="url" rel="index"><span itemprop="name">interview</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>大家好，我是小林。</p>
+<p>分享一篇字节后端开发校招一面经，同学反馈面试官人很
+nice，虽然问的很细节，但是会引导问题方向，但是可惜自己没把握住，深问一点细节的，就不会了。</p>
+<p>这一面主要是拷打基础方向，重点拷打了网络IO、Linux
+操作系统、网络协议、mysql、算法。</p>
+<h2 id="项目相关">项目相关</h2>
+<h3 id="epoll-的工作原理">epoll 的工作原理？</h3>
+<p>先用 epoll_create 创建一个 epoll 对象 epfd，再通过 epoll_ctl
+将需要监视的 socket 添加到epfd中，最后调用 epoll_wait
+等待数据，当epoll_wait返回后，就可以遍历它返回的事件列表，然后根据事件类型做出相应的处理。<br />
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> s = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);  </span><br><span class="line">bind(s, ...);  </span><br><span class="line">listen(s, ...)  </span><br><span class="line">  </span><br><span class="line"><span class="type">int</span> epfd = epoll_create(...);  </span><br><span class="line">epoll_ctl(epfd, ...); <span class="comment">//将所有需要监听的socket添加到epfd中  </span></span><br><span class="line">  </span><br><span class="line"><span class="keyword">while</span>(<span class="number">1</span>) &#123;  </span><br><span class="line">    <span class="type">int</span> n = epoll_wait(...);  </span><br><span class="line">    <span class="keyword">for</span>(接收到数据的socket)&#123;  </span><br><span class="line">        <span class="comment">//处理  </span></span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="epollselectpoll的区别">epoll、select、poll的区别？</h3>
+<p>select 实现多路复用的方式是，将已连接的 Socket
+都放到一个<strong>文件描述符集合</strong>，然后调用 select
+函数将文件描述符集合<strong>拷贝</strong>到内核里，让内核来检查是否有网络事件产生，检查的方式很粗暴，就是通过<strong>遍历</strong>文件描述符集合的方式，当检查到有事件产生后，将此
+Socket 标记为可读或可写，
+接着再把整个文件描述符集合<strong>拷贝</strong>回用户态里，然后用户态还需要再通过<strong>遍历</strong>的方法找到可读或可写的
+Socket，然后再对其处理。</p>
+<p>所以，对于 select 这种方式，需要进行 <strong>2
+次「遍历」文件描述符集合</strong>，一次是在内核态里，一个次是在用户态里
+，而且还会发生 <strong>2
+次「拷贝」文件描述符集合</strong>，先从用户空间传入内核空间，由内核修改后，再传出到用户空间中。</p>
+<p>select 使用固定长度的
+BitsMap，表示文件描述符集合，而且所支持的文件描述符的个数是有限制的，在
+Linux 系统中，由内核中的 FD_SETSIZE 限制，
+默认最大值为 <code>1024</code>，只能监听 0~1023 的文件描述符。</p>
+<p>poll 不再用 BitsMap
+来存储所关注的文件描述符，取而代之用动态数组，以链表形式来组织，突破了
+select 的文件描述符个数限制，当然还会受到系统文件描述符限制。</p>
+<p>但是 poll 和 select
+并没有太大的本质区别，<strong>都是使用「线性结构」存储进程关注的 Socket
+集合，因此都需要遍历文件描述符集合来找到可读或可写的
+Socket，时间复杂度为
+O(n)，而且也需要在用户态与内核态之间拷贝文件描述符集合</strong>，这种方式随着并发数上来，性能的损耗会呈指数级增长。</p>
+<p>epoll 通过两个方面，很好解决了 select/poll 的问题。</p>
+<ul>
+<li><p><em>第一点</em>，epoll
+在内核里使用<strong>红黑树来跟踪进程所有待检测的文件描述字</strong>，把需要监控的
+socket
+通过 <code>epoll_ctl()</code> 函数加入内核中的红黑树里，红黑树是个高效的数据结构，增删改一般时间复杂度是 <code>O(logn)</code>。而
+select/poll 内核里没有类似 epoll 红黑树这种保存所有待检测的 socket
+的数据结构，所以 select/poll 每次操作时都传入整个 socket 集合给内核，而
+epoll 因为在内核维护了红黑树，可以保存所有待检测的 socket
+，所以只需要传入一个待检测的
+socket，减少了内核和用户空间大量的数据拷贝和内存分配。</p></li>
+<li><p><em>第二点</em>， epoll
+使用<strong>事件驱动</strong>的机制，内核里<strong>维护了一个链表来记录就绪事件</strong>，当某个
+socket
+有事件发生时，通过<strong>回调函数</strong>内核会将其加入到这个就绪事件列表中，当用户调用 <code>epoll_wait()</code> 函数时，只会返回有事件发生的文件描述符的个数，不需要像
+select/poll 那样轮询扫描整个 socket
+集合，大大提高了检测的效率。</p></li>
+</ul>
+<p>可以看到 epoll 相关的接口作用：</p>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZcf06PvM1uEQRwdxo5Woia8FejqvF3vaZBmBc2JfgWG5BXtj3bNnj3w85TL6JfB735oJ28Q1cS37zw/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<p>epoll 的方式即使监听的 Socket
+数量越多的时候，效率不会大幅度降低，能够同时监听的 Socket
+的数目也非常的多了，上限就为系统定义的进程打开的最大文件描述符个数。因而，<strong>epoll
+被称为解决 C10K 问题的利器</strong>。</p>
+<h3
+id="select线性表要从用户态复制到内核态具体怎么复制的">select线性表要从用户态复制到内核态，具体怎么复制的？</h3>
+<p>用户态准备一个文件描述符集合，通常是使用<code>fd_set</code>数据结构来表示，该集合包含要监视的文件描述符。调用<code>select</code>系统调用时，将该文件描述符集合作为参数传递给<code>select</code>函数。</p>
+<p>内核态的<code>select</code>函数接收到用户态传递的文件描述符集合后，会在内核中创建一个与用户态相对应的数据结构
+fdset，然后将用户空间的ufdset拷贝到内核空间fdset。</p>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZcf06PvM1uEQRwdxo5Woia8FDyMDsia6UHug8EclUOKuOy3EAbqnFGXUMIoKB59DOBPJeqNlNmLeN8A/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<h2 id="操作系统">操作系统</h2>
+<h3 id="进程线程协程的概念">进程、线程、协程的概念</h3>
+<ul>
+<li><p>进程（Process）：进程是操作系统中的一个执行实例，它拥有独立的内存空间和资源。每个进程都是独立运行的，拥有自己的地址空间、文件句柄、环境变量等。进程间通信需要通过特定的机制，如管道、消息队列、共享内存等。</p></li>
+<li><p>线程（Thread）：线程是进程的一部分，是在同一进程内并发执行的执行单元。不同线程共享同一进程的内存空间和资源，包括全局变量、堆、文件描述符等。线程可以更轻量级地创建、切换和销毁，相对于进程而言，线程间的切换开销较小。线程之间可以通过共享内存等机制进行通信。</p></li>
+<li><p>协程（Coroutine）：协程是一种用户级的轻量级线程。协程由用户控制，而不是由操作系统内核控制。在协程中，执行流可以在不同协程之间进行切换，切换由程序员手动控制，而不需要内核介入。协程可以在一个线程内实现并发，但无法利用多核心处理器。协程通常用于实现高效的异步编程和协作任务。</p></li>
+</ul>
+<h3
+id="系统创建进程的时候会给进程分配哪些资源">系统创建进程的时候，会给进程分配哪些资源？</h3>
+<p>会分配虚拟内存空间、文件描述符、信号资源。</p>
+<h3 id="线程的资源怎么回收">线程的资源怎么回收？</h3>
+<p>linux
+线程退出有多种方式，如return，pthread_exit,pthread_cancel等；线程分为可结合的（joinable）和
+分离的（detached）两种。</p>
+<ul>
+<li><p>如果没有在创建线程时设置线程的属性为PTHREAD_CREATE_DETACHED，则线程默认是可结合的。可结合的线程在线程退出后不会立即释放资源，必须要调用pthread_join来显式的结束线程。</p></li>
+<li><p>分离的线程在线程退出时系统会自动回收资源。</p></li>
+</ul>
+<h3 id="怎么看进程当中有哪些线程">怎么看进程当中有哪些线程？</h3>
+<p>使用<code>ps</code>命令：通过在终端中运行<code>ps -eLf</code>命令，可以列出所有进程及其对应的线程信息。每个线程都会显示线程ID（TID）、进程ID（PID）、线程优先级（PRI）、CPU占用率（%CPU）、内存占用（%MEM）等信息。</p>
+<p><img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZcf06PvM1uEQRwdxo5Woia8F54qmEGu9WVlDLibXyz0XrW7OJJ9GzKgxiaMj4Qrpt5Q930PkZt9oLMfw/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" /><br />
+### 怎么查看网络的状态？</p>
+<p>可以通过 netstat 命令。</p>
+<p><img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZcf06PvM1uEQRwdxo5Woia8FCVOQGmjwjown45g1jZ0uNgu3eBFgIwWFR2dDBKbggq3oX1zvmnxPkQ/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" /><br />
+### 如果只想看close_wait状态的连接，怎么看？</p>
+<p><code>netstat -napt  | grep close_wait</code></p>
+<h2 id="计网">计网</h2>
+<h3
+id="http协议状态码-500-501-502-503-504分别代表什么可以举出具体场景嘛">HTTP协议状态码
+500 501 502 503 504分别代表什么？可以举出具体场景嘛？</h3>
+<p>状态码500：<br />
+- 服务器内部错误（Internal Server
+Error）：表示服务器在处理请求时遇到了意外的错误，无法完成请求。</p>
+<ul>
+<li>场景：当服务器上的应用程序发生未处理的异常或错误时，可能会返回500状态码。例如，如果网站的后端代码出现了错误，导致无法正确处理请求，服务器可能会返回500状态码。</li>
+</ul>
+<p>状态码501：<br />
+- 未实现（Not
+Implemented）：表示服务器不支持客户端请求的功能或方法。</p>
+<ul>
+<li>场景：当客户端发送了一个服务器不支持的请求方法或功能时，服务器可以返回501状态码。例如，如果客户端发送了一个不被服务器支持的HTTP方法，如PROPFIND，服务器可能会返回501状态码。</li>
+</ul>
+<p>状态码502：<br />
+- 错误网关（Bad
+Gateway）：表示服务器作为网关或代理，从上游服务器接收到的响应无效。</p>
+<ul>
+<li>场景：当服务器作为网关或代理时，如果服务器从上游服务器接收到的响应无效，可能会返回502状态码。例如，当反向代理服务器无法访问后端服务器或后端服务器返回了无效的响应时，可能会返回502状态码。</li>
+</ul>
+<p>状态码503 ：<br />
+- 服务不可用（Service
+Unavailable）：表示服务器暂时无法处理请求，通常是由于服务器过载或维护。</p>
+<ul>
+<li>场景：当服务器暂时无法处理请求时，可能会返回503状态码。例如，当网站正在进行维护或升级时，服务器可以返回503状态码来告知客户端服务不可用。</li>
+</ul>
+<p>状态码504 ：<br />
+- 网关超时（Gateway
+Timeout）：表示服务器作为网关或代理，在等待上游服务器的响应时超时。</p>
+<ul>
+<li>场景：当服务器作为网关或代理时，在等待上游服务器的响应时超时，可能会返回504状态码。例如，如果反向代理服务器在规定的超时时间内无法从后端服务器获取响应，可能会返回504状态码。</li>
+</ul>
+<h3 id="说一说四次挥手的整个过程">说一说四次挥手的整个过程？</h3>
+<p>TCP 四次挥手的过程如下：<br />
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZcf06PvM1uEQRwdxo5Woia8Fv7jJJwwGE0csE4AQbMfsfxn8fkb2Togxbic4AfHsxHOYOHpOkp1s7GQ/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" /></p>
+<p>具体过程：<br />
+- 客户端主动调用关闭连接的函数，于是就会发送 FIN 报文，这个 FIN
+报文代表客户端不会再发送数据了，进入 FIN_WAIT_1 状态；<br />
+- 服务端收到了 FIN 报文，然后马上回复一个 ACK 确认报文，此时服务端进入
+CLOSE_WAIT 状态。在收到 FIN 报文的时候，TCP 协议栈会为 FIN
+包插入一个文件结束符 EOF 到接收缓冲区中，服务端应用程序可以通过 read
+调用来感知这个 FIN 包，这个 EOF
+会被<strong>放在已排队等候的其他已接收的数据之后</strong>，所以必须要得继续
+read 接收缓冲区已接收的数据；<br />
+- 接着，当服务端在 read 数据的时候，最后自然就会读到
+EOF，接着 <strong>read() 就会返回
+0，这时服务端应用程序如果有数据要发送的话，就发完数据后才调用关闭连接的函数，如果服务端应用程序没有数据要发送的话，可以直接调用关闭连接的函数</strong>，这时服务端就会发一个
+FIN 包，这个 FIN 报文代表服务端不会再发送数据了，之后处于 LAST_ACK
+状态； - 客户端接收到服务端的 FIN 包，并发送 ACK
+确认包给服务端，此时客户端将进入 TIME_WAIT 状态；<br />
+- 服务端收到 ACK 确认包后，就进入了最后的 CLOSE 状态；<br />
+- 客户端经过 2MSL 时间之后，也进入 CLOSE 状态；</p>
+<p>你可以看到，每个方向都需要<strong>一个 FIN 和一个
+ACK</strong>，因此通常被称为<strong>四次挥手</strong>。</p>
+<h3 id="time_wait-为什么2msl">Time_wait 为什么2MSL ？</h3>
+<p>主要是两个原因：<br />
+- 防止历史连接中的数据，被后面相同四元组的连接错误的接收； -
+保证「被动关闭连接」的一方，能被正确的关闭；</p>
+<p><em>原因一：防止历史连接中的数据，被后面相同四元组的连接错误的接收</em></p>
+<p>假设 TIME-WAIT
+没有等待时间或时间过短，被延迟的数据包抵达后会发生什么呢？</p>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZcf06PvM1uEQRwdxo5Woia8FxkiaDtTiaPic5nMTYibuc99tUTn47GaD5aN7MY6pJl1124fvcnIZbgGhsA/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<p>TIME-WAIT 时间过短，收到旧连接的数据报文</p>
+<p>如上图：<br />
+-
+服务端在关闭连接之前发送的 <code>SEQ = 301</code> 报文，被网络延迟了。<br />
+-
+接着，服务端以相同的四元组重新打开了新连接，前面被延迟的 <code>SEQ = 301</code> 这时抵达了客户端，而且该数据报文的序列号刚好在客户端接收窗口内，因此客户端会正常接收这个数据报文，但是这个数据报文是上一个连接残留下来的，这样就产生数据错乱等严重的问题。</p>
+<p>为了防止历史连接中的数据，被后面相同四元组的连接错误的接收，因此 TCP
+设计了 TIME_WAIT
+状态，状态会持续 <code>2MSL</code> 时长，这个时间<strong>足以让两个方向上的数据包都被丢弃，使得原来连接的数据包在网络中都自然消失，再出现的数据包一定都是新建立连接所产生的。</strong></p>
+<p><em>原因二：保证「被动关闭连接」的一方，能被正确的关闭</em></p>
+<p>在 RFC 793 指出 TIME-WAIT 另一个重要的作用是：</p>
+<p><em>TIME-WAIT - represents waiting for enough time to pass to be sure
+the remote TCP received the acknowledgment of its connection termination
+request.</em></p>
+<p>也就是说，TIME-WAIT 作用是<strong>等待足够的时间以确保最后的 ACK
+能让被动关闭方接收，从而帮助其正常关闭。</strong></p>
+<p>如果客户端（主动关闭方）最后一次 ACK
+报文（第四次挥手）在网络中丢失了，那么按照 TCP
+可靠性原则，服务端（被动关闭方）会重发 FIN 报文。</p>
+<p>假设客户端没有 TIME_WAIT 状态，而是在发完最后一次回 ACK
+报文就直接进入 CLOSE 状态，如果该 ACK 报文丢失了，服务端则重传的 FIN
+报文，而这时客户端已经进入到关闭状态了，在收到服务端重传的 FIN
+报文后，就会回 RST 报文。</p>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZcf06PvM1uEQRwdxo5Woia8FTHCOiaibXqhmaKvG8KPibqzCDJtX0ZHguqUHyw4u1hyj74yRmnBjTSSvw/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<p>TIME-WAIT 时间过短，没有确保连接正常关闭</p>
+<p>服务端收到这个 RST 并将其解释为一个错误（Connection reset by
+peer），这对于一个可靠的协议来说不是一个优雅的终止方式。</p>
+<p>为了防止这种情况出现，客户端必须等待足够长的时间，确保服务端能够收到
+ACK，如果服务端没有收到 ACK，那么就会触发 TCP
+重传机制，服务端会重新发送一个 FIN，这样一去一来刚好两个 MSL
+的时间。</p>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZcf06PvM1uEQRwdxo5Woia8FNbVIttAllb78oaqK4licVELx3ZXkg2xy1TJOVkg0cY9MWpRPXByGHqA/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<p>TIME-WAIT 时间正常，确保了连接正常关闭</p>
+<p>客户端在收到服务端重传的 FIN 报文时，TIME_WAIT
+状态的等待时间，会重置回 2MSL。</p>
+<h3
+id="当存在大量close_wait的连接时怎么处理">当存在大量close_wait的连接时怎么处理？</h3>
+<p>CLOSE_WAIT
+状态是「被动关闭方」才会有的状态，而且如果「被动关闭方」没有调用 close
+函数关闭连接，那么就无法发出 FIN 报文，从而无法使得 CLOSE_WAIT
+状态的连接转变为 LAST_ACK 状态。</p>
+<p>所以，<strong>当服务端出现大量 CLOSE_WAIT
+状态的连接的时候，说明服务端的程序没有调用 close
+函数关闭连接</strong>。</p>
+<p>那什么情况会导致服务端的程序没有调用 close
+函数关闭连接？这时候通常需要排查代码。</p>
+<p>我们先来分析一个普通的 TCP 服务端的流程：</p>
+<ol type="1">
+<li><p>创建服务端 socket，bind 绑定端口、listen 监听端口</p></li>
+<li><p>将服务端 socket 注册到 epoll</p></li>
+<li><p>epoll_wait 等待连接到来，连接到来时，调用 accpet 获取已连接的
+socket</p></li>
+<li><p>将已连接的 socket 注册到 epoll</p></li>
+<li><p>epoll_wait 等待事件发生</p></li>
+<li><p>对方连接关闭时，我方调用 close</p></li>
+</ol>
+<p>可能导致服务端没有调用 close 函数的原因，如下。</p>
+<p><strong>第一个原因</strong>：第 2 步没有做，没有将服务端 socket
+注册到
+epoll，这样有新连接到来时，服务端没办法感知这个事件，也就无法获取到已连接的
+socket，那服务端自然就没机会对 socket 调用 close 函数了。</p>
+<p>不过这种原因发生的概率比较小，这种属于明显的代码逻辑 bug，在前期 read
+view 阶段就能发现的了。</p>
+<p><strong>第二个原因</strong>：第 3 步没有做，有新连接到来时没有调用
+accpet 获取该连接的
+socket，导致当有大量的客户端主动断开了连接，而服务端没机会对这些 socket
+调用 close 函数，从而导致服务端出现大量 CLOSE_WAIT 状态的连接。</p>
+<p>发生这种情况可能是因为服务端在执行 accpet
+函数之前，代码卡在某一个逻辑或者提前抛出了异常。</p>
+<p><strong>第三个原因</strong>：第 4 步没有做，通过 accpet 获取已连接的
+socket 后，没有将其注册到 epoll，导致后续收到 FIN
+报文的时候，服务端没办法感知这个事件，那服务端就没机会调用 close
+函数了。</p>
+<p><strong>第四个原因</strong>：第 6
+步没有做，当发现客户端关闭连接后，服务端没有执行 close
+函数，可能是因为代码漏处理，或者是在执行 close
+函数之前，代码卡在某一个逻辑，比如发生死锁等等。</p>
+<p>可以发现，当服务端出现大量 CLOSE_WAIT
+状态的连接的时候，通常都是代码的问题，这时候我们需要针对具体的代码一步一步的进行排查和定位，主要分析的方向就是服务端为什么没有调用
+close。</p>
+<h2 id="mysql">mysql</h2>
+<h3 id="什么是聚簇索引和非聚簇索引">什么是聚簇索引和非聚簇索引？</h3>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZcf06PvM1uEQRwdxo5Woia8FTecAbR8ib4stz31RKO25BjxrIhQgZnQsBC63gQwA8Q7bBDv1tlKwCIA/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<ul>
+<li><p>对于<strong>聚簇索引表</strong>来说（左图），表数据是和主键一起存储的，主键索引的叶结点存储行数据(包含了主键值)，二级索引的叶结点存储行的主键值。使用的是B+树作为索引的存储结构，非叶子节点都是索引关键字，但非叶子节点中的关键字中不存储对应记录的具体内容或内容地址。叶子节点上的数据是主键与具体记录(数据内容)。</p></li>
+<li><p>对于<strong>非聚簇索引表</strong>来说（右图），表数据和索引是分成两部分存储的，主键索引和二级索引存储上没有任何区别。使用的是B+树作为索引的存储结构，所有的节点都是索引，叶子节点存储的是索引+索引对应的记录的数据。</p></li>
+</ul>
+<h3 id="inoodb-为什么要使用聚簇索引">InooDB 为什么要使用聚簇索引？</h3>
+<p>使用聚簇索引的一些好处：</p>
+<ul>
+<li><p>数据行的物理存储顺序：使用聚集索引可以将数据行按照索引键的顺序存储在磁盘上，这样相邻的数据行在物理上也是相邻的。这种物理存储顺序可以提高基于范围查询的性能，因为相关的数据行在物理上是连续的，减少了磁盘I/O的次数。</p></li>
+<li><p>覆盖索引查询：由于聚集索引包含了实际的数据行，当查询只需要使用聚集索引的键列时，可以避免访问数据行，提高查询性能。这种情况下也称为覆盖索引查询。</p></li>
+</ul>
+<h3 id="什么是-inoodb里面的联合索引">什么是 InooDB里面的联合索引？</h3>
+<p>通过将多个字段组合成一个索引，该索引就被称为联合索引。</p>
+<p>比如，将商品表中的 product_no 和 name
+字段组合成联合索引<code>(product_no, name)</code>，创建联合索引的方式如下：</p>
+<p><code>CREATE INDEX index_product_no_name ON product(product_no, name);</code></p>
+<p>联合索引<code>(product_no, name)</code> 的 B+Tree
+示意图如下（图中叶子节点之间我画了单向链表，但是实际上是双向链表，原图我找不到了，修改不了，偷个懒我不重画了，大家脑补成双向链表就行）。</p>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZcf06PvM1uEQRwdxo5Woia8FKhzLTbdTZNwEjWS6SVicPRmxbGmdHwhqrwhzxrcdtxVM3AOic5Ey0k9g/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<p>联合索引</p>
+<p>可以看到，联合索引的非叶子节点用两个字段的值作为 B+Tree 的 key
+值。当在联合索引查询数据时，先按 product_no 字段比较，在 product_no
+相同的情况下再按 name 字段比较。</p>
+<p>也就是说，联合索引查询的 B+Tree 是先按 product_no 进行排序，然后再
+product_no 相同的情况再按 name 字段排序。</p>
+<p>因此，使用联合索引时，存在<strong>最左匹配原则</strong>，也就是按照最左优先的方式进行索引的匹配。在使用联合索引进行查询的时候，如果不遵循「最左匹配原则」，联合索引会失效，这样就无法利用到索引快速查询的特性了。</p>
+<p>比如，如果创建了一个 <code>(a, b, c)</code> 联合索引，如果查询条件是以下这几种，就可以匹配上联合索引：</p>
+<ul>
+<li><p>where a=1；</p></li>
+<li><p>where a=1 and b=2 and c=3；</p></li>
+<li><p>where a=1 and b=2；</p></li>
+</ul>
+<p>需要注意的是，因为有查询优化器，所以 a 字段在 where
+子句的顺序并不重要。</p>
+<p>但是，如果查询条件是以下这几种，因为不符合最左匹配原则，所以就无法匹配上联合索引，联合索引就会失效:</p>
+<ul>
+<li><p>where b=2；</p></li>
+<li><p>where c=3；</p></li>
+<li><p>where b=2 and c=3；</p></li>
+</ul>
+<p>上面这些查询条件之所以会失效，是因为<code>(a, b, c)</code> 联合索引，是先按
+a 排序，在 a 相同的情况再按 b 排序，在 b 相同的情况再按 c
+排序。所以，<strong>b 和 c
+是全局无序，局部相对有序的</strong>，这样在没有遵循最左匹配原则的情况下，是无法利用到索引的。</p>
+<p>我这里举联合索引（a，b）的例子，该联合索引的 B+ Tree
+如下（图中叶子节点之间我画了单向链表，但是实际上是双向链表，原图我找不到了，修改不了，偷个懒我不重画了，大家脑补成双向链表就行）。</p>
+<figure>
+<img
+src="https://mmbiz.qpic.cn/sz_mmbiz_png/J0g14CUwaZcf06PvM1uEQRwdxo5Woia8FVDtES9bnYHKBu4vibHguVRclbINQVMXouHQ9dXKTUeozUPIIttDfScg/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1"
+alt="图片" />
+<figcaption aria-hidden="true">图片</figcaption>
+</figure>
+<p>img</p>
+<p>可以看到，a 是全局有序的（1, 2, 2, 3, 4, 5, 6, 7 ,8），而 b
+是全局是无序的（12，7，8，2，3，8，10，5，2）。因此，直接执行<code>where b = 2</code>这种查询条件没有办法利用联合索引的，<strong>利用索引的前提是索引里的
+key 是有序的</strong>。</p>
+<p>只有在 a 相同的情况才，b 才是有序的，比如 a 等于 2 的时候，b
+的值为（7，8），这时就是有序的，这个有序状态是局部的，因此，执行<code>where a = 2 and b = 7</code>是
+a 和 b 字段能用到联合索引的，也就是联合索引生效了。</p>
+<h3
+id="给出一个表a-有a1a5-个列联合索引a2a1select-a5-from-a-where-a21-and-a12-请问用到联合索引了嘛它的具体过程呢">给出一个表A
+有a1~a5 个列，联合索引（a2,a1）select a5 from A where a2=1 and a1=2
+请问用到联合索引了嘛？它的具体过程呢？</h3>
+<p>查询符合最左匹配原则，可以a1 和 a2 都可以使用联合索引。</p>
+<p>具体的查询过程，在二级索引 b+树找到符合条件 a2 和 a1
+的记录，然后获取这些记录的 id 值，拿 id 值去主键索引查询 a5
+列的值，这里涉及了回表的查询。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/interview/" rel="tag"># interview</a>
+              <a href="/blog/tags/%E5%B0%8F%E6%9E%97coding/" rel="tag"># 小林coding</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/interview/%E5%B0%8F%E6%9E%97coding/%E7%AC%94%E8%AF%95%E9%81%87%E5%88%B0%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95%EF%BC%8C%E8%B7%AA%E4%BA%86..../" rel="prev" title="笔试遇到联合索引，跪了....">
+      <i class="fa fa-chevron-left"></i> 笔试遇到联合索引，跪了....
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/interview/%E5%B0%8F%E6%9E%97coding/%E5%AD%97%E8%8A%82%E9%9D%A2%E8%AF%95%E4%BD%93%E9%AA%8C%E5%BE%88%E6%A3%92%EF%BC%81/" rel="next" title="字节面试体验很棒！">
+      字节面试体验很棒！ <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E7%9B%B8%E5%85%B3"><span class="nav-number">1.</span> <span class="nav-text">项目相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#epoll-%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.1.</span> <span class="nav-text">epoll 的工作原理？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#epollselectpoll%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.2.</span> <span class="nav-text">epoll、select、poll的区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#select%E7%BA%BF%E6%80%A7%E8%A1%A8%E8%A6%81%E4%BB%8E%E7%94%A8%E6%88%B7%E6%80%81%E5%A4%8D%E5%88%B6%E5%88%B0%E5%86%85%E6%A0%B8%E6%80%81%E5%85%B7%E4%BD%93%E6%80%8E%E4%B9%88%E5%A4%8D%E5%88%B6%E7%9A%84"><span class="nav-number">1.3.</span> <span class="nav-text">select线性表要从用户态复制到内核态，具体怎么复制的？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="nav-number">2.</span> <span class="nav-text">操作系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B%E5%8D%8F%E7%A8%8B%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">2.1.</span> <span class="nav-text">进程、线程、协程的概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%88%9B%E5%BB%BA%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%97%B6%E5%80%99%E4%BC%9A%E7%BB%99%E8%BF%9B%E7%A8%8B%E5%88%86%E9%85%8D%E5%93%AA%E4%BA%9B%E8%B5%84%E6%BA%90"><span class="nav-number">2.2.</span> <span class="nav-text">系统创建进程的时候，会给进程分配哪些资源？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E8%B5%84%E6%BA%90%E6%80%8E%E4%B9%88%E5%9B%9E%E6%94%B6"><span class="nav-number">2.3.</span> <span class="nav-text">线程的资源怎么回收？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E7%9C%8B%E8%BF%9B%E7%A8%8B%E5%BD%93%E4%B8%AD%E6%9C%89%E5%93%AA%E4%BA%9B%E7%BA%BF%E7%A8%8B"><span class="nav-number">2.4.</span> <span class="nav-text">怎么看进程当中有哪些线程？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%BD%91"><span class="nav-number">3.</span> <span class="nav-text">计网</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#http%E5%8D%8F%E8%AE%AE%E7%8A%B6%E6%80%81%E7%A0%81-500-501-502-503-504%E5%88%86%E5%88%AB%E4%BB%A3%E8%A1%A8%E4%BB%80%E4%B9%88%E5%8F%AF%E4%BB%A5%E4%B8%BE%E5%87%BA%E5%85%B7%E4%BD%93%E5%9C%BA%E6%99%AF%E5%98%9B"><span class="nav-number">3.1.</span> <span class="nav-text">HTTP协议状态码
+500 501 502 503 504分别代表什么？可以举出具体场景嘛？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B4%E4%B8%80%E8%AF%B4%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E7%9A%84%E6%95%B4%E4%B8%AA%E8%BF%87%E7%A8%8B"><span class="nav-number">3.2.</span> <span class="nav-text">说一说四次挥手的整个过程？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#time_wait-%E4%B8%BA%E4%BB%80%E4%B9%882msl"><span class="nav-number">3.3.</span> <span class="nav-text">Time_wait 为什么2MSL ？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%93%E5%AD%98%E5%9C%A8%E5%A4%A7%E9%87%8Fclose_wait%E7%9A%84%E8%BF%9E%E6%8E%A5%E6%97%B6%E6%80%8E%E4%B9%88%E5%A4%84%E7%90%86"><span class="nav-number">3.4.</span> <span class="nav-text">当存在大量close_wait的连接时怎么处理？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql"><span class="nav-number">4.</span> <span class="nav-text">mysql</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95%E5%92%8C%E9%9D%9E%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95"><span class="nav-number">4.1.</span> <span class="nav-text">什么是聚簇索引和非聚簇索引？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#inoodb-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95"><span class="nav-number">4.2.</span> <span class="nav-text">InooDB 为什么要使用聚簇索引？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-inoodb%E9%87%8C%E9%9D%A2%E7%9A%84%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95"><span class="nav-number">4.3.</span> <span class="nav-text">什么是 InooDB里面的联合索引？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%99%E5%87%BA%E4%B8%80%E4%B8%AA%E8%A1%A8a-%E6%9C%89a1a5-%E4%B8%AA%E5%88%97%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95a2a1select-a5-from-a-where-a21-and-a12-%E8%AF%B7%E9%97%AE%E7%94%A8%E5%88%B0%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95%E4%BA%86%E5%98%9B%E5%AE%83%E7%9A%84%E5%85%B7%E4%BD%93%E8%BF%87%E7%A8%8B%E5%91%A2"><span class="nav-number">4.4.</span> <span class="nav-text">给出一个表A
+有a1~a5 个列，联合索引（a2,a1）select a5 from A where a2&#x3D;1 and a1&#x3D;2
+请问用到联合索引了嘛？它的具体过程呢？</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>

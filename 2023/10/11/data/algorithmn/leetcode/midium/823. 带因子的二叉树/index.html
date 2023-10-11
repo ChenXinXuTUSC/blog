@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="823. 带因子的二叉树">
+<meta property="og:url" content="http://example.com/2023/10/11/data/algorithmn/leetcode/midium/823.%20%E5%B8%A6%E5%9B%A0%E5%AD%90%E7%9A%84%E4%BA%8C%E5%8F%89%E6%A0%91/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:21.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:21.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="algorithmn">
+<meta property="article:tag" content="leetcode">
+<meta property="article:tag" content="midium">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/algorithmn/leetcode/midium/823.%20%E5%B8%A6%E5%9B%A0%E5%AD%90%E7%9A%84%E4%BA%8C%E5%8F%89%E6%A0%91/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>823. 带因子的二叉树 | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/algorithmn/leetcode/midium/823.%20%E5%B8%A6%E5%9B%A0%E5%AD%90%E7%9A%84%E4%BA%8C%E5%8F%89%E6%A0%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          823. 带因子的二叉树
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:21" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:21+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/algorithmn/" itemprop="url" rel="index"><span itemprop="name">algorithmn</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="中等">[<span style="color:orange;">中等</span>]</h2>
+<p>给出一个含有不重复整数元素的数组 <code>arr</code> ，每个整数 <code>arr[i]</code> 均大于
+1。</p>
+<p>用这些整数来构建二叉树，每个整数可以使用任意次数。其中：每个非叶结点的值应等于它的两个子结点的值的乘积。</p>
+<p>满足条件的二叉树一共有多少个？答案可能很大，返回 <strong>对</strong> <code>109 + 7</code> <strong>取余</strong> 的结果。</p>
+<p><strong>示例 1:</strong></p>
+<p><strong>输入:</strong> <code>arr = [2, 4]</code><br />
+<strong>输出:</strong> 3<br />
+<strong>解释:</strong> 可以得到这些二叉树:
+<code>[2], [4], [4, 2, 2]</code></p>
+<p><strong>示例 2:</strong></p>
+<p><strong>输入:</strong> <code>arr = [2, 4, 5, 10]</code><br />
+<strong>输出:</strong> <code>7</code><br />
+<strong>解释:</strong> 可以得到这些二叉树:
+<code>[2], [4], [5], [10], [4, 2, 2], [10, 2, 5], [10, 5, 2]</code>.</p>
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= arr.length &lt;= 1000</code><br />
+</li>
+<li><code>2 &lt;= arr[i] &lt;= 109</code><br />
+</li>
+<li><code>arr</code> 中的所有值 <strong>互不相同</strong></li>
+</ul>
+<p>首先看到这题，大部分同学应该能在第一时间反应过来是求数组内各个数的因式分解，通过每次将数分解为两个因数的分解式，一直分解到无法在继续分解为止。</p>
+<p>根据题目给出的测试样例，单独一个数作为根节点就能成为一颗树，然后一次因式分解得到的两个因数成为左右子树，并且左右子树交换位置可以算作是一颗新的树。那么选定一个数作为根节点，以给定的数组为可选因数集合，不断进行二叉分解，一共能得到多少棵子树？不难发现，其等于：<code>1 + numLeftSubTree * numRightSubTree</code>
+或者
+<code>1 + numLeftSubTree * numRightSubTree * 2</code>，这取决于因式分解得到的两个因数是否相同，如果不相同，那么这两个因数作为左右子树的根节点，交换这两棵子树就得到了新的组合。综上，一个数通过因式分解得到的二叉树组合数总共有：</p>
+<ul>
+<li>因数1 == 因数2 -&gt; 总数 = 根节点作为一棵树 + 左子树组合数 *
+右子树组合数<br />
+</li>
+<li>因数1 != 因数2 -&gt; 总数 = 根节点作为一棵树 + 左子树组合数 *
+右子树组合数 * 2</li>
+</ul>
+<p>因此本题的第一个重点是如何找到一个数的因式分解，最直观的方法是，将待选因数集合排序，使用双指针法，一头指向小因数，一头指向大因数，往中间扫描即可。</p>
+<p>可以声明一个数组
+<code>std::vector&lt;unsigned long long&gt; dpv</code>
+来存储各个数所代表的二叉树组合数，这样后面其它数在因式分解时如果得到了这个之前已经求过的更小的数，可以直接从dp数组以
+<span class="math inline">\(O(1)\)</span>
+的时间复杂度获取。通过动态规划，我们将求解 <code>dp[i]</code>
+这个问题分解为了求两个 <code>dp[x]</code> 的子问题。</p>
+<p>将原数组排序后，<code>dpv[i]</code> 代表了 <code>arr[i]</code>
+通过因式分解所能找到的所有二叉树组合数。由题意可知，<code>arr</code>
+中的每个数均大于1，那么我们在排序后的数组中，找 <code>arr[i]</code>
+的因数时，就应该在 <span class="math inline">\(arr[0] \leq \cdots &lt;
+arr[i]\)</span> 中寻找。</p>
+<p>以下是第一版本实现，但是首先使用了二分查找尝试是否会超时，但很明显是超时的，因为基本的上述提到的，单层的动态规划就能完成任务，我的第一次尝试却使用了递归函数，因为我当时看到二叉树，树的一个非常重要的性质就是，子树也是一棵树，能对一棵树执行的函数，自然也能够对其子树执行。所以这一版本实现虽然主题思想与官方题解是一致的，但是缺少优化：<br />
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">typedef</span> <span class="type">unsigned</span> <span class="type">int</span> uint;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    uint numFactors;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; factors;</span><br><span class="line">    unordered_map&lt;uint, uint&gt; dict;</span><br><span class="line">    <span class="type">double</span> eps = <span class="number">1e-9</span>;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">binarySearch</span><span class="params">(<span class="type">const</span> <span class="type">int</span>&amp; factor)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="type">int</span> l = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> r = numFactors - <span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> m = (l + r) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (l &lt;= r)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (factors[m] == factor) <span class="keyword">return</span> m;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (factors[m] &gt; factor) r = m - <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (factors[m] &lt; factor) l = m + <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">else</span> &#123;&#125;</span><br><span class="line">            m = (l + r) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// binary search would exceeds the time limit</span></span><br><span class="line">    <span class="comment">// use map or unordered_map to store position</span></span><br><span class="line">    unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; factorIdxs;</span><br><span class="line"></span><br><span class="line">    <span class="function">uint <span class="title">factorization</span><span class="params">(<span class="type">const</span> <span class="type">int</span>&amp; factor)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (dict[factor]) <span class="keyword">return</span> dict[factor];</span><br><span class="line">        uint cnt = <span class="number">1</span>;</span><br><span class="line">        <span class="comment">// int factorIdx = binarySearch(factor);</span></span><br><span class="line">        <span class="type">int</span> factorIdx = factorIdxs[factor];</span><br><span class="line">        <span class="keyword">if</span> (factorIdx &lt; <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> p = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> q = factorIdx - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (p &lt;= q)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">abs</span>(<span class="built_in">float</span>(factor) / <span class="built_in">float</span>(factors[p]) - <span class="built_in">float</span>(factors[q])) &lt; eps)</span><br><span class="line">            <span class="comment">// if (factors[p] * factors[q] == factor)</span></span><br><span class="line">            &#123;</span><br><span class="line">                uint tmp = <span class="built_in">factorization</span>(factors[p]) * <span class="built_in">factorization</span>(factors[q]);</span><br><span class="line">                <span class="keyword">if</span> (p ^ q)</span><br><span class="line">                    cnt += tmp * <span class="number">2</span>; <span class="comment">// 交换两棵子树的位置</span></span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    cnt += tmp;</span><br><span class="line">                p++;</span><br><span class="line">                q--;            </span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">float</span>(factors[p]) &lt; <span class="built_in">float</span>(factor) / <span class="built_in">float</span>(factors[q]))</span><br><span class="line">                p++;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">float</span>(factors[p]) &gt; <span class="built_in">float</span>(factor) / <span class="built_in">float</span>(factors[q]))</span><br><span class="line">                q--;</span><br><span class="line">            <span class="keyword">else</span> &#123;&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        dict[factor] = cnt;</span><br><span class="line">        <span class="keyword">return</span> cnt;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">numFactoredBinaryTrees</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; arr)</span> </span>&#123;</span><br><span class="line">        factors = arr;</span><br><span class="line">        numFactors = factors.<span class="built_in">size</span>();</span><br><span class="line">        <span class="built_in">sort</span>(factors.<span class="built_in">begin</span>(), factors.<span class="built_in">end</span>());</span><br><span class="line">        <span class="comment">// store every factor&#x27;s position</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; numFactors; ++i)</span><br><span class="line">            factorIdxs[factors[i]] = i;</span><br><span class="line"></span><br><span class="line">        uint total = <span class="number">0</span>;</span><br><span class="line">        uint mod = <span class="built_in">uint</span>(<span class="number">1e9</span> + <span class="number">7</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; numFactors; ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            total = (total + <span class="built_in">factorization</span>(factors[i])) % mod;</span><br><span class="line">            cout &lt;&lt; factors[i] &lt;&lt; <span class="string">&#x27;:&#x27;</span> &lt;&lt; dict[factors[i]] &lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> total;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>下面是使用动态规划的版本，优化了因式分解的查询过程：<br />
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">typedef</span> <span class="type">unsigned</span> <span class="type">int</span> uint;</span><br><span class="line">    <span class="keyword">typedef</span> <span class="type">unsigned</span> <span class="type">long</span> <span class="type">long</span> ull;</span><br><span class="line">    <span class="keyword">typedef</span> <span class="type">long</span> <span class="type">long</span> ll;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">numFactoredBinaryTrees</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; arr)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">sort</span>(arr.<span class="built_in">begin</span>(), arr.<span class="built_in">end</span>());</span><br><span class="line">        uint len = arr.<span class="built_in">size</span>();</span><br><span class="line">        <span class="function">vector&lt;ull&gt; <span class="title">dpv</span><span class="params">(len, <span class="number">1</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">        uint tlt = <span class="number">0</span>;</span><br><span class="line">        uint mod = <span class="built_in">uint</span>(<span class="number">1e9</span> + <span class="number">7</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; len; ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> p = <span class="number">0</span>;</span><br><span class="line">            <span class="type">int</span> q = i - <span class="number">1</span>;</span><br><span class="line">            <span class="comment">// while (p &lt;= q)</span></span><br><span class="line">            <span class="comment">// &#123;</span></span><br><span class="line">            <span class="comment">//     if (ull(arr[p]) * ull(arr[q]) == ull(arr[i]))</span></span><br><span class="line">            <span class="comment">//     &#123;</span></span><br><span class="line">            <span class="comment">//         dpv[i] += (p ^ q ? dpv[p] * dpv[q] * 2 : dpv[p] * dpv[q]);</span></span><br><span class="line">            <span class="comment">//         p++;</span></span><br><span class="line">            <span class="comment">//         q--;</span></span><br><span class="line">            <span class="comment">//     &#125;</span></span><br><span class="line">            <span class="comment">//     else if (ll(arr[i]) / ll(arr[p]) - ll(arr[q]) &gt; 0)</span></span><br><span class="line">            <span class="comment">//         p++;</span></span><br><span class="line">            <span class="comment">//     else if (ll(arr[i]) / ll(arr[p]) - ll(arr[q]) &lt; 0)</span></span><br><span class="line">            <span class="comment">//         q--;</span></span><br><span class="line">            <span class="comment">//     else &#123;&#125;</span></span><br><span class="line">            <span class="comment">// &#125;</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> p = <span class="number">0</span>, q = i - <span class="number">1</span>; p &lt;= q; p++) &#123;</span><br><span class="line">                <span class="keyword">while</span> (p &lt;= q &amp;&amp; (ll)arr[i] / (ll)arr[p] - (ll)arr[q] &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                    q--;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (p &lt;= q &amp;&amp; (ll)arr[p] * arr[q] == arr[i]) &#123;</span><br><span class="line">                    dpv[i] += (p ^ q ? dpv[p] * dpv[q] * <span class="number">2</span> : dpv[p] * dpv[q]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            tlt = (tlt + dpv[i]) % mod;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (<span class="type">int</span>)tlt;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>本题的第二个重点是选择合适的类型来存储中间结果。虽然题目提示，计算过程中的数可能会非常大，需要对
+<span class="math inline">\(10^9 + 7\)</span>
+取余，但是我还是没有想到居然能有这么大。这主要发生在我设计因式分解的双指针查找时。因为一开始我是用
+<span class="math inline">\(a \times b = c\)</span>
+的方式来检测是否找到因数 a 和因数 b ，但是在后面的几个测试样例中，<span
+class="math inline">\(a \times b\)</span> 的值已经远远超过了
+<code>unsigned int</code>
+所能表示的范围，但是我并没有意识到是数据类型的问题导致测试样例没有通过，一直以为是逻辑问题，排查了很久，后面我换成了
+<span class="math inline">\(a = c \div b\)</span>
+的形式，来防止类型溢出，但似乎 <span class="math inline">\(a, b,
+c\)</span> 自己本身就已经溢出了，并不是运算过程中导致的溢出......<br />
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; len; ++i)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> p = <span class="number">0</span>;</span><br><span class="line">	<span class="type">int</span> q = i - <span class="number">1</span>;</span><br><span class="line">	<span class="comment">// while (p &lt;= q)</span></span><br><span class="line">	<span class="comment">// &#123;</span></span><br><span class="line">	<span class="comment">//     if (ull(arr[p]) * ull(arr[q]) == ull(arr[i]))</span></span><br><span class="line">	<span class="comment">//     &#123;</span></span><br><span class="line">	<span class="comment">//         dpv[i] += (p ^ q ? dpv[p] * dpv[q] * 2 : dpv[p] * dpv[q]);</span></span><br><span class="line">	<span class="comment">//         p++;</span></span><br><span class="line">	<span class="comment">//         q--;</span></span><br><span class="line">	<span class="comment">//     &#125;</span></span><br><span class="line">	<span class="comment">//     else if (ll(arr[i]) / ll(arr[p]) - ll(arr[q]) &gt; 0)</span></span><br><span class="line">	<span class="comment">//         p++;</span></span><br><span class="line">	<span class="comment">//     else if (ll(arr[i]) / ll(arr[p]) - ll(arr[q]) &lt; 0)</span></span><br><span class="line">	<span class="comment">//         q--;</span></span><br><span class="line">	<span class="comment">//     else &#123;&#125;</span></span><br><span class="line">	<span class="comment">// &#125;</span></span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> p = <span class="number">0</span>, q = i - <span class="number">1</span>; p &lt;= q; p++) &#123;</span><br><span class="line">		<span class="keyword">while</span> (p &lt;= q &amp;&amp; (ll)arr[i] / (ll)arr[p] - (ll)arr[q] &lt; <span class="number">0</span>) &#123;</span><br><span class="line">			q--;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (p &lt;= q &amp;&amp; (ll)arr[p] * arr[q] == arr[i]) &#123;</span><br><span class="line">			dpv[i] += (p ^ q ? dpv[p] * dpv[q] * <span class="number">2</span> : dpv[p] * dpv[q]);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	tlt = (tlt + dpv[i]) % mod;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 上述代码中，注释的代码段就是最初使用
+<code>unsigned int</code>
+类型无法通过的双指针查找，因为无法通过测试样例，所以我也没有办法确定到底是逻辑问题还是数据类型问题。官方题解的双指针查找其实并不是很直观，虽然多看几遍也能看懂，但是终究还是不直观的......</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/algorithmn/" rel="tag"># algorithmn</a>
+              <a href="/blog/tags/leetcode/" rel="tag"># leetcode</a>
+              <a href="/blog/tags/midium/" rel="tag"># midium</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/algorithmn/leetcode/midium/849.%20%E5%88%B0%E6%9C%80%E8%BF%91%E7%9A%84%E4%BA%BA%E7%9A%84%E6%9C%80%E5%A4%A7%E8%B7%9D%E7%A6%BB/" rel="prev" title="849. 到最近的人的最大距离">
+      <i class="fa fa-chevron-left"></i> 849. 到最近的人的最大距离
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/algorithmn/leetcode/midium/714.%20%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E4%BD%B3%E6%97%B6%E6%9C%BA%E5%90%AB%E6%89%8B%E7%BB%AD%E8%B4%B9/" rel="next" title="714. 买卖股票的最佳时机含手续费">
+      714. 买卖股票的最佳时机含手续费 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AD%E7%AD%89"><span class="nav-number">1.</span> <span class="nav-text">[中等]</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>

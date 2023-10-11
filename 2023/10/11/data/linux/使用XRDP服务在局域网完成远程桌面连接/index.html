@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="使用XRDP服务在局域网完成远程桌面连接">
+<meta property="og:url" content="http://example.com/2023/10/11/data/linux/%E4%BD%BF%E7%94%A8XRDP%E6%9C%8D%E5%8A%A1%E5%9C%A8%E5%B1%80%E5%9F%9F%E7%BD%91%E5%AE%8C%E6%88%90%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/index.html">
+<meta property="og:site_name" content="Code Blog">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-11T15:54:36.000Z">
+<meta property="article:modified_time" content="2023-10-11T15:54:36.000Z">
+<meta property="article:author" content="Fredom Fu">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/11/data/linux/%E4%BD%BF%E7%94%A8XRDP%E6%9C%8D%E5%8A%A1%E5%9C%A8%E5%B1%80%E5%9F%9F%E7%BD%91%E5%AE%8C%E6%88%90%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>使用XRDP服务在局域网完成远程桌面连接 | Code Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Code Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Code Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/blog/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ChenXinXuTUSC" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/11/data/linux/%E4%BD%BF%E7%94%A8XRDP%E6%9C%8D%E5%8A%A1%E5%9C%A8%E5%B1%80%E5%9F%9F%E7%BD%91%E5%AE%8C%E6%88%90%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Fredom Fu">
+      <meta itemprop="description" content="Code Blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用XRDP服务在局域网完成远程桌面连接
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-10-11 23:54:36" itemprop="dateCreated datePublished" datetime="2023-10-11T23:54:36+08:00">2023-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description"> </div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>In this article, we want to teach you how to <strong>Install and
+Configure XRDP on Debian 11</strong>.</p>
+<p><strong>XRDP</strong> is an open-source implementation of the
+Microsoft RDP (Remote Desktop Protocol) server. It provides bridging
+between the RDP client and the X windows system. The XRDP server allows
+remote users to graphical login to the remote machines using the
+Microsoft RDP client.</p>
+<p>what you read in this post?</p>
+<ul>
+<li><a
+target="_blank" rel="noopener" href="https://orcacore.com/install-and-configure-xrdp-on-debian-11/#steps-to-install-and-configure-xrdp-on-debian-11">Steps
+To Install and Configure XRDP on Debian 11</a><br />
+</li>
+<li><a
+target="_blank" rel="noopener" href="https://orcacore.com/install-and-configure-xrdp-on-debian-11/#install-the-desktop-environment-on-debian-11">Install
+the Desktop Environment on Debian 11</a><br />
+</li>
+<li><a
+target="_blank" rel="noopener" href="https://orcacore.com/install-and-configure-xrdp-on-debian-11/#install-xrdp-on-debian-11">Install
+XRDP on Debian 11</a><br />
+</li>
+<li><a
+target="_blank" rel="noopener" href="https://orcacore.com/install-and-configure-xrdp-on-debian-11/#configure-xrdp-service-on-debian-11">Configure
+XRDP service on Debian 11</a><br />
+</li>
+<li><a
+target="_blank" rel="noopener" href="https://orcacore.com/install-and-configure-xrdp-on-debian-11/#access-debian-remote-desktop">Access
+Debian Remote Desktop</a><br />
+</li>
+<li><a
+target="_blank" rel="noopener" href="https://orcacore.com/install-and-configure-xrdp-on-debian-11/#conclusion">Conclusion</a></li>
+</ul>
+<h3 id="steps-to-install-and-configure-xrdp-on-debian-11">Steps To
+Install and Configure XRDP on Debian 11</h3>
+<p>Before you start to install XRDP on Debian 11, you need to log in to
+your server as a non-root user with sudo privileges and set up a basic
+firewall. To do these, you can check our article about the <a
+target="_blank" rel="noopener" href="https://orcacore.com/initial-server-setup-with-debian-11/">Initial
+Server Setup with Debian 11</a>.</p>
+<p>Now you can start to install the Desktop environment on Debian
+11.</p>
+<h3 id="install-the-desktop-environment-on-debian-11">Install the
+Desktop Environment on Debian 11</h3>
+<p>There are several desktop environments (DE) available in Debian
+repositories. We’ll be installing <a
+target="_blank" rel="noopener" href="https://xfce.org/">Xfce</a>.</p>
+<p>First, update the local package index with the following command:</p>
+<p>sudo apt update</p>
+<p>Then, install the Xfce packages with the following command:</p>
+<p>sudo apt install xfce4 xfce4-goodies xorg dbus-x11
+x11-xserver-utils</p>
+<p>This may take some time to install.</p>
+<p>Now you can install XRDP on your server.</p>
+<h3 id="install-xrdp-on-debian-11">Install XRDP on Debian 11</h3>
+<p>The XRDP packages are available on the default Debian repository. You
+can install it with the following command:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install xrdp -y </span><br></pre></td></tr></table></figure>
+<p>Verify that the XRDP is active and running on Debian 11 with the
+following command:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status xrdp </span><br></pre></td></tr></table></figure>
+<p><strong>Output</strong><br />
+xrdp.service - xrdp daemon<br />
+Loaded: loaded (/lib/systemd/system/xrdp.service; enabled; vendor
+preset: &gt;<br />
+Active: active (running) since Tue 2021-11-09 08:10:53 EST; 46s
+ago<br />
+Docs: man:xrdp(8)<br />
+man:xrdp.ini(5)<br />
+Process: 1363 ExecStartPre=/bin/sh /usr/share/xrdp/socksetup
+(code=exited, &gt;<br />
+Process: 1371 ExecStart=/usr/sbin/xrdp $XRDP_OPTIONS (code=exited,
+status=0&gt;<br />
+Main PID: 1372 (xrdp)<br />
+Tasks: 1 (limit: 2325)<br />
+Memory: 760.0K<br />
+CPU: 59ms<br />
+CGroup: /system.slice/xrdp.service<br />
+└─1372 /usr/sbin/xrdp</p>
+<p>The installation process creates a user named xrdp in your system.
+The XRDP sessions use a certificate key file
+“/etc/ssl/private/ssl-cert-snakeoil.key”. This key file is owned by root
+and the group owner is “ssl-cert”</p>
+<p>So you need to allow xrdp users to access this key file. To do this,
+add the xrdp user to the “ssl-cert” group with the following
+command:</p>
+<p>sudo adduser xrdp ssl-cert</p>
+<p><strong>Output</strong><br />
+Adding user <code>xrdp' to group</code>ssl-cert' ...<br />
+Adding user xrdp to group ssl-cert<br />
+Done.</p>
+<p>When you have XRDP active and running on Debian 11, let’s start to
+configure it.</p>
+<h3 id="configure-xrdp-service-on-debian-11">Configure XRDP service on
+Debian 11</h3>
+<p>For basic Xrdp connections, you do not need to make any changes to
+the configuration files. Xrdp will use the default X Window desktop,
+which in this case, is XFCE.</p>
+<p>The main configuration file is named <code>xrdp.ini</code> . This
+file allows you to set global configuration settings such as security
+and listening addresses and create different xrdp login sessions.</p>
+<p>Whenever you make any changes to the configuration file you need to
+restart the Xrdp service on Debian 11:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart xrdp</span><br></pre></td></tr></table></figure>
+<p>Xrdp uses <code>startwm.sh</code> file to launch the X session. To
+use another X Window desktop, edit this file.</p>
+<p>Now you need to adjust the firewall to access the XRDP on Debian
+11.</p>
+<p>The Xrdp listens on port 3389.</p>
+<p>You can use the following command to open port 3389 for the LAN
+network:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw allow from 192.168.1.0/24 to any port 3389 </span><br></pre></td></tr></table></figure>
+<p><em><strong>Note</strong></em>: If you want to allow access from
+anywhere you can use the following command:</p>
+<p>sudo ufw allow 3389</p>
+<p>To apply the new rules reload the firewall with the following
+command:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw reload </span><br></pre></td></tr></table></figure>
+<p>Now you can access the xrdp on Debian 11.</p>
+<h3 id="access-debian-remote-desktop">Access Debian Remote Desktop</h3>
+<p>On your Windows client, open the RDP client and enter the IP address
+of the Debian system.</p>
+<p>You can launch the RDP client by typing the “mstsc” in the Run window
+or command line.</p>
+<figure>
+<img
+src="https://orcacore.com/wp-content/uploads/2021/11/remote-desktop-connection.webp"
+alt="XRP on Debian11-remote desktop connection" />
+<figcaption aria-hidden="true">XRP on Debian11-remote desktop
+connection</figcaption>
+</figure>
+<p>It will ask for a warning message that the remote system is unknown
+to your system.</p>
+<p>Click the “Don’t ask me again for connection to this computer” and
+click Yes to continue.</p>
+<figure>
+<img
+src="https://orcacore.com/wp-content/uploads/2021/11/remote-warning.webp"
+alt="Remote desktop connection warning" />
+<figcaption aria-hidden="true">Remote desktop connection
+warning</figcaption>
+</figure>
+<p>Now enter the login credentials of the remote Debian system to get
+remote desktop access:</p>
+<figure>
+<img
+src="https://orcacore.com/wp-content/uploads/2021/11/Ubuntu-credentials.webp"
+alt="Debian 11 login credentials" />
+<figcaption aria-hidden="true">Debian 11 login credentials</figcaption>
+</figure>
+<p>When you have logged in you will see:</p>
+<p><a
+target="_blank" rel="noopener" href="https://orcacore.com/wp-content/uploads/2021/11/desktop-env-debian11.webp"><img
+src="https://orcacore.com/wp-content/uploads/2021/11/desktop-env-debian11.webp"
+alt="Debian 11 desktop environment with Xrdp" /></a></p>
+<p>You can now start interacting with the remote XFCE desktop from your
+local machine using your keyboard and mouse.</p>
+<p>If you are using macOS, you can install the Microsoft Remote Desktop
+application from the Mac App Store. Linux users can use an RDP client
+such as Remmina or Vinagre.</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>At this point, you learn to set up a desktop environment
+and <strong>install</strong> <strong>XRDP on Debian 11</strong>. Now you
+can manage your server from the local desktop machine in a graphical
+interface.</p>
+<p>Hope you enjoy this part of the <a
+target="_blank" rel="noopener" href="https://orcacore.com/category/linux/">Linux Tutorials</a> on
+the <a target="_blank" rel="noopener" href="https://orcacore.com/">orcacore</a> website.</p>
+<p>You may be like these articles:</p>
+<p><a
+target="_blank" rel="noopener" href="https://orcacore.com/install-configure-xrdp-almalinux-9/">Install
+and Configure XRDP on AlmaLinux 9</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://orcacore.com/install-configure-xrdp-ubuntu-22-04/">Install
+and Configure XRDP on Ubuntu 22.04</a></p>
+<p><a target="_blank" rel="noopener" href="https://orcacore.com/install-xrdp-centos-7/">How To Install
+XRDP on Centos 7</a></p>
+<p>以下是实验结果，自己安装的是Debian 11 + KDE
+桌面环境，其中KDE也是基于X11
+图形界面库开发的，所以可以使用XRDP系列的服务。XRDP就是X Remote Desktop
+Protocol远程桌面协议，也是Windows的远程桌面连接兼容的桌面协议。</p>
+<p>首先开启Debian的图形界面会话管理服务sddm，因为我默认情况下这台Debian是日志服务器，只是用SSH连接，但是这次我需要在上面做操作系统的实验，涉及到Bochs的可视化调试界面，不得不上图形界面了。<br />
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">┌[fredom@NUC 09:59:10] ~</span><br><span class="line">└$ stl status sddm</span><br><span class="line">● sddm.service - Simple Desktop Display Manager</span><br><span class="line">     Loaded: loaded (/lib/systemd/system/sddm.service; disabled; vendor preset: enabled)</span><br><span class="line">     Active: active (running) since Thu 2023-08-17 09:59:01 HKT; 6min ago</span><br><span class="line">       Docs: man:sddm(1)</span><br><span class="line">             man:sddm.conf(5)</span><br><span class="line">   Main PID: 3326 (sddm)</span><br><span class="line">      Tasks: 12 (limit: 9312)</span><br><span class="line">     Memory: 83.5M</span><br><span class="line">        CPU: 817ms</span><br><span class="line">     CGroup: /system.slice/sddm.service</span><br><span class="line">             ├─3326 /usr/bin/sddm</span><br><span class="line">             └─3338 /usr/lib/xorg/Xorg -nolisten tcp -auth /var/run/sddm/&#123;73f81b5d-fecb-4&gt;</span><br><span class="line"></span><br><span class="line">Aug 17 09:59:01 NUC sddm[3326]: Socket server starting...</span><br><span class="line">Aug 17 09:59:01 NUC sddm[3326]: Socket server started.</span><br><span class="line">Aug 17 09:59:01 NUC sddm[3326]: Loading theme configuration from &quot;/usr/share/sddm/themes/&gt;&quot;</span><br><span class="line">Aug 17 09:59:01 NUC sddm[3326]: Greeter starting...</span><br><span class="line">Aug 17 09:59:01 NUC sddm-helper[3357]: [PAM] Starting...</span><br><span class="line">Aug 17 09:59:01 NUC sddm-helper[3357]: [PAM] Authenticating...</span><br><span class="line">Aug 17 09:59:01 NUC sddm-helper[3357]: [PAM] returning.</span><br><span class="line">Aug 17 09:59:01 NUC sddm-helper[3357]: pam_unix(sddm-greeter:session): session opened for&gt;</span><br><span class="line">Aug 17 09:59:01 NUC sddm[3326]: Greeter session started successfully</span><br><span class="line">Aug 17 09:59:01 NUC sddm[3326]: Message received from greeter: Connect</span><br></pre></td></tr></table></figure></p>
+<p>检查sddm桌面环境管理服务没有问题之后，开启xrdp服务，并且根据上面的文章要注意，xrdp服务应该被加入ssl-cert组别来访问本计算机的密钥。<br />
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">● xrdp.service - xrdp daemon</span><br><span class="line">     Loaded: loaded (/lib/systemd/system/xrdp.service; enabled; vendor preset: enabled)</span><br><span class="line">     Active: active (running) since Thu 2023-08-17 09:59:07 HKT; 8min ago</span><br><span class="line">       Docs: man:xrdp(8)</span><br><span class="line">             man:xrdp.ini(5)</span><br><span class="line">    Process: 3406 ExecStartPre=/bin/sh /usr/share/xrdp/socksetup (code=exited, status=0/SUCCESS)</span><br><span class="line">    Process: 3414 ExecStart=/usr/sbin/xrdp $XRDP_OPTIONS (code=exited, status=0/SUCCESS)</span><br><span class="line">   Main PID: 3415 (xrdp)</span><br><span class="line">      Tasks: 1 (limit: 9312)</span><br><span class="line">     Memory: 924.0K</span><br><span class="line">        CPU: 5.318s</span><br><span class="line">     CGroup: /system.slice/xrdp.service</span><br><span class="line">             └─3415 /usr/sbin/xrdp</span><br><span class="line"></span><br><span class="line">Aug 17 09:59:31 NUC xrdp[3432]: (3432)(140331499132736)[INFO ] xrdp_wm_log_msg: login successful for display 10</span><br><span class="line">Aug 17 09:59:31 NUC xrdp[3432]: (3432)(140331499132736)[DEBUG] xrdp_wm_log_msg: started connecting</span><br><span class="line">Aug 17 09:59:31 NUC xrdp[3432]: (3432)(140331499132736)[INFO ] lib_mod_log_peer: xrdp_pid=3432 connected to X11rdp_pid=3435 X11rdp_uid=1000 X11rdp_gid=1000 client_ip=::ffff:192.168.8.157 c&gt;</span><br><span class="line">Aug 17 09:59:31 NUC xrdp[3432]: (3432)(140331499132736)[DEBUG] xrdp_wm_log_msg: connected ok</span><br><span class="line">Aug 17 09:59:31 NUC xrdp[3432]: (3432)(140331499132736)[DEBUG] xrdp_mm_connect_chansrv: chansrv connect successful</span><br><span class="line">Aug 17 09:59:31 NUC xrdp[3432]: (3432)(140331499132736)[DEBUG] Closed socket 18 (AF_INET6 ::1 port 39472)</span><br><span class="line">Aug 17 10:00:35 NUC xrdp[3432]: (3432)(140331499132736)[DEBUG] Closed socket 12 (AF_INET6 ::ffff:192.168.8.73 port 3389)</span><br><span class="line">Aug 17 10:00:35 NUC xrdp[3432]: (3432)(140331499132736)[DEBUG] xrdp_mm_module_cleanup</span><br><span class="line">Aug 17 10:00:35 NUC xrdp[3432]: (3432)(140331499132736)[DEBUG] Closed socket 19 (AF_UNIX)</span><br><span class="line">Aug 17 10:00:35 NUC xrdp[3432]: (3432)(140331499132736)[DEBUG] Closed socket 20 (AF_UNIX)</span><br></pre></td></tr></table></figure></p>
+<p>确定xrdp服务也开启了之后，再检查防火墙有没有阻拦xrdp服务监听的3389端口。然后在Windows下（一般需要Windows专业版才有远程桌面连接服务，这里白嫖了学校的Win10
+专业版许可证）打开远程桌面连接，无需配置端口，只需要指定Debian主机在当前路由器下的局域网地址即可连接，虽然连接上之后画面传输比较卡，不过还是能凑合着用，可能因为两台主机都是通过路由器的无线传输吧，或者可以在Windows的远程桌面连接中把画质调低一些。<br />
+![[Pasted image 20230817101048.png]]<br />
+![[Pasted image 20230817101534.png]]</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/linux/" rel="tag"># linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/linux/%E4%BD%BF%E7%94%A8fuzzy%20finder%E5%A2%9E%E5%BC%BA%E6%9F%A5%E6%89%BE/" rel="prev" title="使用fuzzy finder增强查找">
+      <i class="fa fa-chevron-left"></i> 使用fuzzy finder增强查找
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/10/11/data/linux/%E4%BD%BF%E7%94%A8PM2%E6%9D%A5%E7%AE%A1%E7%90%86%E8%87%AA%E5%B7%B1%E7%9A%84%E8%BF%9B%E7%A8%8B/" rel="next" title="使用PM2来管理自己的进程">
+      使用PM2来管理自己的进程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#steps-to-install-and-configure-xrdp-on-debian-11"><span class="nav-number">1.</span> <span class="nav-text">Steps To
+Install and Configure XRDP on Debian 11</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#install-the-desktop-environment-on-debian-11"><span class="nav-number">2.</span> <span class="nav-text">Install the
+Desktop Environment on Debian 11</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#install-xrdp-on-debian-11"><span class="nav-number">3.</span> <span class="nav-text">Install XRDP on Debian 11</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configure-xrdp-service-on-debian-11"><span class="nav-number">4.</span> <span class="nav-text">Configure XRDP service on
+Debian 11</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#access-debian-remote-desktop"><span class="nav-number">5.</span> <span class="nav-text">Access Debian Remote Desktop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#conclusion"><span class="nav-number">6.</span> <span class="nav-text">Conclusion</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Fredom Fu</p>
+  <div class="site-description" itemprop="description">Code Blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Fredom Fu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/pjax/pjax.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '32px',
+  right: '32px',
+  left: 'unset',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+    </div>
+</body>
+</html>
